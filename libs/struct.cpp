@@ -17,6 +17,7 @@ struct sockaddr_in initAddrServer(int af, int port){
     addr.sin_family = af;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = INADDR_ANY;
+    return addr;
 }
 
 struct sockaddr_in initAddrClient(int af, int port, char* address){
@@ -24,19 +25,25 @@ struct sockaddr_in initAddrClient(int af, int port, char* address){
     addr.sin_family = af;
     addr.sin_port = htons(port);
     inet_ptonCheck(af, address, &addr.sin_addr);
+    return addr;
 }
 
-Client findUser(Client* client, char* user){
+Client findUser(std::vector<Client>& client, char* user){
     for(int i = 0; i < 16; i++){
         if(strcmp(client[i].login, user) == 0){
             return client[i];
         }
     }
+    Client tmp;
+    memcpy(tmp.login, user, 8);
+    tmp.sockfd = nullptr;
+    tmp.status = 0;
+    return tmp;
 }
 
-int loginCheck(char* log, Client* client, int id){
+int loginCheck(char* log, std::vector<Client>& client, int id){
     int flag = 0;
-    for(int i = 0; i < 16; i++){
+    for(int i = 0; i < client.size(); i++){
         if(strcmp(log, client[i].login) == 0){
             flag = -1;
         }
@@ -49,8 +56,8 @@ int loginCheck(char* log, Client* client, int id){
     }
 }
 
-int userCheck(char* user, Client* client){
-    for(int i = 0; i < 16; i++){
+int userCheck(char* user, std::vector<Client>& client){
+    for(int i = 0; i < client.size(); i++){
         if(strcmp(client[i].login, user) == 0){
             if(client[i].status == 1){
                 return 1;

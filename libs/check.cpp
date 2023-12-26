@@ -70,7 +70,7 @@ int keepAlive(int *sock){
     fidesc.fd = *sock;
     fidesc.events = POLLIN;
 
-    int ret = poll(&fidesc, 1, 15000);
+    int ret = poll(&fidesc, 1, 10000);
     if(ret == -1){
         // unknown error
         printf("poll error\n");
