@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <utility>
+#include <memory>
 
 #include <sys/socket.h>
 #include <sys/types.h>

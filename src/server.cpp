@@ -23,7 +23,7 @@ int main(int argc, char* argv[]){
             close(*client[i].sockfd);
             continue;
         }
-        std::thread handle(handleClient, std::move(client), std::move(client[i]), user);
+        std::thread handle(handleClient, std::ref(client), std::ref(client[i]), user);
         handle.join();
         i++;
     }

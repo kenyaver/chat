@@ -4,7 +4,7 @@ void handleClient(std::vector<Client>&& clients, Client&& clientic, char* user){
     Client partner = findUser(clients, user);
     if (partner.status == 1){
         std::atomic<int> flag{0};
-        std::thread t(talk, std::move(clientic), std::move(partner), std::move(flag));
+        std::thread t(talk, std::ref(clientic), std::ref(partner), std::ref(flag));
         t.join();
     } else {
         std::thread w(writeFile, std::move(clientic), partner.login);

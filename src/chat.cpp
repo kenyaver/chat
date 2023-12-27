@@ -2,11 +2,6 @@
 #include "../libs/function.h"
 // #include "../libs/struct.h"
 
-struct param{
-    int *first;
-    int *second;    
-};
-
 int exitCheck(char* buffer){
     int flag = 0;
     for(int i = 0; i < strlen(buffer); i++){
@@ -17,43 +12,33 @@ int exitCheck(char* buffer){
     return flag;
 }
 
-void* handlePair(void* fd){
-    struct param *session = (param*)fd;
-    int fds[2]{*session->first, *session->second};
-    int ret = socketpair(AF_INET, SOCK_STREAM, 0, fds);
-    if(ret != 0){
-        std::cout << "create pair failed\n";
-    } else {
-        std::cout << "pair accepted\n";
-    }
+void handlePair(int* fds[]){
     char buffer1[1024];
     char buffer2[1024];
     std::thread reciv([&]{
         while(exitCheck(buffer1) == 0){
-            recv(fds[0], buffer1, 1024, 0);
-            send(fds[1], buffer1, 1024, 0);
+            recv(*fds[0], buffer1, 1024, 0);
+            send(*fds[1], buffer1, 1024, 0);
         }
-        std::cout << "good bye!\n";
     });
 
     std::thread sende([&]{
         while(exitCheck(buffer2) == 0){
-            recv(fds[1], buffer2, 1024, 0);
-            send(fds[0], buffer2, 1024, 0);
+            recv(*fds[1], buffer2, 1024, 0);
+            send(*fds[0], buffer2, 1024, 0);
         }
-        std::cout << "good bye!\n";
     });
-
+    std::cout << "good bye!\n";
     reciv.join();
     sende.join();
-    return fd;
+    close(*fds[0]);
+    close(*fds[1]);
+    delete[] *fds;
 }
 
 int main(int argc, char* argv[]){
     std::vector<int*> client;
-    pthread_t tid[512]; /* идентификатор потока */
-    pthread_attr_t attr; /* отрибуты потока */
-    pthread_attr_init(&attr);
+    std::vector<std::thread> t;
 
     int sock = socketCheck(AF_INET, SOCK_STREAM, 0);
     sockaddr_in addr;
@@ -70,15 +55,19 @@ int main(int argc, char* argv[]){
         client.push_back(&c);
         i++;
         std::cout << "client accepted\n";
-        if(i % 2 == 0){ 
-            struct param* thr = (param*)calloc(1, sizeof(param));
-            thr->first = client[i];
-            thr->second = client[i-1]; 
-            pthread_create(&tid[j], &attr, handlePair, &thr);
+        if(i % 2 == 0){
+            int** fds = new int*[2];
+            fds[0] = client[i - 2];
+            fds[1] = client[i - 1];
+            std::cout << *fds[0] << ' ' << *fds[1] << '\n';
+            t.push_back(std::thread(handlePair, fds));
+            std::cout << "session " << t[j].get_id() << ": created\n"; 
             j++;
         }
     }
-    for(int t = 0; t < j; t++){
-        pthread_join(tid[t], 0);
+    
+    for(auto &i: t){
+        i.join();
     }
+
 }
