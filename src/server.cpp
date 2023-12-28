@@ -30,6 +30,7 @@ int main(int argc, char* argv[]){
             client.push_back(findUser(client, user));
             i++;
             t.push_back(std::thread(talk, std::ref(client[i-1]), std::ref(client[i])));
+            t.push_back(std::thread(talk, std::ref(client[i]), std::ref(client[i-1])));
         }
 
         // std::thread handle(handleClient, std::ref(client), std::ref(client[i]), user);
