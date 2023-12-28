@@ -6,7 +6,6 @@
 #include "function.h"
 #include "check.h"
 
-void handleClient(std::vector<Client>&& clients, Client&& clientic, char* user);
-void writeFile(Client&& clientic, char* user);
-void talk(Client&& client1, Client&& client2, std::atomic<int>&& flag);
+int writeFile(char* sender, char* recver, char* buffer);
+void talk(Client&& client1, Client&& client2);
 #endif

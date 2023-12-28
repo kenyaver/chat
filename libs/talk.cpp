@@ -1,18 +1,6 @@
 #include "talk.h"
 
-void handleClient(std::vector<Client>&& clients, Client&& clientic, char* user){
-    Client partner = findUser(clients, user);
-    if (partner.status == 1){
-        std::atomic<int> flag{0};
-        std::thread t(talk, std::ref(clientic), std::ref(partner), std::ref(flag));
-        t.join();
-    } else {
-        std::thread w(writeFile, std::move(clientic), partner.login);
-        w.join();
-    }
-}
-
-void talk(Client&& client1, Client&& client2, std::atomic<int>&& flag){
+void talk(Client&& client1, Client&& client2){
     struct pollfd fidesc1;
     fidesc1.fd = *client1.sockfd;
     fidesc1.events = POLLIN;
@@ -21,7 +9,7 @@ void talk(Client&& client1, Client&& client2, std::atomic<int>&& flag){
     char buffer[4096];
     char bufferRecv[1024];
     char bufferSend[1028];
-    while(afk != 300000 && flag.load() != 1){
+    while(afk != 300000 && exitClient(bufferRecv) == 0 && exitClient(bufferSend) == 0){
         int ret = poll(&fidesc1, 1, 10000);
         if(ret == 0){
             afk += 10000;
@@ -39,38 +27,28 @@ void talk(Client&& client1, Client&& client2, std::atomic<int>&& flag){
             if(keepAlive(client2.sockfd) != 0){
                 send(*client1.sockfd, "partner innactive\n", 24, 0);
                 close(*client2.sockfd);
-                writeFile(std::move(client1), client2.login);
+                char fileWriteBuffer[1024];
+                strcat(fileWriteBuffer, client1.login);
+                strcat(fileWriteBuffer, bufferSend);
+                writeFile(client1.login, client2.login, fileWriteBuffer);
             }
         }
     }
 }
 
-void writeFile(Client&& clientic, char* user){
-    struct pollfd fidesc1;
-    fidesc1.fd = *clientic.sockfd;
-    fidesc1.events = POLLIN;
-    int afk = 0; // ms innactive
-    char bufferRecv[1024];
-    char* filename = strcat(user, (char*)".txt");
+int writeFile(char* sender, char* recver, char* buffer){
+    char* filename = strcat(recver, (char*)".txt");
     filename = strcat((char*)"../offlene/", filename);
     int fileSize = getFileSize(filename);
-    while(afk != 300000 && fileSize != 4096){
-        FILE* file = fopen(filename, "a+");
-        int ret = poll(&fidesc1, 1, 10000);
-        if(ret == 0){
-            afk += 10000;
-            if(afk == 180000){
-                send(*clientic.sockfd, "you innactive!\n", 16, 0);
-            }
-        }
-        if(fidesc1.revents && POLLIN){
-            fidesc1.revents = 0;
-            recv(*clientic.sockfd, bufferRecv, 1024, 0);
-            fprintf(file, "%s: %s", clientic.login, bufferRecv);
-            fclose(file);
-            fileSize = getFileSize(filename);
-        }
+    FILE* file;
+    if(fileSize != 4096){
+        file = fopen(filename, "a+");
+    } else {
+        return -1;
     }
+
+    fprintf(file, "%s: %s", sender, buffer);
+    return 0;
 }
 
 
