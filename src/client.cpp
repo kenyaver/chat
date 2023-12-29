@@ -17,9 +17,16 @@ int main(int argc, char* argv[]){
     int sock = socketCheck(AF_INET, SOCK_STREAM, 0);
     sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(1555);
-    inet_pton(AF_INET, (char*)"192.168.10.92", &addr.sin_addr);
+    addr.sin_port = htons(fromString(argv[2])); // connection
+    inet_ptonCheck(AF_INET, argv[1], &addr.sin_addr);
     connectCheck(sock, (struct sockaddr*)&addr, sizeof(addr));
+
+    char nameBuffer[20];
+    strcat(nameBuffer, argv[3]);
+    strcat(nameBuffer, " "); // send your name and partner`s name
+    strcat(nameBuffer, argv[4]);
+    send(sock, nameBuffer, 20, 0);
+
     char bufferRecv[1024];
     char bufferSend[1024];
 

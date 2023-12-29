@@ -18,23 +18,24 @@ int main(int argc, char* argv[]){
     for(;;){
         sockClient[i] = acceptCheck(sock, (struct sockaddr*)&addr, &addrLen);
         client.push_back({"", &sockClient[i], 1});
-        recv(*client[i].sockfd, log_user, 24, 0);
-        parse(log_user, client[i].login, user);
-        if(loginCheck(client[i].login, client, i) != 0){
-            send(*client[i].sockfd, "choose other username\n", 24, 0);
-            close(*client[i].sockfd);
-            continue;
-        }
+        int ret = recv(*client[i].sockfd, log_user, 20, 0);
+        parse(log_user, client[i].login, user); // позже обязательно сделать проверку на существование пользователя
+        // if(loginCheck(client[i].login, client, i) == -1){
+        //     send(*client[i].sockfd, "choose other username~\n", 24, 0);
+        //     close(*client[i].sockfd);
+        //     continue;
+        // }
         Client tmp = findUser(client, user);
         if(tmp.login != ""){
             client.push_back(findUser(client, user));
             i++;
-            t.push_back(std::thread(talk, std::ref(client[i-1]), std::ref(client[i])));
-            t.push_back(std::thread(talk, std::ref(client[i]), std::ref(client[i-1])));
+            t.push_back(std::thread([&]{
+                talk(client[i - 1], client[i]);
+            }));
+            t.push_back(std::thread([&]{
+                talk(client[i], client[i - 1]);
+            }));
         }
-
-        // std::thread handle(handleClient, std::ref(client), std::ref(client[i]), user);
-        // handle.join();
         i++;
     }
 

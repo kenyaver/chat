@@ -1,4 +1,4 @@
-all: server
+all: server client
 
 server:
 	g++ src/server.cpp libs/check.cpp libs/function.cpp libs/struct.cpp libs/talk.cpp -o build/server
@@ -13,4 +13,4 @@ chatC:
 	g++ src/clientChat.cpp libs/check.cpp libs/function.cpp -o build/chatC
 
 clear:
-	rm server client
+	rm build/server build/client

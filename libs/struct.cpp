@@ -45,7 +45,9 @@ int loginCheck(char* log, std::vector<Client>& client, int id){
     int flag = 0;
     for(int i = 0; i < client.size(); i++){
         if(strcmp(log, client[i].login) == 0){
-            flag = -1;
+            if(client[i].status == 1){
+                flag = -1;
+            }
         }
     }
     if(flag == 0){

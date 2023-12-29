@@ -40,7 +40,7 @@ void handlePair(int* client1, int* client2){
     });
     c1.join();
     c2.join();
-    std::cout << "\ngood bye!\n";
+    std::cout << "session " << std::this_thread::get_id() << ": finihed\n";
     close(*client1);
     close(*client2);
 }

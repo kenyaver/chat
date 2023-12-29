@@ -7,5 +7,5 @@
 #include "check.h"
 
 int writeFile(char* sender, char* recver, char* buffer);
-void talk(Client&& client1, Client&& client2);
+void talk(Client& client1, Client& client2);
 #endif
