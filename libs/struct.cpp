@@ -41,7 +41,7 @@ Client findUser(std::vector<Client>& client, char* user){
     return tmp;
 }
 
-int loginCheck(char* log, std::vector<Client>& client, int id){
+int loginCheck(char* log, std::vector<Client>& client, Client& clientin){
     int flag = 0;
     for(int i = 0; i < client.size(); i++){
         if(strcmp(log, client[i].login) == 0){
@@ -51,7 +51,7 @@ int loginCheck(char* log, std::vector<Client>& client, int id){
         }
     }
     if(flag == 0){
-        strcpy(client[id].login, log);
+        strcpy(clientin.login, log);
         return 0;
     } else {
         return -1;
