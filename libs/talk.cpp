@@ -1,6 +1,7 @@
 #include "talk.h"
 
 void talk(Client& client1, Client& client2){
+    send(*client1.sockfd, "start message\n", 16, 0);
     struct pollfd fidesc1;
     fidesc1.fd = *client1.sockfd;
     fidesc1.events = POLLIN;

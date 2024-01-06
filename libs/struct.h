@@ -9,6 +9,8 @@ int *sockfd;
 int status;
 } Client;
 
+char* getIPaddr(char* IPaddr);
+
 void inet_ptonCheck(int af, char* src, void* dst);
 
 struct sockaddr_in initAddrServer(int af, int port);
