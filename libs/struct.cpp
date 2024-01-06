@@ -53,7 +53,7 @@ struct sockaddr_in initAddrClient(int af, int port, char* address){
 }
 
 Client findUser(std::vector<Client>& client, char* user){
-    for(int i = 0; i < 16; i++){
+    for(int i = 0; i < client.size(); i++){
         if(strcmp(client[i].login, user) == 0){
             return client[i];
         }

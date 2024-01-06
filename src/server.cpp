@@ -45,9 +45,11 @@ int main(int argc, char* argv[]){
                 t.push_back(std::thread([&]{
                     talk(client[i - 1], client[i]);
                 }));
+                std::cout << "OK\n";
                 t.push_back(std::thread([&]{
                     talk(client[i], client[i - 1]);
                 }));
+                std::cout << "OK\n";
             }
         } else {
             std::cout << "iteration OK\n";
