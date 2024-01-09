@@ -63,7 +63,7 @@ void talk(Client& client1, Client& client2){
         if(fidesc1.revents && POLLIN){
             std::cout << "client live\n";
             fidesc1.revents = 0;
-            get(buffer, client1, id);
+            get(client1, buffer, id);
             if(put(buffer, client2) != 0){
                 char fileWriteBuffer[1036];
                 strcat(fileWriteBuffer, client1.login);

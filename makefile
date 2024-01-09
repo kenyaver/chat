@@ -15,10 +15,10 @@ talk.o:
 	g++ -c libs/talk.cpp -o build/talk.o
 
 server:
-	g++ src/server.cpp build/check.o build/function.o build/struct.o build/talk.o -o build/server
+	g++ src/server.cpp build/check.o build/function.o build/struct.o build/talk.o -o build/schat
 
 client:
-	g++ src/client.cpp build/check.o build/function.o build/struct.o build/talk.o -o build/client
+	g++ src/client.cpp build/check.o build/function.o build/struct.o build/talk.o -o build/cchat
 
 chatS:
 	g++ src/chat.cpp libs/check.cpp libs/function.cpp -o build/chatS
@@ -27,7 +27,7 @@ chatC:
 	g++ src/clientChat.cpp libs/check.cpp libs/function.cpp -o build/chatC
 
 clear:
-	rm build/server build/client
+	rm build/schat build/cchat
 
 clearLibs:
 	rm build/check.o build/function.o build/struct.o build/talk.o

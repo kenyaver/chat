@@ -6,7 +6,7 @@
 #include "function.h"
 #include "check.h"
 
-char* get(char* buffer, Client& client, int id);
+char* get(Client& client, char* buffer , int id);
 int put(char* buffer, Client& client);
 
 void handleClient(std::vector<Client>& clients, Client& client, char* recver);
