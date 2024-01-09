@@ -14,6 +14,9 @@ struct.o:
 talk.o:
 	g++ -c libs/talk.cpp -o build/talk.o
 
+fileSchat:
+	g++ src/fileSchat.cpp build/check.o build/function.o build/struct.o build/talk.o -o build/fileSchat
+
 server:
 	g++ src/server.cpp build/check.o build/function.o build/struct.o build/talk.o -o build/schat
 

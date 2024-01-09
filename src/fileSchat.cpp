@@ -3,7 +3,7 @@
 #include "../libs/struct.h"
 #include "../libs/talk.h"
 
-void HandleClient(Client& client, char* recver){
+void sendMessage(Client& client, char* recver){
     std::cout << "hh\n";
     send(*client.sockfd, "start message\n", 16, 0);
     struct pollfd fidesc;
@@ -30,6 +30,23 @@ void HandleClient(Client& client, char* recver){
             }
         }
     }
+    close(*client.sockfd);
+}
+
+void readMessage(Client& client){
+    char* nameFile;
+    strcat(nameFile, "../message/");
+    strcat(nameFile, client.login);
+    strcat(nameFile, ".txt");
+    FILE* file = fopen(nameFile, "a+");
+    char buffer[4132];
+    while(feof(file)){
+        fscanf(file, "%s", buffer);
+        send(*client.sockfd, buffer, 4128, 0);
+    }
+    fclose(file);
+    freopen(nameFile, "w", file);
+    fclose(file);
 }
 
 
@@ -64,8 +81,15 @@ int main(int argc, char* argv[]){
             close(*client[i].sockfd);
             continue;
         } else {
+            int* stop = 0;
             t.push_back(std::thread([&]{
-                handleClient(client, client[i], user);
+                while(*stop == 0){
+                    readMessage(std::ref(client[i]));
+                }
+            }));
+            t.push_back(std::thread([&]{
+                sendMessage(std::ref(client[i]), user);
+                *stop = 1;
             }));
         }
         std::cout << "iteration OK\n";

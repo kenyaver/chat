@@ -1,6 +1,6 @@
 #include "talk.h"
 
-char* get(char* buffer, Client& client, int id){
+char* get(Client& client, char* buffer, int id){
     char bufferRecv[1024];
     recv(*client.sockfd, bufferRecv, 1024, 0);
     char* strId = toString(strId, id);
