@@ -8,3 +8,6 @@ build/client
 
 #ignore object-files
 *.o
+
+#ignore logCheck
+logicheck.cpp
