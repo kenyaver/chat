@@ -18,6 +18,7 @@ struct sockaddr_in initAddrClient(int af, int port, char* address);
 
 
 Client findUser(std::vector<Client>& client, char* user);
+int findIDuser(std::vector<Client>& client, char* login);
 
 int loginCheck(char* log_us, std::vector<Client>& client, int id);
 int userCheck(char* user, std::vector<Client>& client);

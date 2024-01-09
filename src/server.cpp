@@ -34,26 +34,12 @@ int main(int argc, char* argv[]){
             close(*client[i].sockfd);
             continue;
         } else {
-            std::cout << "login OK\n";
+            t.push_back(std::thread([&]{
+                handleClient(client, client[i], user);
+            }));
         }
+        std::cout << "iteration OK\n";
         i++;
-        if(i % 2 == 0){
-            Client tmp = findUser(client, user);
-            if(tmp.login != ""){
-                client.push_back(tmp);
-                i++;
-                t.push_back(std::thread([&]{
-                    talk(client[i - 1], client[i]);
-                }));
-                std::cout << "OK\n";
-                t.push_back(std::thread([&]{
-                    talk(client[i], client[i - 1]);
-                }));
-                std::cout << "OK\n";
-            }
-        } else {
-            std::cout << "iteration OK\n";
-        }
     }
 
     for(auto &thr: t){        

@@ -65,6 +65,15 @@ Client findUser(std::vector<Client>& client, char* user){
     return tmp;
 }
 
+int findIDuser(std::vector<Client>& client, char* login){
+    for(int i = 0; i < client.size(); i++){
+        if(strcmp(client[i].login, login) == 0){
+            return i;
+        }
+    }
+    return -1;
+}
+
 int loginCheck(char* log, std::vector<Client>& client, int id){
     int flag = 0;
     for(int i = 0; i < client.size() - 1; i++){

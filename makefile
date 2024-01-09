@@ -28,3 +28,6 @@ chatC:
 
 clear:
 	rm build/server build/client
+
+clearLibs:
+	rm build/check.o build/function.o build/struct.o build/talk.o

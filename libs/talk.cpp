@@ -1,21 +1,58 @@
 #include "talk.h"
 
+char* get(char* buffer, Client& client, int id){
+    char bufferRecv[1024];
+    recv(*client.sockfd, bufferRecv, 1024, 0);
+    char* strId = toString(strId, id);
+    id++;
+    strcat(buffer, strId);
+    strcat(buffer, " ");
+    strcat(buffer, bufferRecv);
+    return buffer;
+}
+
+int put(char* buffer, Client& client){
+    send(*client.sockfd, buffer, 1028, 0);
+    if(keepAlive(client.sockfd) != 0){
+        close(*client.sockfd);
+        return -1;
+    }
+    return 0;
+}
+
+void handleClient(std::vector<Client>& clients, Client& client, char* recver){
+    Client tmp = findUser(clients, recver);
+    std::vector<std::thread> t;
+    if(tmp.login == ""){
+        char buffer[1032];
+        int size = 0;
+        while(size < 4128){
+            recv(*client.sockfd, buffer, 1024, 0);
+            size = writeFile(client.login, recver, buffer);
+        }
+    } else {
+        int idUser = findIDuser(clients, recver);
+        t.push_back(std::thread([&]{
+                talk(std::ref(client), std::ref(clients[idUser]));
+        }));
+    }
+
+    for(auto &i: t){
+        i.join(); 
+    }
+}
+
 void talk(Client& client1, Client& client2){
-// <<<<<<< HEAD
-    send(*client1.sockfd, "start message\n", 16, 0);
-// =======
     std::cout << "hh\n";
-// >>>>>>> 6266e0e (ny)
+    send(*client1.sockfd, "start message\n", 16, 0);
     struct pollfd fidesc1;
     fidesc1.fd = *client1.sockfd;
     fidesc1.events = POLLIN;
     int afk = 0;
     int id = 0;
-    char buffer[4096];
-    char bufferRecv[1024];
-    char bufferSend[1032];
+    char buffer[1028];
     std::cout << "hmmm..\n";
-    while(afk != 300000 && exitClient(bufferRecv) == 0 && exitClient(bufferSend) == 0){
+    while(afk != 300000 && exitClient(buffer) == 0){
         int ret = poll(&fidesc1, 1, 5000);
         if(ret == 0){
             afk += 5000;
@@ -26,18 +63,11 @@ void talk(Client& client1, Client& client2){
         if(fidesc1.revents && POLLIN){
             std::cout << "client live\n";
             fidesc1.revents = 0;
-            char* strId = toString(strId, id);
-            id++;
-            recv(*client1.sockfd, bufferRecv, 1024, 0);
-            strcat(bufferSend, strId);
-            strcat(bufferSend, bufferRecv);
-            send(*client2.sockfd, bufferSend, 1028, 0);
-            if(keepAlive(client2.sockfd) != 0){
-                send(*client1.sockfd, "partner innactive\n", 24, 0);
-                close(*client2.sockfd);
-                char fileWriteBuffer[1024];
+            get(buffer, client1, id);
+            if(put(buffer, client2) != 0){
+                char fileWriteBuffer[1036];
                 strcat(fileWriteBuffer, client1.login);
-                strcat(fileWriteBuffer, bufferSend);
+                strcat(fileWriteBuffer, buffer);
                 writeFile(client1.login, client2.login, fileWriteBuffer);
             }
         }
@@ -46,7 +76,7 @@ void talk(Client& client1, Client& client2){
 
 int writeFile(char* sender, char* recver, char* buffer){
     char* filename = strcat(recver, (char*)".txt");
-    filename = strcat((char*)"../offlene/", filename);
+    filename = strcat((char*)"../offline/", filename);
     int fileSize = getFileSize(filename);
     FILE* file;
     if(fileSize != 4096){
