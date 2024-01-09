@@ -3,4 +3,5 @@
 
 #ignore .out
 *.out
-
+build/server
+build/client

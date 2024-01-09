@@ -1,10 +1,24 @@
 all: server client
 
+libs: check.o function.o struct.o talk.o
+
+check.o:
+	g++ -c libs/check.cpp -o build/check.o
+
+function.o:
+	g++ -c libs/function.cpp -o build/function.o
+
+struct.o:
+	g++ -c libs/struct.cpp -o build/struct.o
+
+talk.o:
+	g++ -c libs/talk.cpp -o build/talk.o
+
 server:
-	g++ src/server.cpp libs/check.cpp libs/function.cpp libs/struct.cpp libs/talk.cpp -o build/server
+	g++ src/server.cpp build/check.o build/function.o build/struct.o build/talk.o -o build/server
 
 client:
-	g++ src/client.cpp libs/check.cpp libs/function.cpp libs/struct.cpp libs/talk.cpp -o build/client
+	g++ src/client.cpp build/check.o build/function.o build/struct.o build/talk.o -o build/client
 
 chatS:
 	g++ src/chat.cpp libs/check.cpp libs/function.cpp -o build/chatS
