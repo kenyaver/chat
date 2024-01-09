@@ -1,7 +1,11 @@
 #include "talk.h"
 
 void talk(Client& client1, Client& client2){
+// <<<<<<< HEAD
     send(*client1.sockfd, "start message\n", 16, 0);
+// =======
+    std::cout << "hh\n";
+// >>>>>>> 6266e0e (ny)
     struct pollfd fidesc1;
     fidesc1.fd = *client1.sockfd;
     fidesc1.events = POLLIN;
@@ -9,18 +13,21 @@ void talk(Client& client1, Client& client2){
     int id = 0;
     char buffer[4096];
     char bufferRecv[1024];
-    char bufferSend[1028];
+    char bufferSend[1032];
+    std::cout << "hmmm..\n";
     while(afk != 300000 && exitClient(bufferRecv) == 0 && exitClient(bufferSend) == 0){
-        int ret = poll(&fidesc1, 1, 10000);
+        int ret = poll(&fidesc1, 1, 5000);
         if(ret == 0){
-            afk += 10000;
+            afk += 5000;
             if(afk == 180000){
                 send(*client1.sockfd, "you innactive!\n", 16, 0);
             }
         }
         if(fidesc1.revents && POLLIN){
+            std::cout << "client live\n";
             fidesc1.revents = 0;
             char* strId = toString(strId, id);
+            id++;
             recv(*client1.sockfd, bufferRecv, 1024, 0);
             strcat(bufferSend, strId);
             strcat(bufferSend, bufferRecv);
