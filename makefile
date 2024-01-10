@@ -30,7 +30,7 @@ chatC:
 	g++ src/clientChat.cpp libs/check.cpp libs/function.cpp -o build/chatC
 
 clear:
-	rm build/schat build/cchat
+	rm build/schat build/cchat build/fileSchat
 
 clearLibs:
 	rm build/check.o build/function.o build/struct.o build/talk.o

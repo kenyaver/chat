@@ -66,11 +66,13 @@ int exitClient(char* buffer){
 }
 
 int keepAlive(int *sock){
+    struct timespec timeout;
+    timeout.tv_sec = 10;
     struct pollfd fidesc;
     fidesc.fd = *sock;
     fidesc.events = POLLIN;
 
-    int ret = poll(&fidesc, 1, 10000);
+    int ret = ppoll(&fidesc, 1, &timeout, NULL);
     if(ret == -1){
         // unknown error
         printf("poll error\n");
