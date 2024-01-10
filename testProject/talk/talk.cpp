@@ -55,10 +55,10 @@ void talk(Client&& client1, Client&& client2){
 
 int writeFile(char* sender, char* recver, char* buffer){
     char* filename = strcat(recver, (char*)".txt");
-    filename = strcat((char*)"../offlene/", filename);
+    filename = strcat((char*)"../offline/", filename);
     int fileSize = getFileSize(filename);
     FILE* file;
-    if(fileSize != 4096){
+    if(fileSize != 4128){
         file = fopen(filename, "a+");
     } else {
         return -1;

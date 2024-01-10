@@ -45,6 +45,8 @@ void handleClient(std::vector<Client>& clients, Client& client, char* recver){
 void talk(Client& client1, Client& client2){
     std::cout << "hh\n";
     send(*client1.sockfd, "start message\n", 16, 0);
+    timespec timeout;
+    timeout.tv_nsec = 5000;
     struct pollfd fidesc1;
     fidesc1.fd = *client1.sockfd;
     fidesc1.events = POLLIN;
@@ -53,7 +55,7 @@ void talk(Client& client1, Client& client2){
     char buffer[1028];
     std::cout << "hmmm..\n";
     while(afk != 300000 && exitClient(buffer) == 0){
-        int ret = poll(&fidesc1, 1, 5000);
+        int ret = ppoll(&fidesc1, 1, &timeout, NULL);
         if(ret == 0){
             afk += 5000;
             if(afk == 180000){

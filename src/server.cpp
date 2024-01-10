@@ -24,9 +24,9 @@ int main(int argc, char* argv[]){
     listenCheck(sock, 1024);
     
     for(;;){
-        sockClient[j] = acceptCheck(sock, (struct sockaddr*)&addr, &addrLen);
-        j++;
+        sockClient[i] = acceptCheck(sock, (struct sockaddr*)&addr, &addrLen);
         client.push_back({"", &sockClient[i], 1});
+        std::cout << &sockClient[i] << ' ' << client[i].sockfd << '\n';
         int ret = recv(*client[i].sockfd, log_user, 20, 0);
         parse(log_user, client[i].login, user);
         if(loginCheck(client[i].login, client, i) == -1){
@@ -34,8 +34,9 @@ int main(int argc, char* argv[]){
             close(*client[i].sockfd);
             continue;
         } else {
+            send(*client[i].sockfd, "u r ready start message\n", 24, 0);
             t.push_back(std::thread([&]{
-                handleClient(client, client[i], user);
+                handleClient(client, std::ref(client[i]), user);
             }));
         }
         std::cout << "iteration OK\n";
