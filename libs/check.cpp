@@ -65,11 +65,11 @@ int exitClient(char* buffer){
     return 0;
 }
 
-int keepAlive(int *sock){
+int keepAlive(int sock){
     struct timespec timeout;
     timeout.tv_sec = 10;
     struct pollfd fidesc;
-    fidesc.fd = *sock;
+    fidesc.fd = sock;
     fidesc.events = POLLIN;
 
     int ret = ppoll(&fidesc, 1, &timeout, NULL);

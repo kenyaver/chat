@@ -11,6 +11,6 @@ int acceptCheck(int sockfd, struct sockaddr* addr, socklen_t* lenAddr);
 int connectCheck(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
 int buffCheck(char* buffer);
 int exitClient(char* buffer);
-int keepAlive(int* sock);
+int keepAlive(int sock);
 
 #endif

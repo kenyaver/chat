@@ -13,6 +13,17 @@ int exitCheck(char* buffer){
     return flag;
 }
 
+char* isClientMessage(char* bufferSRC, char* messageID, char* bufferDST){
+    int id;
+    parse(bufferSRC, messageID, bufferDST);
+    id = fromString(messageID);
+    if(id > 0){
+        return messageID;
+    }
+    strcpy(messageID, "-1");
+    return messageID;
+}
+
 int main(int argc, char* argv[]){
     int sock = socketCheck(AF_INET, SOCK_STREAM, 0);
     sockaddr_in addr;
@@ -27,14 +38,22 @@ int main(int argc, char* argv[]){
     strcat(nameBuffer, argv[4]);
     send(sock, nameBuffer, 20, 0);
 
-    char bufferRecv[1024];
+    char bufferRecv[1028];
     char bufferSend[1024];
+    char messageID[16];
 
     std::thread reciv([&]{
         while(exitCheck(bufferRecv) == 0 && exitCheck(bufferSend) == 0){
-            int ret = recv(sock, bufferRecv, 1024, 0);
+            char buffer[1024];
+            int ret = recv(sock, bufferRecv, 1028, 0);
             if(ret > 0){
-                std::cout << bufferRecv;
+                isClientMessage(bufferRecv, messageID, buffer);
+                if(strcmp(messageID, "-1") != 0){
+                    send(sock, messageID, 4, 0);
+                    std::cout << buffer;
+                } else {
+                    std::cout << bufferRecv;
+                }
             }
         }
     });

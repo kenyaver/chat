@@ -9,6 +9,9 @@ char* toString(char* str, int val)
 int fromString(const char* s) 
 {
   int res = atoi(s);
+  if(res == 0){
+    res = -1;
+  }
   return res;
 }
 

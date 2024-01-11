@@ -60,7 +60,7 @@ Client findUser(std::vector<Client>& client, char* user){
     }
     Client tmp;
     memcpy(tmp.login, user, 8);
-    tmp.sockfd = nullptr;
+    tmp.sockfd = 0;
     tmp.status = 0;
     return tmp;
 }
@@ -74,7 +74,7 @@ int findIDuser(std::vector<Client>& client, char* login){
     return -1;
 }
 
-int loginCheck(char* log, std::vector<Client>& client, int id){
+int loginCheck(char* log, std::vector<Client>& client){
     int flag = 0;
     for(int i = 0; i < client.size() - 1; i++){
         if(strcmp(log, client[i].login) == 0){
