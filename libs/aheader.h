@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <utility>
 #include <memory>
+#include <exception>
 
 #include <sys/socket.h>
 #include <sys/types.h>

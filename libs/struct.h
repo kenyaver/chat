@@ -2,19 +2,28 @@
 #define STRUCT_H
 
 #include "aheader.h"
+#include "function.h"
+#include "check.h"
 
-typedef struct {
-char login[8];
-int sockfd;
-int status;
-} Client;
+class Client {
+    public:
+    char login[8];
+    int sockfd;
+    int status;
+    char bufferRecv[1024];
+    char bufferSend[1032];
+
+    char* getData(int id);
+    int sendData(Client& recver);
+
+};
 
 char* getIPaddr(char* IPaddr);
 
 void inet_ptonCheck(int af, char* src, void* dst);
 
-struct sockaddr_in initAddrServer(int af, int port);
-struct sockaddr_in initAddrClient(int af, int port, char* address);
+struct sockaddr_in initAddrServer(int port);
+struct sockaddr_in initAddrClient(int port, char* address);
 
 
 Client findUser(std::vector<Client>& client, char* user);

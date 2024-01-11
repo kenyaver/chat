@@ -76,28 +76,28 @@ void talk(Client& client1, Client& client2){
     send(client1.sockfd, "start message\n", 16, 0);
     timespec timeout;
     timeout.tv_nsec = 5000;
-    struct pollfd fidesc1;
-    fidesc1.fd = client1.sockfd;
-    fidesc1.events = POLLIN;
+    struct pollfd fidesc;
+    fidesc.fd = client1.sockfd;
+    fidesc.events = POLLIN;
     int afk = 0;
     int id = 0;
     char buffer[1028];
     while(afk != 300000 && exitClient(buffer) == 0 && client2.status == 1){
-        int ret = ppoll(&fidesc1, 1, &timeout, NULL);
+        int ret = ppoll(&fidesc, 1, &timeout, NULL);
         if(ret == 0){
             afk += 5000;
             if(afk == 180000){
                 send(client1.sockfd, "you innactive!\n", 16, 0);
             }
         }
-        if(fidesc1.revents && POLLIN){
+        if(fidesc.revents && POLLIN){
             std::cout << "client live\n";
-            fidesc1.revents = 0;
-            get(client1, buffer, id);
-            if(put(buffer, client2) != 0){
+            fidesc.revents = 0;
+            client1.getData(id);
+            if(client1.sendData(client2) != 0){
                 char fileWriteBuffer[1036];
                 strcat(fileWriteBuffer, client1.login);
-                strcat(fileWriteBuffer, buffer);
+                strcat(fileWriteBuffer, client1.bufferSend);
                 writeFile(client1.login, client2.login, fileWriteBuffer);
                 break;
             }
@@ -120,5 +120,3 @@ int writeFile(char* sender, char* recver, char* buffer){
     fprintf(file, "%s: %s", sender, buffer);
     return 0;
 }
-
-

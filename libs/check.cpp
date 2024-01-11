@@ -1,14 +1,11 @@
 #include "check.h"
 
 int socketCheck(int domain, int type, int protocol){
-    int opt = 1;
-    socklen_t optLen = sizeof(opt);
     int sock = socket(domain, type, protocol);
     if(sock == -1){
         perror("socket failed\n");
         exit(EXIT_FAILURE);
    }
-   setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, &opt, optLen);
    return sock;
 }
 

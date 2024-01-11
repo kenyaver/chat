@@ -1,12 +1,33 @@
 #include "struct.h"
 
+char* Client::getData(int id){
+    recv(sockfd, bufferRecv, 1024, 0);
+    char* strId = toString(strId, id);
+    id++;
+    strcat(bufferSend, strId);
+    strcat(bufferSend, " ");
+    strcat(bufferSend, bufferRecv);
+    return bufferSend;
+}
+
+int Client::sendData(Client& recver){
+    send(recver.sockfd, bufferSend, 1032, 0);
+    if(keepAlive(recver.sockfd) != 0){
+        close(recver.sockfd);
+        memcpy(recver.login, "", 8);
+        recver.status = 0;
+        return -1;
+    }
+    return 0;
+}
+
 char* getIPaddr(char* IPaddr){
     const char* google_dns_server = "8.8.8.8";
     int dns_port = 53;
 
     struct sockaddr_in serv;
 
-    int sock = socket( AF_INET, SOCK_DGRAM, 0);
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
 
     memset( &serv, 0, sizeof(serv) );
     serv.sin_family = AF_INET;
@@ -36,19 +57,19 @@ void inet_ptonCheck(int af, char* src, void* dst){
     }
 }
 
-struct sockaddr_in initAddrServer(int af, int port){
+struct sockaddr_in initAddrServer(int port){
     struct sockaddr_in addr;
-    addr.sin_family = af;
+    addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = INADDR_ANY;
     return addr;
 }
 
-struct sockaddr_in initAddrClient(int af, int port, char* address){
+struct sockaddr_in initAddrClient(int port, char* address){
     struct sockaddr_in addr;
-    addr.sin_family = af;
+    addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
-    inet_ptonCheck(af, address, &addr.sin_addr);
+    inet_ptonCheck(AF_INET, address, &addr.sin_addr);
     return addr;
 }
 
