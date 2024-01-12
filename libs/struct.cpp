@@ -1,5 +1,13 @@
 #include "struct.h"
 
+Client::Client(){
+    bzero(login, 8);
+    sockfd = 0;
+    status = 1;
+    bzero(bufferRecv, 1024);
+    bzero(bufferSend, 1032);
+}
+
 char* Client::getData(int id){
     recv(sockfd, bufferRecv, 1024, 0);
     char* strId = toString(strId, id);
@@ -10,16 +18,28 @@ char* Client::getData(int id){
     return bufferSend;
 }
 
-int Client::sendData(Client& recver){
-    send(recver.sockfd, bufferSend, 1032, 0);
-    if(keepAlive(recver.sockfd) != 0){
-        close(recver.sockfd);
-        memcpy(recver.login, "", 8);
-        recver.status = 0;
+int Client::sendData(Client* recver){
+    send(recver->sockfd, bufferSend, 1032, 0);
+    if(keepAlive(recver->sockfd) != 0){
+        close(recver->sockfd);
+        memcpy(recver->login, "", 8);
+        recver->status = 0;
         return -1;
     }
     return 0;
 }
+
+Client::~Client(){
+        std::cout << "client disconnected\n";
+        close(sockfd);
+        char filename[32];
+        strcat(filename, "../offline");
+        strcat(filename, login);
+        strcat(filename, ".txt");
+        FILE* file = fopen(filename, "a+");
+        fprintf(file, "%s", bufferSend);
+        fclose(file);
+    }
 
 char* getIPaddr(char* IPaddr){
     const char* google_dns_server = "8.8.8.8";
@@ -73,10 +93,10 @@ struct sockaddr_in initAddrClient(int port, char* address){
     return addr;
 }
 
-Client findUser(std::vector<Client>& client, char* user){
+Client findUser(std::vector<Client*>& client, char* user){
     for(int i = 0; i < client.size(); i++){
-        if(strcmp(client[i].login, user) == 0){
-            return client[i];
+        if(strcmp(client.at(i)->login, user) == 0){
+            return *client.at(i);
         }
     }
     Client tmp;
@@ -86,20 +106,20 @@ Client findUser(std::vector<Client>& client, char* user){
     return tmp;
 }
 
-int findIDuser(std::vector<Client>& client, char* login){
+int findIDuser(std::vector<Client*>& client, char* login){
     for(int i = 0; i < client.size(); i++){
-        if(strcmp(client[i].login, login) == 0){
+        if(strcmp(client.at(i)->login, login) == 0){
             return i;
         }
     }
     return -1;
 }
 
-int loginCheck(char* log, std::vector<Client>& client){
+int loginCheck(char* log, std::vector<Client*>& client){
     int flag = 0;
     for(int i = 0; i < client.size() - 1; i++){
-        if(strcmp(log, client[i].login) == 0){
-            if(client[i].status == 1){
+        if(strcmp(log, client.at(i)->login) == 0){
+            if(client.at(i)->status == 1){
                 flag = -1;
             }
         }

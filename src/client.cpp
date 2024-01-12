@@ -27,9 +27,7 @@ char* isClientMessage(char* bufferSRC, char* messageID, char* bufferDST){
 int main(int argc, char* argv[]){
     int sock = socketCheck(AF_INET, SOCK_STREAM, 0);
     sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(fromString(argv[2])); // connection
-    inet_ptonCheck(AF_INET, argv[1], &addr.sin_addr);
+    addr = initAddrClient(fromString(argv[2]), argv[1]);
     connectCheck(sock, (struct sockaddr*)&addr, sizeof(addr));
 
     char nameBuffer[20];
@@ -38,21 +36,23 @@ int main(int argc, char* argv[]){
     strcat(nameBuffer, argv[4]);
     send(sock, nameBuffer, 20, 0);
 
-    char bufferRecv[1028];
-    char bufferSend[1024];
+    char bufferRecv[1036];
+    char bufferSend[1025];
     char messageID[16];
 
     std::thread reciv([&]{
         while(exitCheck(bufferRecv) == 0 && exitCheck(bufferSend) == 0){
             char buffer[1024];
-            int ret = recv(sock, bufferRecv, 1028, 0);
+            int ret = recv(sock, bufferRecv, 1036, 0);
             if(ret > 0){
                 isClientMessage(bufferRecv, messageID, buffer);
                 if(strcmp(messageID, "-1") != 0){
                     send(sock, messageID, 4, 0);
                     std::cout << buffer;
+                    bzero(buffer, 1024);
                 } else {
                     std::cout << bufferRecv;
+                    bzero(bufferRecv, 1036);
                 }
             }
         }
@@ -60,8 +60,14 @@ int main(int argc, char* argv[]){
 
     std::thread sende([&]{
         while(exitCheck(bufferSend) == 0 && exitCheck(bufferRecv) == 0){
-            std::cin.getline(bufferSend, 1024);
-            send(sock, bufferSend, 1024, 0);
+            std::cin.getline(bufferSend, 1025);
+            if(strlen(bufferSend) == 1025){
+                std::cout << "incorrect message (>1024 bytes)\n";
+                bzero(bufferSend, 1025);
+            } else {
+                send(sock, bufferSend, 1024, 0);
+                bzero(bufferSend, 1025);
+            }
         }
     });
 

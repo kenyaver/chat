@@ -22,83 +22,84 @@ int put(char* buffer, Client& client){
     return 0;
 }
 
-void handleClient(std::vector<Client>& clients, Client& client){
+void handleClient(std::vector<Client*>& clients, Client* client){
     char log_user[24];
     char recver[8];
 
-    recv(client.sockfd, log_user, 20, 0);
-    parse(log_user, client.login, recver);
+    recv(client->sockfd, log_user, 20, 0);
+    parse(log_user, client->login, recver);
+    send(client->sockfd, "check your username\n", 1036, 0);
 
-    if(loginCheck(client.login, clients) == -1){
-        send(client.sockfd, "choose other username~\n", 24, 0);
-        close(client.sockfd);
-        client.status = 0;
+    if(loginCheck(client->login, clients) == -1){
+        send(client->sockfd, "choose other username~\n", 1036, 0);
+        close(client->sockfd);
+        client->status = 0;
         return;
     } else {
-        send(client.sockfd, "you ready start message\n", 32, 0);
+        send(client->sockfd, "you ready start message\n", 1036, 0);
     }
 
-    send(client.sockfd, "search partner...\n", 20, 0);
+    send(client->sockfd, "search partner...\n", 1036, 0);
     Client tmp = findUser(clients, recver);
     std::vector<std::thread> t;
-    char buffer[1032];
+    char buffer[1036];
     char state[8];
     int size = 0;
 
     if(tmp.status == 0){
         memcpy(state, "offline\n", 8);
-        send(client.sockfd, state, 8, 0);
+        send(client->sockfd, state, 1036, 0);
     }
 
     while(tmp.status == 0){
         tmp = findUser(clients, recver);
         if(size < 4128){
-            recv(client.sockfd, buffer, 1024, 0);
-            size = writeFile(client.login, recver, buffer);
+            recv(client->sockfd, buffer, 1024, 0);
+            size = writeFile(client->login, recver, buffer);
         }
     }
     
     memcpy(state, "online\n", 8);
-    send(client.sockfd, state, 8, 0);
+    send(client->sockfd, state, 1036, 0);
 
     int idUser = findIDuser(clients, recver);
     t.push_back(std::thread([&]{
-        talk(std::ref(client), std::ref(clients[idUser]));
+        talk(client, clients.at(idUser));
     }));
 
     for(auto &i: t){
         i.join(); 
     }
-    close(client.sockfd);
+    close(client->sockfd);
 }
 
-void talk(Client& client1, Client& client2){
-    send(client1.sockfd, "start message\n", 16, 0);
+void talk(Client* client1, Client* client2){
+    send(client1->sockfd, "start message\n", 16, 0);
     timespec timeout;
     timeout.tv_nsec = 5000;
     struct pollfd fidesc;
-    fidesc.fd = client1.sockfd;
+    fidesc.fd = client1->sockfd;
     fidesc.events = POLLIN;
     int afk = 0;
     int id = 0;
     char buffer[1028];
-    while(afk != 300000 && exitClient(buffer) == 0 && client2.status == 1){
+    while(afk != 300000 && exitClient(buffer) == 0 && client2->status == 1){
         int ret = ppoll(&fidesc, 1, &timeout, NULL);
         if(ret == 0){
             afk += 5000;
             if(afk == 180000){
-                send(client1.sockfd, "you innactive!\n", 16, 0);
+                send(client1->sockfd, "you innactive!\n", 16, 0);
             }
         }
         if(fidesc.revents && POLLIN){
             std::cout << "client live\n";
             fidesc.revents = 0;
-            client1.getData(id);
-            if(client1.sendData(client2) != 0){
+            client1->getData(id);
+            if(client1->sendData(client2) != 0){
                 char fileWriteBuffer[1036];
-                strcat(fileWriteBuffer, client1.login);
-                strcat(fileWriteBuffer, client1.bufferSend);
-                writeFile(client1.login, client2.login, fileWriteBuffer);
+                strcat(fileWriteBuffer, client1->login);
+                strcat(fileWriteBuffer, client1->bufferSend);
+                writeFile(client1->login, client2->login, fileWriteBuffer);
                 break;
             }
         }

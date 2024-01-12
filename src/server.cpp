@@ -4,9 +4,8 @@
 #include "../libs/talk.h"
 
 class Server{
-    private:
-    int sd; // socket descriptor
     public:
+    int sd;
     sockaddr_in addr;
     Server(int port){
         sd = socket(AF_INET, SOCK_STREAM, 0);
@@ -20,45 +19,34 @@ class Server{
         }
     }
 
-    int getSD(){
-        return sd;
-    }
-
-    sockaddr_in getAddr(){
-        return addr;
-    }
-
     ~Server(){
         close(sd);
     }
 };
 
 int main(int argc, char* argv[]){
-    // int sock = socketCheck(AF_INET, SOCK_STREAM, 0);
-    // struct sockaddr_in addr = initAddrServer(fromString(argv[1]));
-    // bindCheck(sock, (struct sockaddr*)&addr, sizeof(addr));
     try{
         Server server(fromString(argv[1]));
         char IPaddr[100];
         getIPaddr(IPaddr);
         std::cout << IPaddr << std::endl;
 
-        socklen_t addrLen = sizeof(server.getAddr());
-        std::vector<Client> client;
-        int clientSize = 0;
+        socklen_t addrLen = sizeof(server.addr);
+        std::vector<Client*> client;
+        int clientCount = 0;
         std::vector<std::thread> t;
-
-        listenCheck(server.getSD(), 20);
+        Client* zero = new Client();
+        listenCheck(server.sd, 20);
         for(;;){
-            client.push_back({"", 0, 1});
-            client.end()->sockfd = acceptCheck(server.getSD(), (sockaddr*)&server.addr, &addrLen); // accepting
+            client.push_back(zero);
+            client.at(clientCount)->sockfd = acceptCheck(server.sd, (sockaddr*)&server.addr, &addrLen); // accepting
             std::cout << "new client accepted\n";
 
             t.push_back(std::thread([&]{
-                handleClient(client, client[clientSize]); // handle new client
+                handleClient(client, client.at(clientCount)); // handle new client
             }));    
             std::cout << "new client handled\n";
-            clientSize++;
+            clientCount++;
         }
 
         for(auto &thr: t){        
