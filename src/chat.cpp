@@ -1,6 +1,5 @@
 #include "../libs/check.h"
 #include "../libs/function.h"
-// #include "../libs/struct.h"
 
 int exitCheck(char* buffer){
     int flag = 0;

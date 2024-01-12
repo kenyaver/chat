@@ -52,6 +52,7 @@ int main(int argc, char* argv[]){
         for(auto &thr: t){        
             thr.join();
         }
+        delete zero;
     } catch(const std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
