@@ -40,12 +40,12 @@ int main(int argc, char* argv[]){
         for(;;){
             client.push_back(zero);
             client.at(clientCount)->sockfd = acceptCheck(server.sd, (sockaddr*)&server.addr, &addrLen); // accepting
-            std::cout << "new client accepted\n";
+            std::cout << clientCount << ": new client accepted\n";
 
             t.push_back(std::thread([&]{
                 handleClient(client, client.at(clientCount)); // handle new client
             }));    
-            std::cout << "new client handled\n";
+            std::cout << clientCount << ": new client handled\n";
             clientCount++;
         }
 

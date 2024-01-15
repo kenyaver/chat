@@ -17,7 +17,7 @@ Client::Client(const char* login, int sockfd, int status, const char* bufferRecv
 }
 
 Client::Client(const Client& a): Client{a.login, a.sockfd, a.status, a.bufferRecv, a.bufferSend}{
-    std::cout << "Client " << this->login << "copied by move-constructor\n";
+    std::cout << "Client " << this->login << " copied by move-constructor\n";
 }
 
 
@@ -44,7 +44,7 @@ int Client::sendData(Client* recver){
 }
 
 Client::~Client(){
-        std::cout << "client disconnected\n";
+        std::cout << "client " << login <<" disconnected\n";
         close(sockfd);
         char filename[32];
         strcat(filename, "../offline");

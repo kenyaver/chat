@@ -28,15 +28,21 @@ void handleClient(std::vector<Client*>& clients, Client* client){
 
     recv(client->sockfd, log_user, 20, 0);
     parse(log_user, client->login, recver);
-    send(client->sockfd, "check your username\n", 1036, 0);
+    send(client->sockfd, "check your username:\n", 1036, 0);
 
     if(loginCheck(client->login, clients) == -1){
-        send(client->sockfd, "choose other username~\n", 1036, 0);
+        char usernameCheck[1036];
+        memcpy(usernameCheck, client->login, 8);
+        strcat(usernameCheck, " NOT OK\nchoose other username~\n");
+        send(client->sockfd, usernameCheck, 1036, 0);
         close(client->sockfd);
         client->status = 0;
         return;
     } else {
-        send(client->sockfd, "you ready start message\n", 1036, 0);
+        char usernameCheck[1036];
+        memcpy(usernameCheck, client->login, 8);
+        strcat(usernameCheck, " OK\nyou ready start message\n");
+        send(client->sockfd, usernameCheck, 1036, 0);
     }
 
     send(client->sockfd, "search partner...\n", 1036, 0);
