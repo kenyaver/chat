@@ -46,7 +46,7 @@ int connectCheck(int sockfd, const struct sockaddr* addr, socklen_t addrlen){
 
 int buffCheck(char* buffer){
     int size = strlen(buffer);
-    if(size >= 512){
+    if(size >= 1024){
         return -1;
     }
     return 0;

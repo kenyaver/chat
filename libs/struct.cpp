@@ -8,6 +8,20 @@ Client::Client(){
     bzero(bufferSend, 1032);
 }
 
+Client::Client(const char* login, int sockfd, int status, const char* bufferRecv, const char* bufferSend){
+    strcpy(this->login, login);
+    this->sockfd = sockfd;
+    this->status = status;
+    strcpy(this->bufferRecv, bufferRecv);
+    strcpy(this->bufferSend, bufferSend);
+}
+
+Client::Client(const Client& a): Client{a.login, a.sockfd, a.status, a.bufferRecv, a.bufferSend}{
+    std::cout << "Client " << this->login << "copied by move-constructor\n";
+}
+
+
+
 char* Client::getData(int id){
     recv(sockfd, bufferRecv, 1024, 0);
     char* strId = toString(strId, id);
@@ -99,10 +113,7 @@ Client findUser(std::vector<Client*>& client, char* user){
             return *client.at(i);
         }
     }
-    Client tmp;
-    memcpy(tmp.login, user, 8);
-    tmp.sockfd = 0;
-    tmp.status = 0;
+    Client tmp(user, 0, 0, "", "");
     return tmp;
 }
 
