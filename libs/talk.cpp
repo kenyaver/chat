@@ -48,7 +48,7 @@ void handleClient(std::vector<Client*>& clients, Client* client){
 
     send(client->sockfd, "search partner...\n", 1036, 0);
     Client tmp = findUser(clients, recver);
-    std::vector<std::thread> t;
+    // std::vector<std::thread> t;
     char buffer[1036];
     char state[8];
     int size = 0;
@@ -70,13 +70,17 @@ void handleClient(std::vector<Client*>& clients, Client* client){
     send(client->sockfd, state, 1036, 0);
 
     int idUser = findIDuser(clients, recver);
-    t.push_back(std::thread([&]{
-        talk(client, clients.at(idUser));
-    }));
+    // t.push_back(std::thread([&]{
+    //     talk(client, clients.at(idUser));
+    // }));
 
-    for(auto &i: t){
-        i.join(); 
-    }
+    std::thread t(talk, client, clients.at(idUser));
+    std::cout << "Client " << client->login << " started message with " << clients.at(idUser)->login << '\n';
+
+    // for(auto &i: t){
+    //     i.join(); 
+    // }
+    t.join();
     close(client->sockfd);
 }
 

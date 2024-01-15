@@ -36,15 +36,15 @@ int getFileSize(const char* file_name){
 
 void parse(char* src, char* dst1, char* dst2){
     int size = strlen(src);
-    int flagdst = 1;
+    int flagdst = 0;
     int j = 0;
     int k = 0;
-    for(int i = 0; i < size - 1; i++){
+    for(int i = 0; i < size; i++){
         if(src[i] == ' '){
             flagdst++;
             continue;
         }
-        if(flagdst > 1){
+        if(!flagdst){
             dst1[j] = src[i];
             j++;
         } else {

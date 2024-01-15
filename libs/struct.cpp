@@ -12,7 +12,7 @@ Client::Client(const char* login, int sockfd, int status){
     strcpy(this->login, login);
     this->sockfd = sockfd;
     this->status = status;
-    std::cout << "Client " << login << " connected\n";
+    // std::cout << "Client " << login << " connected\n";
 }
 
 Client::Client(const Client& a): Client{a.login, a.sockfd, a.status}{
@@ -107,7 +107,7 @@ struct sockaddr_in initAddrClient(int port, char* address){
 }
 
 Client findUser(std::vector<Client*>& client, char* user){
-    for(int i = 0; i < client.size() - 1; i++){
+    for(int i = 0; i < client.size(); i++){
         if(strcmp(client.at(i)->login, user) == 0){
             return *client.at(i);
         }
@@ -134,22 +134,14 @@ int loginCheck(char* log, std::vector<Client*>& client){
             }
         }
     }
-    if(flag == 0){
-        return 0;
-    } else {
-        return -1;
-    }
+    return flag;
 }
 
-int userCheck(char* user, std::vector<Client>& client){
+int userCheck(char* user, std::vector<Client*>& client){
     for(int i = 0; i < client.size(); i++){
-        if(strcmp(client[i].login, user) == 0){
-            if(client[i].status == 1){
-                return 1;
-            } else {
-                return -1;
-            }
+        if(strcmp(client.at(i)->login, user) == 0){
+            return client.at(i)->status;
         }
     }
-    return 0;
+    return -1;
 }
