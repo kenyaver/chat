@@ -44,7 +44,7 @@ void parse(char* src, char* dst1, char* dst2){
             flagdst++;
             continue;
         }
-        if(!flagdst){
+        if(flagdst == 0){
             dst1[j] = src[i];
             j++;
         } else {

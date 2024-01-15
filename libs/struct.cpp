@@ -127,10 +127,12 @@ int findIDuser(std::vector<Client*>& client, char* login){
 
 int loginCheck(char* log, std::vector<Client*>& client){
     int flag = 0;
-    for(int i = 0; i < client.size() - 1; i++){
-        if(strcmp(log, client.at(i)->login) == 0){
-            if(client.at(i)->status == 1){
+    for(auto i: client){
+        if(strcmp(i->login, log) == 0){
+            if(i->status == 1){
                 flag = -1;
+            } else {
+                return flag;
             }
         }
     }

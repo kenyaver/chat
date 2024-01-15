@@ -43,8 +43,9 @@ int main(int argc, char* argv[]){
             std::cout << clientCount << ": new client accepted\n";
 
             t.push_back(std::thread([&]{
-                handleClient(client, client.at(clientCount)); // handle new client
-            }));    
+                handleClient(std::ref(client), std::ref(client.at(clientCount))); // handle new client
+            }));
+            // t.push_back(std::thread(handleClient, std::ref(client), std::ref(client.at(clientCount)))); // handle new client   
             std::cout << clientCount << ": new client handled\n";
             clientCount++;
         }
