@@ -8,15 +8,14 @@ Client::Client(){
     bzero(bufferSend, 1032);
 }
 
-Client::Client(const char* login, int sockfd, int status, const char* bufferRecv, const char* bufferSend){
+Client::Client(const char* login, int sockfd, int status){
     strcpy(this->login, login);
     this->sockfd = sockfd;
     this->status = status;
-    strcpy(this->bufferRecv, bufferRecv);
-    strcpy(this->bufferSend, bufferSend);
+    std::cout << "Client " << login << " connected\n";
 }
 
-Client::Client(const Client& a): Client{a.login, a.sockfd, a.status, a.bufferRecv, a.bufferSend}{
+Client::Client(const Client& a): Client{a.login, a.sockfd, a.status}{
     std::cout << "Client " << this->login << " copied by move-constructor\n";
 }
 
@@ -108,12 +107,12 @@ struct sockaddr_in initAddrClient(int port, char* address){
 }
 
 Client findUser(std::vector<Client*>& client, char* user){
-    for(int i = 0; i < client.size(); i++){
+    for(int i = 0; i < client.size() - 1; i++){
         if(strcmp(client.at(i)->login, user) == 0){
             return *client.at(i);
         }
     }
-    Client tmp(user, 0, 0, "", "");
+    Client tmp(user, 0, 0);
     return tmp;
 }
 

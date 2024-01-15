@@ -1,9 +1,9 @@
 #include<iostream>
 #include<vector>
+#include <string.h>
 
 int main(){
-    std::vector<int> a;
-    int c = 0;
-    std::cout << a.at(c);
+    char* Hello = "Hello";
+    std::cout << strlen(Hello) << '\n';
     return 0;
 }

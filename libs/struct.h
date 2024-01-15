@@ -14,7 +14,7 @@ class Client {
     char bufferSend[1032];
 
     Client();
-    Client(const char* login, int sockfd, int status, const char* bufferRecv, const char* bufferSend);
+    Client(const char* login, int sockfd, int status);
     Client(const Client& a);
 
     char* getData(int id);

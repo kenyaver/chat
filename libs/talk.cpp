@@ -28,6 +28,7 @@ void handleClient(std::vector<Client*>& clients, Client* client){
 
     recv(client->sockfd, log_user, 20, 0);
     parse(log_user, client->login, recver);
+    std::cout << client->login << " is trying to connect\n";
     send(client->sockfd, "check your username:\n", 1036, 0);
 
     if(loginCheck(client->login, clients) == -1){
