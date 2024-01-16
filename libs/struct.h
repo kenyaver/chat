@@ -4,8 +4,9 @@
 #include "aheader.h"
 #include "function.h"
 #include "check.h"
+#include "talk.h"
 
-/class Client{
+class Client{
     public:
     char login[8];
     int sockfd;
@@ -17,26 +18,27 @@
 
     Client(int sockfd);
 
-    Client(const Client& a): Client(a.sockfd){
-        // std::cout << "copied\n";
-    }
+    Client(const Client& a);
     
-    ~Client();
+    ~Client(){
+        close(sockfd);
+    }
 
-    void handleClient(std::vector<Client>& client);
+    void handleClient(){
+        thr = std::thread([&]{
+        sprintf(buffer, "u cool %s!\n", this->login);
+        int err = send(sockfd, buffer, 1024, 0);
+        std::cout << err << '\n';
+        });
+
+        thr.join();
+        char bye[16];
+        strcpy(bye, "bye!\n");
+        send(sockfd, bye, 16, 0);
+        std::cout << "end session for client\n";
+    }
 };
 
-// char* getIPaddr(char* IPaddr);
-
-// void inet_ptonCheck(int af, char* src, void* dst);
-
-// struct sockaddr_in initAddrServer(int port);
-// struct sockaddr_in initAddrClient(int port, char* address);
-
-
-Client findUser(std::vector<Client*>& client, char* user);
-int findIDuser(std::vector<Client*>& client, char* login);
-
-int userCheckStatus(std::vector<Client*>& client, char* user);
+int findUser(std::vector<Client>& client, char* recver);
 
 #endif

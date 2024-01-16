@@ -21,16 +21,7 @@ int main(){
         client.push_back({});
         client.back().sockfd = accept(sock, (sockaddr*)&addr, &addrLen);
         std::cout << "count if clients: " << client.size() << std::endl;
-        client.back().handleClient();
-        char usernames[20];
-        int ret = recv(client.back().sockfd, usernames, 20, 0);
-        parse(usernames, client.back().login, )
-        if(ret > 0){
-            std::cout << client.back().login << " accepted\n";
-            
-        } else {
-            std::cout << errno << std::endl;
-        }
+        client.back().handleClient(client);
     }
     close(sock);
     return 0;

@@ -6,11 +6,5 @@
 #include "function.h"
 #include "check.h"
 
-char* get(Client& client, char* buffer , int id);
-int put(char* buffer, Client& client);
-
-void handleClient(std::vector<Client*>&& clients, Client* client);
-
-void talk(Client* client1, Client* client2);
-int writeFile(char* sender, char* recver, char* buffer);
+void talk(Client& sender, Client& recver);
 #endif
