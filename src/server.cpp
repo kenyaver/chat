@@ -35,30 +35,26 @@ int main(int argc, char* argv[]){
         std::vector<Client*> client;
         int clientCount = 0;
         std::vector<std::thread> t;
-        Client* zero = new Client();
+        
         listenCheck(server.sd, 20);
         for(;;){
+            Client* zero = new Client();
+            zero->sockfd = acceptCheck(server.sd, (sockaddr*)&server.addr, &addrLen); // accepting
             client.push_back(zero);
-            client.at(clientCount)->sockfd = acceptCheck(server.sd, (sockaddr*)&server.addr, &addrLen); // accepting
-            std::cout << clientCount << ": new client accepted\n";
-
             t.push_back(std::thread([&]{
-                handleClient(std::ref(client), std::ref(client.at(clientCount))); // handle new client
+                handleClient(std::move(client), std::ref(client.back())); // handle new client
             }));
-            // t.push_back(std::thread(handleClient, std::ref(client), std::ref(client.at(clientCount)))); // handle new client   
-            std::cout << clientCount << ": new client handled\n";
-            clientCount++;
+            std::cout << "new client connected\n";
+            delete zero;
         }
 
         for(auto &thr: t){        
             thr.join();
         }
-        delete zero;
+        
     } catch(const std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
-
-    
 
     printf("good bye!\n");
     return 0;

@@ -2,57 +2,72 @@
 
 Client::Client(){
     bzero(login, 8);
-    sockfd = 0;
-    status = 1;
-    bzero(bufferRecv, 1024);
-    bzero(bufferSend, 1032);
+    bzero(buffer, 1024);
 }
 
-Client::Client(const char* login, int sockfd, int status){
-    strcpy(this->login, login);
+Client::Client(int sockfd){
     this->sockfd = sockfd;
-    this->status = status;
-    // std::cout << "Client " << login << " connected\n";
 }
 
-Client::Client(const Client& a): Client{a.login, a.sockfd, a.status}{
-    std::cout << "Client " << this->login << " copied by move-constructor\n";
-}
-
-
-
-char* Client::getData(int id){
-    recv(sockfd, bufferRecv, 1024, 0);
-    char* strId = toString(strId, id);
-    id++;
-    strcat(bufferSend, strId);
-    strcat(bufferSend, " ");
-    strcat(bufferSend, bufferRecv);
-    return bufferSend;
-}
-
-int Client::sendData(Client* recver){
-    send(recver->sockfd, bufferSend, 1032, 0);
-    if(keepAlive(recver->sockfd) != 0){
-        close(recver->sockfd);
-        memcpy(recver->login, "", 8);
-        recver->status = 0;
-        return -1;
-    }
-    return 0;
+Client::Client(const Client& a): Client{a.login}{
+    std::cout << this->login << " copied by move-constructor\n";
 }
 
 Client::~Client(){
-        std::cout << "client " << login <<" disconnected\n";
-        close(sockfd);
-        char filename[32];
-        strcat(filename, "../offline");
-        strcat(filename, login);
-        strcat(filename, ".txt");
-        FILE* file = fopen(filename, "a+");
-        fprintf(file, "%s", bufferSend);
-        fclose(file);
-    }
+    status = 0;        
+    char filename[32];
+    sprintf(filename, "../offline%s.txt", login);
+    FILE* file = fopen(filename, "a+");
+    fprintf(file, "%s", bufferSend);
+    fclose(file);
+    close(sockfd);
+}
+
+void Client::handleClient(std::vector<Client>& client){
+    thr = std::thread([&]{
+        char usernames[20];
+        char recver[8];
+        int ret = recv(sockfd, usernames, 20, 0);
+        parse(usernames, login, recver);
+
+        send(sockfd, "search partner...\n", 1036, 0);
+        char state[8];
+        int size = 0;
+
+        Client tmp = findUser(client, recver);
+        
+        client.push_back(tmp);
+
+        if(client.back().status == 0){
+            memcpy(state, "offline\n", 8);
+            send(sockfd, state, 1036, 0);
+        }
+
+        while(client.back().status == 0){
+            client.back().status = userCheckStatus(client, recver);
+            if(size < 4128){
+                recv(sockfd, buffer, 1024, 0);
+                size = writeFile(login, recver, buffer);
+            }
+        }
+
+        memcpy(state, "online\n", 8);
+        send(sockfd, state, 1036, 0);
+
+        int idUser = findIDuser(client, recver);
+
+        std::thread t(talk, std::ref(*this), std::ref(client.at(idUser)));
+        std::cout << "Client " << client->login << " started message with " << clients.at(idUser)->login << '\n';
+        t.join();
+    });
+
+        thr.detach();
+        while(status == 1){}
+        char bye[16];
+        strcpy(bye, "bye!\n");
+        send(sockfd, bye, 16, 0);
+        std::cout << "end session for client " << login << '\n';
+}
 
 char* getIPaddr(char* IPaddr){
     const char* google_dns_server = "8.8.8.8";
@@ -125,21 +140,7 @@ int findIDuser(std::vector<Client*>& client, char* login){
     return -1;
 }
 
-int loginCheck(char* log, std::vector<Client*>& client){
-    int flag = 0;
-    for(auto i: client){
-        if(strcmp(i->login, log) == 0){
-            if(i->status == 1){
-                flag = -1;
-            } else {
-                return flag;
-            }
-        }
-    }
-    return flag;
-}
-
-int userCheck(char* user, std::vector<Client*>& client){
+int userCheckStatus(std::vector<Client*>& client, char* user){
     for(int i = 0; i < client.size(); i++){
         if(strcmp(client.at(i)->login, user) == 0){
             return client.at(i)->status;

@@ -22,7 +22,7 @@ int put(char* buffer, Client& client){
     return 0;
 }
 
-void handleClient(std::vector<Client*>& clients, Client* client){
+void handleClient(std::vector<Client*>&& clients, Client* client){
     char log_user[24];
     char login[8];
     char recver[8];
