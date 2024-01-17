@@ -1,20 +1,19 @@
-#ifndef CLASS_H
-#define CLASS_H
+#pragma once
 
 #include "../libs/check.h"
 #include "../libs/function.h"
 
 class Client{
-    public:
+    private:
     char login[8];
     char reader[8];
-    int sockfd;
     int status;
-    static int ID;
-    int readerID;
     char bufferRecv[1024];
     char bufferSend[1024];
     std::thread thr;
+    public:
+
+    int sockfd;
 
     Client();
 
@@ -24,13 +23,11 @@ class Client{
     
     ~Client();
 
-    void HelloClient();
+    void helloClient();
 
     int readerStatus();
 
     void handleClient();
 };
 
-std::vector<Client> client;
-
-#endif
+inline std::vector<Client> client;

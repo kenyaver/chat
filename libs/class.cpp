@@ -1,8 +1,8 @@
 #include "class.h"
 
-Client::Client(){
-    this->ID++;
-}
+
+
+Client::Client() = default;
 
 Client::Client(int sockfd){
     this->sockfd = sockfd;
@@ -14,7 +14,7 @@ Client::~Client(){
     close(sockfd);
 }
 
-void Client::HelloClient(){
+void Client::helloClient(){
     char usernames[20];
     int ret = recv(client.back().sockfd, usernames, 20, 0);
     if(ret > 0){
@@ -36,7 +36,7 @@ int Client::readerStatus(){
 
 void Client::handleClient(){
     thr = std::thread([&]{
-        this->HelloClient();
+        this->helloClient();
         if(this->readerStatus() == 0){
             // writeFile();
             std::cout << "writeFile\n";

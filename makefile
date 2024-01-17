@@ -13,12 +13,17 @@ function.o:
 class.o:
 	g++ -c libs/class.cpp -o build/class.o
 
+server.o:
+	g++ - c src/server.cpp -o build/server.o
+
+client.o:
+	g++ -c src/client.cpp -o build/client.o
 
 server: check.o function.o class.o
-	g++ src/server.cpp build/check.o build/function.o build/class.o -o build/server
+	g++ build/check.o build/function.o build/class.o src/server.cpp -o build/server
 
 client: check.o function.o class.o
-	g++ src/client.cpp build/check.o build/function.o build/class.o -p build/client
+	g++ build/check.o build/function.o build/class.o src/client.cpp -o build/client
 
 
 clear:
