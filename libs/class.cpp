@@ -22,7 +22,6 @@ void Client::HelloClient(){
         sprintf(bufferRecv, "Hello %s!\n", login);
         int err = send(sockfd, bufferRecv, 1024, 0);
         std::cout << err << '\n';
-        
     }
 }
 

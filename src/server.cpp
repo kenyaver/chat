@@ -1,6 +1,6 @@
 #include "../libs/check.h"
 #include "../libs/function.h"
-#include "class.h"
+#include "../libs/class.h"
 
 int main(){
     int sock = socket(AF_INET, SOCK_STREAM, 0);
