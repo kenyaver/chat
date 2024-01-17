@@ -1,5 +1,5 @@
-#ifndef WRAPPER_H
-#define WRAPPER_H
+#ifndef CHECK_H
+#define CHECK_H
 
 #include "aheader.h"
 
