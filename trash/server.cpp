@@ -1,7 +1,7 @@
 #include "../libs/check.h"
 #include "../libs/function.h"
-#include "../libs/struct.h"
-#include "../libs/talk.h"
+#include "struct.h"
+#include "talk.h"
 
 class Server{
     public:

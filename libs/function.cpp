@@ -15,6 +15,30 @@ int fromString(const char* s)
   return res;
 }
 
+char* getIPaddr(char* IPaddr){
+    const char* google_dns_server = "8.8.8.8";
+    int dns_port = 53;
+
+    struct sockaddr_in serv;
+
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+
+    memset( &serv, 0, sizeof(serv) );
+    serv.sin_family = AF_INET;
+    serv.sin_addr.s_addr = inet_addr( google_dns_server );
+    serv.sin_port = htons( dns_port );
+
+    int err = connect( sock , (const struct sockaddr*) &serv , sizeof(serv) );
+
+    struct sockaddr_in name;
+    socklen_t namelen = sizeof(name);
+    err = getsockname(sock, (struct sockaddr*) &name, &namelen);
+
+    const char* p = inet_ntop(AF_INET, &name.sin_addr, IPaddr, 100);
+    close(sock);
+    return IPaddr;
+}
+
 int getFileSize(const char* file_name){
 	int file_size = 0;
 	struct stat fileStatbuff;

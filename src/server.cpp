@@ -2,11 +2,15 @@
 #include "../libs/function.h"
 #include "../libs/class.h"
 
-int main(){
+int main(int argc, char* argv[]){
+    char IPaddr[100];
+    getIPaddr(IPaddr);
+    std::cout << "server`s IP-address: " << IPaddr << std::endl;
+
     int sock = socketCheck(AF_INET, SOCK_STREAM, 0);
     sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(1500);
+    addr.sin_port = htons(fromString(argv[1]));
     addr.sin_addr.s_addr = INADDR_ANY;
     socklen_t addrLen = sizeof(addr);
     bindCheck(sock, (sockaddr*)&addr, addrLen);
