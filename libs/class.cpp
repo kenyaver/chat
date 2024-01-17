@@ -1,7 +1,7 @@
 #include "class.h"
 
 Client::Client(){
-    ID++;
+    this->ID++;
 }
 
 Client::Client(int sockfd){

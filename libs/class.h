@@ -1,7 +1,6 @@
 #ifndef CLASS_H
 #define CLASS_H
 
-#include "../libs/aheader.h"
 #include "../libs/check.h"
 #include "../libs/function.h"
 
