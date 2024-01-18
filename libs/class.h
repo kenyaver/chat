@@ -22,12 +22,12 @@ class Client{
     Client(const Client& a);
     
     ~Client();
-
-    void helloClient();
-
-    int readerStatus();
-
     void handleClient();
+    void helloClient();
+    int readerStatus();
+    int writeFile();
+    int talk();
 };
 
 inline std::vector<Client> client;
+

@@ -9,7 +9,7 @@ int main(int argc, char* argv[]){
     int sock = socket(AF_INET, SOCK_STREAM, 0);
         sockaddr_in addr;
         addr.sin_family = AF_INET;
-        addr.sin_port = htons(1500);
+        addr.sin_port = htons(fromString(argv[1]));
         inet_pton(AF_INET, "192.168.10.92", &addr.sin_addr);
         socklen_t addrLen = sizeof(addr);
         int err = connect(sock, (sockaddr*)&addr, addrLen);
@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
             err = connect(sock, (sockaddr*)&addr, addrLen);
         }
         char usernames[20];
-        sprintf(usernames, "%s %s", argv[1], argv[2]);
+        sprintf(usernames, "%s %s", argv[2], argv[3]);
         send(sock, usernames, 20, 0);
         char bufferR[BUFFERrSIZE];
         char bufferS[BUFFERsSize];

@@ -1,8 +1,12 @@
 #include<iostream>
 #include <vector>
 #include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 int main(){
-    std::cout << "Hello\n";
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    close(sock);
+    close(sock);
 }
     
