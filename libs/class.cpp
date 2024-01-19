@@ -48,6 +48,8 @@ int Client::readerStatus(){
 
 void Client::handleClient(){
     // thr = std::thread([&]{
+        // client.push_back({});
+        // client.back().sockfd = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
         helloClient();
         if(readerStatus() == 0){
             int i = 0;

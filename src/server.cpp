@@ -8,6 +8,7 @@ int main(int argc, char* argv[]){
     std::cout << "server`s IP-address: " << IPaddr << std::endl;
 
     std::vector<std::thread> t;
+    size_t countClient = 0;
 
     int sock = socketCheck(AF_INET, SOCK_STREAM, 0);
     sockaddr_in addr;
@@ -25,10 +26,6 @@ int main(int argc, char* argv[]){
             std::cout << "EBADF\n";
             continue;
         }
-        std::cout << "count if clients: " << client.size() << std::endl;
-        // t.push_back(std::thread([&]{
-        //     client.back().handleClient();
-        // }));
 
         t.push_back(std::thread(&Client::handleClient, client.back()));
         t.back().detach();

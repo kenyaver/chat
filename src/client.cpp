@@ -15,11 +15,18 @@ int main(int argc, char* argv[]){
         int err = connect(sock, (sockaddr*)&addr, addrLen);
         while(err == -1){
             err = connect(sock, (sockaddr*)&addr, addrLen);
+            std::cout << "connect error: " << errno << '\n';
+            exit(EXIT_FAILURE);
         }
         std::cout << "connected to server\n";
         char usernames[20];
         sprintf(usernames, "%s %s", argv[2], argv[3]);
         err = send(sock, usernames, 20, 0);
+        if(err == -1){
+            std::cout << errno << '\n';
+            close(sock);
+            exit(EXIT_FAILURE);
+        }
         std::cout << "usernames: " << err << " bytes\n";
         char bufferR[BUFFERrSIZE];
         char bufferS[BUFFERsSize];
@@ -29,7 +36,7 @@ int main(int argc, char* argv[]){
         if(err == -1){
             std::cout << errno << '\n';
             close(sock);
-            exit(1);
+            exit(EXIT_FAILURE);
         }
         char state[12];
         err = recv(sock, state, sizeof(state), 0);
@@ -37,7 +44,7 @@ int main(int argc, char* argv[]){
         if(err == -1){
             std::cout << errno << '\n';
             close(sock);
-            exit(1);
+            exit(EXIT_FAILURE);
         }
         std::thread r([&]{
             while(exitClient(bufferR) == 0 && exitClient(bufferS) == 0){
