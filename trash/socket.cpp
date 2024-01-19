@@ -1,7 +1,6 @@
 #include "../libs/check.h"
 #include "../libs/function.h"
-#include "../libs/struct.h"
-#include "../libs/talk.h"
+
 
 
 
