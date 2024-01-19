@@ -18,6 +18,10 @@ Client::~Client(){
     close(sockfd);
 }
 
+bool Client::operator==(Client& a){
+    return !strcmp(this->login, a.login) && this->sockfd == a.sockfd && this->status == a.status;
+}
+
 Client Client::operator()(){
     this->handleClient();
     return *this;
@@ -27,7 +31,7 @@ void Client::helloClient(){
     char usernames[20];
     int ret = recv(client.back().sockfd, usernames, 20, 0);
     if(ret > 0){
-        parse(usernames, login, reader);
+        parse(usernames, login, reader->login);
         char hello[32];
         sprintf(hello, "Hello %s!\n", login);
         int err = send(sockfd, hello, sizeof(hello), 0);
@@ -39,7 +43,7 @@ void Client::helloClient(){
 
 int Client::readerStatus(){
     for(auto i: client){
-        if(strcmp(i.login, this->reader) == 0){
+        if(i == *this->reader){
             return i.status;
         }
     }
@@ -47,9 +51,6 @@ int Client::readerStatus(){
 }
 
 void Client::handleClient(){
-    // thr = std::thread([&]{
-        // client.push_back({});
-        // client.back().sockfd = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
         helloClient();
         if(readerStatus() == 0){
             int i = 0;
@@ -69,7 +70,6 @@ void Client::handleClient(){
             std::cout << "talk\n";
             // talk();
         }
-    // });
     char bye[16];
     strcpy(bye, "bye!\n");
     send(sockfd, bye, sizeof(bye), 0);

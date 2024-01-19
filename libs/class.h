@@ -6,22 +6,20 @@
 class Client{
     private:
     char login[8];
-    char reader[8];
+    Client* reader;
     int status;
     char bufferRecv[1024];
     char bufferSend[1024];
-    std::thread thr;
     public:
 
     int sockfd;
 
     Client();
-
     Client(int sockfd);
-
     Client(const Client& a);
-    
     ~Client();
+
+    bool operator==(Client& a);
     Client operator()();
     void handleClient();
     void helloClient();
