@@ -26,7 +26,6 @@ int main(int argc, char* argv[]){
             std::cout << "EBADF\n";
             continue;
         }
-
         t.push_back(std::thread(&Client::handleClient, client.back()));
         t.back().detach();
     }

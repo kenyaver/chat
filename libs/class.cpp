@@ -3,11 +3,11 @@
 
 
 Client::Client(){
-    this->status = 1;
+    // this->status = 1;
 }
 
 Client::Client(int sockfd){
-    this->status = 1;
+    // this->status = 1;
     this->sockfd = sockfd;
 }
 
@@ -19,7 +19,7 @@ Client::~Client(){
 }
 
 bool Client::operator==(Client& a){
-    return !strcmp(this->login, a.login) && this->sockfd == a.sockfd && this->status == a.status;
+    return !strcmp(this->login, a.login);
 }
 
 Client Client::operator()(){
@@ -36,25 +36,27 @@ void Client::helloClient(){
         sprintf(hello, "Hello %s!\n", login);
         int err = send(sockfd, hello, sizeof(hello), 0);
         std::cout << login << " connected\n";
-        // bzero(bufferSend, sizeof(bufferSend));
         std::cout << err << ' ' << errno << '\n';
     }
 }
 
-int Client::readerStatus(){
+Client Client::findReader(char* reader){
     for(auto i: client){
         if(i == *this->reader){
-            return i.status;
+            return i;
         }
     }
-    return 0;
+    return Client(0);
 }
 
 void Client::handleClient(){
+        this->status = 1;
         helloClient();
-        if(readerStatus() == 0){
+        client.push_back(findReader(reader->login));
+
+        if(reader->status == 0){
             int i = 0;
-            while(readerStatus() == 0 && i < 4){
+            while(reader->status == 0 && i < 4){
                 send(sockfd, "offline\n", 12, 0);
                 int ret = recv(sockfd, bufferRecv, sizeof(bufferRecv), 0);
                 if(ret > 0){

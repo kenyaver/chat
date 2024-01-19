@@ -23,10 +23,13 @@ class Client{
     Client operator()();
     void handleClient();
     void helloClient();
-    int readerStatus();
+    Client findReader(char* reader);
+    // int readerStatus();
     int writeFile();
     int talk();
 };
 
 inline std::vector<Client> client;
+
+
 
