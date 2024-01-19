@@ -9,6 +9,8 @@
 #include <cstdlib>
 #include <utility>
 #include <memory>
+
+#include <errno.h>
 #include <exception>
 
 #include <sys/socket.h>

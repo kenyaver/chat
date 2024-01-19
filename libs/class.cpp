@@ -18,15 +18,22 @@ Client::~Client(){
     close(sockfd);
 }
 
+Client Client::operator()(){
+    this->handleClient();
+    return *this;
+}
+
 void Client::helloClient(){
     char usernames[20];
     int ret = recv(client.back().sockfd, usernames, 20, 0);
     if(ret > 0){
         parse(usernames, login, reader);
-        sprintf(bufferSend, "Hello %s!\n", login);
-        int err = send(sockfd, bufferSend, sizeof(bufferSend), 0);
-        bzero(bufferSend, sizeof(bufferSend));
-        std::cout << err << '\n';
+        char hello[32];
+        sprintf(hello, "Hello %s!\n", login);
+        int err = send(sockfd, hello, sizeof(hello), 0);
+        std::cout << login << " connected\n";
+        // bzero(bufferSend, sizeof(bufferSend));
+        std::cout << err << ' ' << errno << '\n';
     }
 }
 
@@ -40,11 +47,12 @@ int Client::readerStatus(){
 }
 
 void Client::handleClient(){
-    thr = std::thread([&]{
-        this->helloClient();
+    // thr = std::thread([&]{
+        helloClient();
         if(readerStatus() == 0){
             int i = 0;
             while(readerStatus() == 0 && i < 4){
+                send(sockfd, "offline\n", 12, 0);
                 int ret = recv(sockfd, bufferRecv, sizeof(bufferRecv), 0);
                 if(ret > 0){
                     writeFile();
@@ -55,13 +63,11 @@ void Client::handleClient(){
                 }
             }
         } else {
+            send(sockfd, "online\n", 12, 0);
             std::cout << "talk\n";
             // talk();
         }
-    });
-
-    thr.detach();
-    while(this->status == 1){}
+    // });
     char bye[16];
     strcpy(bye, "bye!\n");
     send(sockfd, bye, sizeof(bye), 0);

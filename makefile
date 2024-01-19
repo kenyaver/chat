@@ -4,6 +4,10 @@ app: server client
 
 lib: check.o function.o class.o
 
+test: check.o function.o class.o
+	g++ -E  src/server.cpp -o build/server.ii
+	g++ -E  src/client.cpp -o build/client.ii
+
 check.o:
 	g++ -c libs/check.cpp -o build/check.o
 

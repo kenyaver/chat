@@ -22,6 +22,7 @@ class Client{
     Client(const Client& a);
     
     ~Client();
+    Client operator()();
     void handleClient();
     void helloClient();
     int readerStatus();

@@ -16,19 +16,40 @@ int main(int argc, char* argv[]){
         while(err == -1){
             err = connect(sock, (sockaddr*)&addr, addrLen);
         }
+        std::cout << "connected to server\n";
         char usernames[20];
         sprintf(usernames, "%s %s", argv[2], argv[3]);
-        send(sock, usernames, 20, 0);
+        err = send(sock, usernames, 20, 0);
+        std::cout << "usernames: " << err << " bytes\n";
         char bufferR[BUFFERrSIZE];
         char bufferS[BUFFERsSize];
+        char hello[32];
+        err = recv(sock, hello, sizeof(hello), 0);
+        std::cout << hello << " -> " << err << " bytes\n";
+        if(err == -1){
+            std::cout << errno << '\n';
+            close(sock);
+            exit(1);
+        }
+        char state[12];
+        err = recv(sock, state, sizeof(state), 0);
+        std:: cout << state << " -> " << err << " bytes\n";
+        if(err == -1){
+            std::cout << errno << '\n';
+            close(sock);
+            exit(1);
+        }
         std::thread r([&]{
             while(exitClient(bufferR) == 0 && exitClient(bufferS) == 0){
                 int ret = recv(sock, bufferR, BUFFERrSIZE, 0);
+                if(ret == 0){
+                    continue;
+                }
                 if(ret > 0){
-                    std::cout << bufferR;
-                } else {
-                    std::cout << errno << std::endl;
-                    break;
+                    std::cout << bufferR << std::endl;
+                }
+                if(ret == -1){
+                    std::cout << errno << '\n';
                 }
             }
         });
