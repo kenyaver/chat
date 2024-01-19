@@ -8,9 +8,11 @@ build/client
 
 #ignore object-files
 *.o
+*.ii
 
 #ignore logCheck
 logicheck.cpp
 
 #ignore trash
-/trash
+/.trash
+/.testProject
