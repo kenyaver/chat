@@ -72,8 +72,10 @@ void parse(char* src, char* dst1, char* dst2){
             dst1[j] = src[i];
             j++;
         } else {
-            dst2[k] = src[i];
-            k++;
+            if(src[i] != '\0'){
+                dst2[k] = src[i];
+                k++;
+            }
         }
     }
 }

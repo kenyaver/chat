@@ -34,6 +34,7 @@ int acceptCheck(int sockfd, struct sockaddr* addr, socklen_t* lenAddr){
     if(res == -1){
         printf("accept failed\n");
         std::cout << errno << '\n';
+        exit(EXIT_FAILURE);
     }
     return res;
 }

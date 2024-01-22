@@ -5,15 +5,15 @@
 #define BUFFERsSize 1025
 
 int main(int argc, char* argv[]){
-    if(strlen(argv[1]) < 9 && strlen(argv[2]) < 9){
+    if(strlen(argv[3]) < 9 && strlen(argv[4]) < 9){
     int sock = socket(AF_INET, SOCK_STREAM, 0);
         sockaddr_in addr;
         addr.sin_family = AF_INET;
-        addr.sin_port = htons(fromString(argv[1]));
-        inet_pton(AF_INET, "192.168.10.92", &addr.sin_addr);
+        addr.sin_port = htons(fromString(argv[2]));
+        inet_pton(AF_INET, argv[1], &addr.sin_addr);
         socklen_t addrLen = sizeof(addr);
         int err = connect(sock, (sockaddr*)&addr, addrLen);
-        while(err == -1){
+        if(err == -1){
             err = connect(sock, (sockaddr*)&addr, addrLen);
             std::cout << "connect error: " << errno << '\n';
             exit(EXIT_FAILURE);
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]){
         char bufferR[BUFFERrSIZE];
         char bufferS[BUFFERsSize];
         char hello[32];
-        err = recv(sock, hello, sizeof(hello), 0);
+        err = recv(sock, hello, sizeof(hello), MSG_WAITALL);
         std::cout << hello << " -> " << err << " bytes\n";
         if(err == -1){
             std::cout << errno << '\n';

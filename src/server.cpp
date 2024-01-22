@@ -22,12 +22,13 @@ int main(int argc, char* argv[]){
     for(;;){
         client.push_back({});
         client.back().sockfd = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
-        if(client.back().sockfd == -1){
-            std::cout << "EBADF\n";
-            continue;
-        }
-        t.push_back(std::thread(&Client::handleClient, client.back()));
-        t.back().detach();
+
+        // int accepter = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
+        // client.push_back(accepter);
+        client.back().handleClient();
+        
+        // t.push_back(std::thread(&Client::handleClient, std::ref(client.back())));
+        // t.back().detach();
     }
     close(sock);
     return 0;
