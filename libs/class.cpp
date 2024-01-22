@@ -3,12 +3,15 @@
 
 
 Client::Client(){
-    // this->status = 1;
+    this->sockfd = 0;
+    this->status = 1;
 }
 
 Client::Client(int sockfd){
-    // this->status = 1;
+    this->status = 1;
     this->sockfd = sockfd;
+    // reader = new Client();
+    // reader->status = 0;
 }
 
 Client::Client(const Client& a): Client(a.sockfd){}
@@ -16,6 +19,7 @@ Client::Client(const Client& a): Client(a.sockfd){}
 Client::~Client(){
     this->status = 0;
     close(sockfd);
+    // delete reader;
 }
 
 bool Client::operator==(Client& a){
@@ -29,7 +33,7 @@ Client Client::operator()(){
 
 void Client::helloClient(){
     char usernames[20];
-    int ret = recv(this->sockfd, usernames, sizeof(usernames), MSG_WAITALL);
+    int ret = recv(sockfd, usernames, sizeof(usernames), MSG_WAITALL);
     if(ret > 0){
         parse(usernames, login, reader->login);
         std::cout << login << ' ' << reader->login << '\n';
@@ -41,26 +45,24 @@ void Client::helloClient(){
     } else {
         std::cout << "error recv usernames\n";
         std::cout << errno << '\n';
+        std::cout << this->sockfd << '\n';
         exit(EXIT_FAILURE);
     }
 }
 
-Client Client::findReader(){
+void Client::findReader(){
     for(auto i: client){
         if(i == *this->reader){
             *reader = i;
-            return *reader;
         }
     }
-    return *reader;
 }
 
 void Client::handleClient(){
     std::thread t([&]{
         this->status = 1;
         helloClient();
-        Client tmp(findReader());
-        reader = &tmp;
+        findReader();
         std::cout << reader->status << '\n';
     });
     t.detach();
