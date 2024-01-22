@@ -23,7 +23,7 @@ class Client{
     Client operator()();
     void handleClient();
     void helloClient();
-    Client findReader(char* reader);
+    Client findReader();
     // int readerStatus();
     int writeFile();
     int talk();

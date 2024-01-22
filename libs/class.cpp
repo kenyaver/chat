@@ -40,20 +40,20 @@ void Client::helloClient(){
     }
 }
 
-Client Client::findReader(char* reader){
+Client Client::findReader(){
     for(auto i: client){
         if(i == *this->reader){
-            return i;
+            *reader = i;
+            return *reader;
         }
     }
-    return Client(0);
+    return *reader;
 }
 
 void Client::handleClient(){
         this->status = 1;
         helloClient();
-        client.push_back(findReader(reader->login));
-
+        findReader();
         if(reader->status == 0){
             int i = 0;
             while(reader->status == 0 && i < 4){
