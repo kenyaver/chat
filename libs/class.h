@@ -17,6 +17,7 @@ class Client{
     Client();
     Client(int sockfd);
     Client(const Client& a);
+    Client(int sock, sockaddr *addr, socklen_t *addrLen);
     ~Client();
 
     bool operator==(Client& a);

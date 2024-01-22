@@ -20,13 +20,13 @@ int main(int argc, char* argv[]){
     listenCheck(sock, 20);
 
     for(;;){
-        client.push_back({});
+        client.push_back(Client(sock, (sockaddr*)&addr, &addrLen)); // добавляет в вектор класс, ожидающий подключения клиента
         std::cout << client.back().sockfd << '\n';
-        client.back().sockfd = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
+        // client.back().sockfd = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
         // std::cout << client.back().sockfd << '\n';
         // int accepter = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
         // client.push_back(&accepter);
-        std::cout << client.back().sockfd << '\n';
+        // std::cout << client.back().sockfd << '\n';
         client.back().handleClient();
         // t.push_back(std::thread(&Client::handleClient, std::ref(client.back())));
         // t.back().detach();

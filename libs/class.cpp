@@ -3,18 +3,26 @@
 
 
 Client::Client(){
-    this->sockfd = 0;
     this->status = 1;
 }
 
-Client::Client(int sockfd){
-    this->status = 1;
-    this->sockfd = sockfd;
-    // reader = new Client();
-    // reader->status = 0;
+// Client::Client(int sockfd){
+//     this->status = 1;
+//     this->sockfd = sockfd;
+//     // reader = new Client();
+//     // reader->status = 0;
+// }
+
+// Client::Client(const Client& a): Client(a.sockfd){}
+
+Client::Client(const Client& a){
+    strcpy(this->login, a.login);
+    this->sockfd = a.sockfd;
 }
 
-Client::Client(const Client& a): Client(a.sockfd){}
+Client::Client(int sock, sockaddr *addr, socklen_t *addrLen){
+    this->sockfd = acceptCheck(sock, addr, addrLen);
+}
 
 Client::~Client(){
     this->status = 0;
@@ -59,13 +67,13 @@ void Client::findReader(){
 }
 
 void Client::handleClient(){
-    std::thread t([&]{
+    // std::thread t([&]{
         this->status = 1;
         helloClient();
         findReader();
         std::cout << reader->status << '\n';
-    });
-    t.detach();
+    // });
+    // t.detach();
         // if(reader->status == 0){
         //     int i = 0;
         //     while(reader->status == 0 && i < 4){
