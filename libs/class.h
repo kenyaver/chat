@@ -5,11 +5,11 @@
 
 class Client{
     private:
+    char bufferRecv[1024];
+    char bufferSend[1024];
     char login[8];
     Client* reader;
     int status;
-    char bufferRecv[1024];
-    char bufferSend[1024];
     public:
 
     int sockfd;
@@ -25,6 +25,7 @@ class Client{
     void handleClient();
     void helloClient();
     void findReader() noexcept;
+    int acceptClient(int sock, sockaddr_in addr);
     // int readerStatus();
     int writeFile();
     int talk();

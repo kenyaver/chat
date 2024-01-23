@@ -6,12 +6,13 @@
 
 int main(int argc, char* argv[]){
     if(strlen(argv[3]) < 9 && strlen(argv[4]) < 9){
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
+        int sock = socket(AF_INET, SOCK_STREAM, 0);
         sockaddr_in addr;
         addr.sin_family = AF_INET;
         addr.sin_port = htons(fromString(argv[2]));
         inet_pton(AF_INET, argv[1], &addr.sin_addr);
         socklen_t addrLen = sizeof(addr);
+
         int err = connect(sock, (sockaddr*)&addr, addrLen);
         if(err == -1){
             err = connect(sock, (sockaddr*)&addr, addrLen);
@@ -19,33 +20,38 @@ int main(int argc, char* argv[]){
             exit(EXIT_FAILURE);
         }
         std::cout << "connected to server\n";
+
         char usernames[20];
-        sprintf(usernames, "%s %s", argv[2], argv[3]);
-        err = send(sock, usernames, 20, 0);
+        sprintf(usernames, "%s %s", argv[3], argv[4]);
+        err = send(sock, usernames, sizeof(usernames), 0);
         if(err == -1){
             std::cout << errno << '\n';
             close(sock);
             exit(EXIT_FAILURE);
         }
         std::cout << "usernames: " << err << " bytes\n";
+        
+        char hello[32];
+
+        err = recv(sock, hello, sizeof(hello), MSG_WAITALL);
+        if(err < 1){
+            std::cout << errno << '\n';
+            close(sock);
+            exit(EXIT_FAILURE);
+        }
+        std::cout << hello << " -> " << err << " bytes\n";
+
+        char state[12];
+        err = recv(sock, state, sizeof(state), MSG_WAITALL);
+        if(err < 1){
+            std::cout << errno << '\n';
+            close(sock);
+            exit(EXIT_FAILURE);
+        }
+        std:: cout << state << " -> " << err << " bytes\n";
+        
         char bufferR[BUFFERrSIZE];
         char bufferS[BUFFERsSize];
-        char hello[32];
-        err = recv(sock, hello, sizeof(hello), MSG_WAITALL);
-        std::cout << hello << " -> " << err << " bytes\n";
-        if(err == -1){
-            std::cout << errno << '\n';
-            close(sock);
-            exit(EXIT_FAILURE);
-        }
-        char state[12];
-        err = recv(sock, state, sizeof(state), 0);
-        std:: cout << state << " -> " << err << " bytes\n";
-        if(err == -1){
-            std::cout << errno << '\n';
-            close(sock);
-            exit(EXIT_FAILURE);
-        }
         std::thread r([&]{
             while(exitClient(bufferR) == 0 && exitClient(bufferS) == 0){
                 int ret = recv(sock, bufferR, BUFFERrSIZE, 0);

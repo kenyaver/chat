@@ -24,8 +24,9 @@ int main(int argc, char* argv[]){
 
     for(;;){
         try{
-            client.push_back(Client(sock, (sockaddr*)&addr, &addrLen)); // добавляет в вектор класс, ожидающий подключения клиента
-            std::cout << "new client accepted\n";
+            // client.push_back(Client(sock, (sockaddr*)&addr, &addrLen)); // добавляет в вектор класс, ожидающий подключения клиента
+            client.push_back({});
+            client.back().acceptClient(sock, addr);
             client.back().handleClient();
         } catch(const char* errorMessage){
             std::cout << errorMessage << std::endl;

@@ -2,9 +2,8 @@
 
 
 
-Client::Client(){
-    this->status = 1;
-}
+Client::Client(){}
+
 
 // Client::Client(int sockfd){
 //     this->status = 1;
@@ -22,7 +21,7 @@ Client::Client(const Client& a){
 
 Client::Client(int sock, sockaddr *addr, socklen_t *addrLen){
     try{
-        this->sockfd = acceptCheck(sock, addr, addrLen);
+        this->sockfd = accept(sock, addr, addrLen);
     } catch(const char* errorMessage){
         throw errorMessage;
     }
@@ -42,6 +41,16 @@ Client Client::operator()(){
     return *this;
 }
 
+int Client::acceptClient(int sock, sockaddr_in addr){
+    try{
+        socklen_t addrLen = sizeof(addr);
+        this->sockfd = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
+        std::cout << "new client accepted\n";
+    } catch(const char* errorMessage){
+        std::cout << errorMessage << std::endl;
+    }
+}
+
 void Client::helloClient(){
     char usernames[20];
     int ret = recv(sockfd, usernames, sizeof(usernames), MSG_WAITALL);
@@ -52,7 +61,6 @@ void Client::helloClient(){
         sprintf(hello, "Hello %s!\n", login);
         int err = send(sockfd, hello, sizeof(hello), 0);
         std::cout << login << " connected\n";
-        std::cout << err << ' ' << errno << '\n';
     } else {
         throw "error recv usernames";
     }
@@ -74,8 +82,8 @@ void Client::handleClient(){
         } catch(const char* errorMessage){
             std::cout << errorMessage << ": " << errno << '\n';
             // exit(EXIT_FAILURE);
-            this->status = 0;
             throw "client disconnected";
+            this->~Client();
             return;
         }
         findReader();
