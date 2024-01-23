@@ -1,5 +1,6 @@
 #include "check.h"
 
+
 int socketCheck(int domain, int type, int protocol){
     int sock = socket(domain, type, protocol);
     if(sock == -1){
@@ -10,6 +11,7 @@ int socketCheck(int domain, int type, int protocol){
    }
    return sock;
 }
+
 
 int bindCheck(int fd, struct sockaddr* addr, socklen_t lenAddr){
     int err = bind(fd, addr, lenAddr);
@@ -22,6 +24,7 @@ int bindCheck(int fd, struct sockaddr* addr, socklen_t lenAddr){
     return err;
 }
 
+
 void listenCheck(int sockfd, int backlog){
     int res = listen(sockfd, 16);
     if(res == -1){
@@ -31,6 +34,7 @@ void listenCheck(int sockfd, int backlog){
         throw "listen failed";
     }
 }
+
 
 int acceptCheck(int sockfd, struct sockaddr* addr, socklen_t* lenAddr){
     int res = accept(sockfd, addr, lenAddr);
@@ -43,6 +47,7 @@ int acceptCheck(int sockfd, struct sockaddr* addr, socklen_t* lenAddr){
     return res;
 }
 
+
 int connectCheck(int sockfd, const struct sockaddr* addr, socklen_t addrlen){
     int res = connect(sockfd, addr, addrlen);
     if(res == -1){
@@ -54,6 +59,7 @@ int connectCheck(int sockfd, const struct sockaddr* addr, socklen_t addrlen){
     return res;
 }
 
+
 int buffCheck(char* buffer){
     int size = strlen(buffer);
     if(size >= 1024){
@@ -61,6 +67,7 @@ int buffCheck(char* buffer){
     }
     return 0;
 }
+
 
 int exitClient(char* buffer){
     int size = strlen(buffer);
@@ -71,6 +78,7 @@ int exitClient(char* buffer){
     }
     return 0;
 }
+
 
 int keepAlive(int sock){
     struct timespec timeout;

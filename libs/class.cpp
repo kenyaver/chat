@@ -2,7 +2,7 @@
 
 
 
-Client::Client(){}
+Client::Client() noexcept{}
 
 
 // Client::Client(int sockfd){
@@ -14,7 +14,7 @@ Client::Client(){}
 
 // Client::Client(const Client& a): Client(a.sockfd){}
 
-Client::Client(const Client& a){
+Client::Client(const Client& a) noexcept{
     strcpy(this->login, a.login);
     this->sockfd = a.sockfd;
 }
@@ -27,17 +27,17 @@ Client::Client(int sock, sockaddr *addr, socklen_t *addrLen){
     }
 }
 
-Client::~Client(){
+Client::~Client() noexcept{
     this->status = 0;
     // std::cout << "close socket\n";
     // close(sockfd);
 }
 
-bool Client::operator==(Client& a){
+bool Client::operator==(Client& a) noexcept{
     return !strcmp(this->login, a.login);
 }
 
-Client Client::operator()(){
+Client Client::operator()() noexcept{
     this->handleClient();
     return *this;
 }
@@ -56,7 +56,7 @@ void Client::sendHelloClient(){
     char usernames[20];
     int ret = recv(sockfd, usernames, sizeof(usernames), MSG_WAITALL);
     if(ret > 0){
-        parse(usernames, login, reader->login);
+        parseNames(usernames, login, reader->login);
         char hello[32];
         sprintf(hello, "Hello %s!\n", login);
         int err = send(sockfd, hello, sizeof(hello), 0);
@@ -99,7 +99,7 @@ void Client::handleClient(){
         }
         findReader();
         sendStateSession();
-        
+
     // });
     // t.detach();
         // if(reader->status == 0){

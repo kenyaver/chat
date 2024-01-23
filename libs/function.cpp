@@ -39,10 +39,10 @@ char* getIPaddr(char* IPaddr){
     return IPaddr;
 }
 
-int getFileSize(const char* file_name){
+int getFileSize(const char* fileName){
 	int file_size = 0;
 	struct stat fileStatbuff;
-	int fd = open(file_name, O_RDONLY);
+	int fd = open(fileName, O_RDONLY);
 	if(fd == -1){
 		file_size = -1;
 	}
@@ -58,7 +58,7 @@ int getFileSize(const char* file_name){
 	return file_size;
 }
 
-void parse(const char* src, char* dst1, char* dst2){
+void parseNames(const char* src, char* dst1, char* dst2){
     char sep[10] = " \0";
     char *isrc;
 

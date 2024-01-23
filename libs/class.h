@@ -11,25 +11,52 @@ class Client{
     Client* reader;
     int status;
     public:
-
+    // сокет для общения между клиентом и сервером
     int sockfd;
 
+    // конструктор по умолчанию
     Client() noexcept;
+
+    // конструктор для конструктора копирования
     Client(int sockfd) noexcept;
+
+    // конструктор копирования
     Client(const Client& a) noexcept;
+
+    // неудачная попытка принимать клиента при создании объекта
     Client(int sock, sockaddr *addr, socklen_t *addrLen);
+
+    // деструктор 
     ~Client() noexcept;
 
+    // сравнивает логины клиентов
     bool operator==(Client& a) noexcept;
+
+    // пока что без предназначения
     Client operator()() noexcept;
+
+    // принятие клиента
     void acceptClient(int sock, sockaddr_in addr);
+
+    // обработка клиента и подготовка к общению
     void handleClient();
+
+    // принятие первого сообщения от клиента (логинов) и отправка приветствия клиенту
     void sendHelloClient();
-    void findReader() noexcept; // находит клиента с таким именем и присвает его указателю reader
+
+    // находит клиента с таким именем и присвает его указателю reader
+    void findReader() noexcept;
+
+    // отправляет клиенту-отправителю статус подключения клиента-получателя
     void sendStateSession() noexcept;
-    // int readerStatus();
+
+
+    // запись в файл полученных сообщений
     int writeFile();
+
+    // принятие сообщений, отправка команд клиенту-получателю и проверка подключения клиентов к серверу
     int talk();
 };
 
+// контейнер всех клиентов
 inline std::vector<Client> client;

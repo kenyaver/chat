@@ -3,10 +3,19 @@
 
 #include "aheader.h"
 
-char* toString(char* str, int val); // return int to char* (1 -> "1")
-int fromString(const char* s); // return string to int ("1" -> 1)
-char* getIPaddr(char* IPaddr); // return your IP-address
-int getFileSize(const char* file_name); // return size of file
-void parse(const char* src, char* dst1, char* dst2); // set dst1 and dst2 from src 
+// конвертирует целочисленное значение, переданное во втором парамете, в строку, переданную в первом параметре
+char* toString(char* str, int val);
+
+// конвертирует строку, переданную в параметре в число (число возвращается функцией)
+int fromString(const char* s);
+
+// возвращает IP адрес устройства, подключенного к Интернету
+char* getIPaddr(char* IPaddr);
+
+// возвращает размер файла, путь до которого передан в параметре
+int getFileSize(const char* fileName);
+
+// парсит src в dst1 и dst2 по пробелу (src{"Artem artem"} -> dst1{Artem}, dst2{artem})
+void parseNames(const char* src, char* dst1, char* dst2); // set dst1 and dst2 from src 
 
 #endif
