@@ -17,19 +17,21 @@ int main(int argc, char* argv[]){
         sock = socketCheck(AF_INET, SOCK_STREAM, 0);
         bindCheck(sock, (sockaddr*)&addr, addrLen);
         listenCheck(sock, 20);
-    } catch(char* errorMessage){
-        std::cout << errorMessage;
+    } catch(const char* errorMessage){
+        std::cout << errorMessage << std::endl;
+        exit(EXIT_FAILURE);
     }
 
     for(;;){
-        client.push_back(Client(sock, (sockaddr*)&addr, &addrLen)); // добавляет в вектор класс, ожидающий подключения клиента
-        std::cout << client.back().sockfd << '\n';
-        // client.back().sockfd = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
-        // std::cout << client.back().sockfd << '\n';
-        // int accepter = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
-        // client.push_back(&accepter);
-        // std::cout << client.back().sockfd << '\n';
-        client.back().handleClient();
+        try{
+            client.push_back(Client(sock, (sockaddr*)&addr, &addrLen)); // добавляет в вектор класс, ожидающий подключения клиента
+            std::cout << "new client accepted\n";
+            client.back().handleClient();
+        } catch(const char* errorMessage){
+            std::cout << errorMessage << std::endl;
+            // exit(EXIT_FAILURE);
+            continue;
+        }
         // t.push_back(std::thread(&Client::handleClient, std::ref(client.back())));
         // t.back().detach();
     }

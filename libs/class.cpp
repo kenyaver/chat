@@ -23,16 +23,14 @@ Client::Client(const Client& a){
 Client::Client(int sock, sockaddr *addr, socklen_t *addrLen){
     try{
         this->sockfd = acceptCheck(sock, addr, addrLen);
-    } catch(char* errorMessage){
-        std::cout << errorMessage;
-        exit(EXIT_FAILURE);
+    } catch(const char* errorMessage){
+        throw errorMessage;
     }
 }
 
 Client::~Client(){
     this->status = 0;
     close(sockfd);
-    // delete reader;
 }
 
 bool Client::operator==(Client& a){
@@ -56,14 +54,11 @@ void Client::helloClient(){
         std::cout << login << " connected\n";
         std::cout << err << ' ' << errno << '\n';
     } else {
-        std::cout << "error recv usernames\n";
-        std::cout << errno << '\n';
-        std::cout << this->sockfd << '\n';
-        exit(EXIT_FAILURE);
+        throw "error recv usernames";
     }
 }
 
-void Client::findReader(){
+void Client::findReader() noexcept{
     for(auto i: client){
         if(i == *this->reader){
             *reader = i;
@@ -74,7 +69,15 @@ void Client::findReader(){
 void Client::handleClient(){
     // std::thread t([&]{
         this->status = 1;
-        helloClient();
+        try{
+            helloClient();
+        } catch(const char* errorMessage){
+            std::cout << errorMessage << ": " << errno << '\n';
+            // exit(EXIT_FAILURE);
+            this->status = 0;
+            throw "client disconnected";
+            return;
+        }
         findReader();
         std::cout << reader->status << '\n';
     // });

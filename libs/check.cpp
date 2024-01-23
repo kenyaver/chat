@@ -6,7 +6,7 @@ int socketCheck(int domain, int type, int protocol){
         // perror("socket failed\n");
         // std::cout << errno << '\n';
         // exit(EXIT_FAILURE);
-        throw "socket failed\n";
+        throw "socket failed";
    }
    return sock;
 }
@@ -17,7 +17,7 @@ int bindCheck(int fd, struct sockaddr* addr, socklen_t lenAddr){
         // perror("bind failed\n");
         // std::cout << errno << '\n';
         // exit(EXIT_FAILURE);
-        throw "bind failed\n";
+        throw "bind failed";
     }
     return err;
 }
@@ -28,7 +28,7 @@ void listenCheck(int sockfd, int backlog){
         // perror("listen failed\n");
         // std::cout << errno << '\n';
         // exit(EXIT_FAILURE);
-        throw "listen failed\n";
+        throw "listen failed";
     }
 }
 
@@ -38,7 +38,7 @@ int acceptCheck(int sockfd, struct sockaddr* addr, socklen_t* lenAddr){
         // printf("accept failed\n");
         // std::cout << errno << '\n';
         // exit(EXIT_FAILURE);
-        throw "accept failed\n";
+        throw "accept failed";
     }
     return res;
 }

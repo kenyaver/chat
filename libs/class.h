@@ -24,7 +24,7 @@ class Client{
     Client operator()();
     void handleClient();
     void helloClient();
-    void findReader();
+    void findReader() noexcept;
     // int readerStatus();
     int writeFile();
     int talk();
