@@ -29,7 +29,8 @@ Client::Client(int sock, sockaddr *addr, socklen_t *addrLen){
 
 Client::~Client(){
     this->status = 0;
-    close(sockfd);
+    // std::cout << "close socket\n";
+    // close(sockfd);
 }
 
 bool Client::operator==(Client& a){
@@ -41,13 +42,13 @@ Client Client::operator()(){
     return *this;
 }
 
-int Client::acceptClient(int sock, sockaddr_in addr){
+void Client::acceptClient(int sock, sockaddr_in addr){
     try{
         socklen_t addrLen = sizeof(addr);
         this->sockfd = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
         std::cout << "new client accepted\n";
     } catch(const char* errorMessage){
-        std::cout << errorMessage << std::endl;
+        throw errorMessage;
     }
 }
 
@@ -56,7 +57,6 @@ void Client::helloClient(){
     int ret = recv(sockfd, usernames, sizeof(usernames), MSG_WAITALL);
     if(ret > 0){
         parse(usernames, login, reader->login);
-        std::cout << login << ' ' << reader->login << '\n';
         char hello[32];
         sprintf(hello, "Hello %s!\n", login);
         int err = send(sockfd, hello, sizeof(hello), 0);
@@ -76,6 +76,7 @@ void Client::findReader() noexcept{
 
 void Client::handleClient(){
     // std::thread t([&]{
+        reader = new Client();
         this->status = 1;
         try{
             helloClient();
@@ -87,7 +88,8 @@ void Client::handleClient(){
             return;
         }
         findReader();
-        std::cout << reader->status << '\n';
+        std::cout << "reader`s status: " << reader->status << '\n';
+
     // });
     // t.detach();
         // if(reader->status == 0){
@@ -111,6 +113,8 @@ void Client::handleClient(){
     // char bye[16];
     // strcpy(bye, "bye!\n");
     // send(sockfd, bye, sizeof(bye), 0);
+
+    delete reader; 
 }
 
 int Client::writeFile(){

@@ -58,24 +58,39 @@ int getFileSize(const char* file_name){
 	return file_size;
 }
 
-void parse(char* src, char* dst1, char* dst2){
-    int size = strlen(src);
-    int flagdst = 0;
-    int j = 0;
-    int k = 0;
-    for(int i = 0; i < size; i++){
-        if(src[i] == ' '){
-            flagdst++;
-            continue;
-        }
-        if(flagdst == 0){
-            dst1[j] = src[i];
-            j++;
-        } else {
-            if(src[i] != '\0'){
-                dst2[k] = src[i];
-                k++;
-            }
-        }
-    }
+void parse(const char* src, char* dst1, char* dst2){
+    char sep[10] = " \0";
+    char *isrc;
+
+    isrc = strtok (const_cast<char*>(src), sep);
+    strcpy(dst1, isrc);
+        
+    isrc = strtok (NULL, sep);
+    strcpy(dst2, isrc);
 }
+
+// void parse(char* src, char* dst1, char* dst2){
+//     std::cout << "start parsing\n";
+//     int size = strlen(src);
+//     int flagdst = 0;
+//     int j = 0;
+//     int k = 0;
+//     for(int i = 0; i < size; i++){
+//         if(src[i] == ' '){
+//             flagdst++;
+//             continue;
+//         }
+//         if(flagdst == 0){
+//             dst1[j] = src[i];
+//             j++;
+//         } else {
+//             if(src[i] != '\0'){
+//                 dst2[k] = src[i];
+//                 k++;
+//             } else {
+//                 break;
+//             }
+//         }
+//     }
+//     std::cout << dst1 << ' ' << dst2 << '\n';
+// }

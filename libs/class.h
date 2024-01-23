@@ -25,13 +25,10 @@ class Client{
     void handleClient();
     void helloClient();
     void findReader() noexcept;
-    int acceptClient(int sock, sockaddr_in addr);
+    void acceptClient(int sock, sockaddr_in addr);
     // int readerStatus();
     int writeFile();
     int talk();
 };
 
 inline std::vector<Client> client;
-
-
-
