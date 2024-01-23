@@ -21,7 +21,12 @@ Client::Client(const Client& a){
 }
 
 Client::Client(int sock, sockaddr *addr, socklen_t *addrLen){
-    this->sockfd = acceptCheck(sock, addr, addrLen);
+    try{
+        this->sockfd = acceptCheck(sock, addr, addrLen);
+    } catch(char* errorMessage){
+        std::cout << errorMessage;
+        exit(EXIT_FAILURE);
+    }
 }
 
 Client::~Client(){

@@ -3,38 +3,42 @@
 int socketCheck(int domain, int type, int protocol){
     int sock = socket(domain, type, protocol);
     if(sock == -1){
-        perror("socket failed\n");
-        std::cout << errno << '\n';
-        exit(EXIT_FAILURE);
+        // perror("socket failed\n");
+        // std::cout << errno << '\n';
+        // exit(EXIT_FAILURE);
+        throw "socket failed\n";
    }
    return sock;
 }
 
 int bindCheck(int fd, struct sockaddr* addr, socklen_t lenAddr){
-    int bin = bind(fd, addr, lenAddr);
-    if(bin == -1){
-        perror("bind failed\n");
-        std::cout << errno << '\n';
-        exit(EXIT_FAILURE);
+    int err = bind(fd, addr, lenAddr);
+    if(err == -1){
+        // perror("bind failed\n");
+        // std::cout << errno << '\n';
+        // exit(EXIT_FAILURE);
+        throw "bind failed\n";
     }
-    return bin;
+    return err;
 }
 
 void listenCheck(int sockfd, int backlog){
     int res = listen(sockfd, 16);
     if(res == -1){
-        perror("listen failed\n");
-        std::cout << errno << '\n';
+        // perror("listen failed\n");
+        // std::cout << errno << '\n';
         // exit(EXIT_FAILURE);
+        throw "listen failed\n";
     }
 }
 
 int acceptCheck(int sockfd, struct sockaddr* addr, socklen_t* lenAddr){
     int res = accept(sockfd, addr, lenAddr);
     if(res == -1){
-        printf("accept failed\n");
-        std::cout << errno << '\n';
-        exit(EXIT_FAILURE);
+        // printf("accept failed\n");
+        // std::cout << errno << '\n';
+        // exit(EXIT_FAILURE);
+        throw "accept failed\n";
     }
     return res;
 }
@@ -42,9 +46,10 @@ int acceptCheck(int sockfd, struct sockaddr* addr, socklen_t* lenAddr){
 int connectCheck(int sockfd, const struct sockaddr* addr, socklen_t addrlen){
     int res = connect(sockfd, addr, addrlen);
     if(res == -1){
-        perror("connect fail\n");
-        std::cout << errno << '\n';
-        exit(EXIT_FAILURE);
+        // perror("connect fail\n");
+        // std::cout << errno << '\n';
+        // exit(EXIT_FAILURE);
+        throw "connect failed\n";
     }
     return res;
 }

@@ -7,17 +7,19 @@ int main(int argc, char* argv[]){
     getIPaddr(IPaddr);
     std::cout << "server`s IP-address: " << IPaddr << std::endl;
 
-    // std::vector<std::thread> t;
-    // size_t countClient = 0;
-
-    int sock = socketCheck(AF_INET, SOCK_STREAM, 0);
+    int sock;
     sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(fromString(argv[1]));
     addr.sin_addr.s_addr = INADDR_ANY;
     socklen_t addrLen = sizeof(addr);
-    bindCheck(sock, (sockaddr*)&addr, addrLen);
-    listenCheck(sock, 20);
+    try{
+        sock = socketCheck(AF_INET, SOCK_STREAM, 0);
+        bindCheck(sock, (sockaddr*)&addr, addrLen);
+        listenCheck(sock, 20);
+    } catch(char* errorMessage){
+        std::cout << errorMessage;
+    }
 
     for(;;){
         client.push_back(Client(sock, (sockaddr*)&addr, &addrLen)); // добавляет в вектор класс, ожидающий подключения клиента
