@@ -52,7 +52,7 @@ void Client::acceptClient(int sock, sockaddr_in addr){
     }
 }
 
-void Client::helloClient(){
+void Client::sendHelloClient(){
     char usernames[20];
     int ret = recv(sockfd, usernames, sizeof(usernames), MSG_WAITALL);
     if(ret > 0){
@@ -74,12 +74,22 @@ void Client::findReader() noexcept{
     }
 }
 
+void Client::sendStateSession() noexcept{
+    char state[12];
+    if(this->reader->status == 0){
+        strcpy(state, "offline\n");
+    } else {
+        strcpy(state, "online\n");
+    }
+    send(this->sockfd, state, sizeof(state), 0);
+}
+
 void Client::handleClient(){
     // std::thread t([&]{
         reader = new Client();
         this->status = 1;
         try{
-            helloClient();
+            sendHelloClient();
         } catch(const char* errorMessage){
             std::cout << errorMessage << ": " << errno << '\n';
             // exit(EXIT_FAILURE);
@@ -88,8 +98,8 @@ void Client::handleClient(){
             return;
         }
         findReader();
-        std::cout << "reader`s status: " << reader->status << '\n';
-
+        sendStateSession();
+        
     // });
     // t.detach();
         // if(reader->status == 0){
@@ -121,7 +131,7 @@ int Client::writeFile(){
     char filename[32];
     sprintf(filename, "../offline/%s.txt", reader->login);
     FILE* file = fopen(filename, "a+");
-    if(getFileSize(filename) < 4128){
+    if(getFileSize(filename) < 4136){
         fprintf(file, "%s: %s", login, bufferSend);
     } else{
         std::cout << "file is FULL\n";

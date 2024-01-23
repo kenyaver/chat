@@ -14,18 +14,19 @@ class Client{
 
     int sockfd;
 
-    Client();
-    Client(int sockfd);
-    Client(const Client& a);
+    Client() noexcept;
+    Client(int sockfd) noexcept;
+    Client(const Client& a) noexcept;
     Client(int sock, sockaddr *addr, socklen_t *addrLen);
-    ~Client();
+    ~Client() noexcept;
 
-    bool operator==(Client& a);
-    Client operator()();
-    void handleClient();
-    void helloClient();
-    void findReader() noexcept;
+    bool operator==(Client& a) noexcept;
+    Client operator()() noexcept;
     void acceptClient(int sock, sockaddr_in addr);
+    void handleClient();
+    void sendHelloClient();
+    void findReader() noexcept; // находит клиента с таким именем и присвает его указателю reader
+    void sendStateSession() noexcept;
     // int readerStatus();
     int writeFile();
     int talk();
