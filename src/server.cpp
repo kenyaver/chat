@@ -1,5 +1,3 @@
-#include "../libs/check.h"
-#include "../libs/function.h"
 #include "../libs/class.h"
 
 int main(int argc, char* argv[]){
@@ -24,17 +22,13 @@ int main(int argc, char* argv[]){
 
     for(;;){
         try{
-            // client.push_back(Client(sock, (sockaddr*)&addr, &addrLen)); // добавляет в вектор класс, ожидающий подключения клиента
             client.push_back({});
             client.back().acceptClient(sock, addr);
             client.back().handleClient();
         } catch(const char* errorMessage){
             std::cout << errorMessage << std::endl;
-            // exit(EXIT_FAILURE);
             continue;
         }
-        // t.push_back(std::thread(&Client::handleClient, std::ref(client.back())));
-        // t.back().detach();
     }
     close(sock);
     return 0;

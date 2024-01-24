@@ -1,18 +1,6 @@
 #include "class.h"
 
-
-
-Client::Client() noexcept{}
-
-
-// Client::Client(int sockfd){
-//     this->status = 1;
-//     this->sockfd = sockfd;
-//     // reader = new Client();
-//     // reader->status = 0;
-// }
-
-// Client::Client(const Client& a): Client(a.sockfd){}
+Client::Client() noexcept = default;
 
 Client::Client(const Client& a) noexcept{
     strcpy(this->login, a.login);
@@ -29,8 +17,6 @@ Client::Client(int sock, sockaddr *addr, socklen_t *addrLen){
 
 Client::~Client() noexcept{
     this->status = 0;
-    // std::cout << "close socket\n";
-    // close(sockfd);
 }
 
 bool Client::operator==(Client& a) noexcept{
@@ -74,57 +60,62 @@ void Client::findReader() noexcept{
     }
 }
 
-void Client::sendStateSession() noexcept{
+int Client::sendStateSession() noexcept{
     char state[12];
+    int res;
     if(this->reader->status == 0){
         strcpy(state, "offline\n");
+        res = 0;
     } else {
         strcpy(state, "online\n");
+        res = 1;
     }
     send(this->sockfd, state, sizeof(state), 0);
+
+    return res;
+}
+
+void Client::closeSocket(){
+    if(this->sockfd != -1){
+        close(this->sockfd);
+        this->sockfd = -1;
+        std::cout << this->login << "`s socket successfully closed\n";
+    } else{
+        std::cout << "error: this socket was already closed\n";
+    }
 }
 
 void Client::handleClient(){
-    // std::thread t([&]{
-        reader = new Client();
-        this->status = 1;
-        try{
-            sendHelloClient();
-        } catch(const char* errorMessage){
-            std::cout << errorMessage << ": " << errno << '\n';
-            // exit(EXIT_FAILURE);
-            throw "client disconnected";
-            this->~Client();
-            return;
+    this->reader = new Client();
+    this->status = 1;
+    try{
+        this->sendHelloClient();
+    } catch(const char* errorMessage){
+        std::cout << errorMessage << ": " << errno << '\n';
+        // exit(EXIT_FAILURE);
+        throw "client disconnected";
+        this->~Client();
+        return;
+    }
+
+    this->findReader();
+
+    if(this->sendStateSession() == 0){
+        int i = 0;
+        while(i < 4){
+            int ret = recv(this->sockfd, this->bufferRecv, sizeof(bufferRecv), 0);
+            if(ret == -1){
+                throw "error recv message for offline client\n";
+                break;
+            }
+            this->writeFile();
+            i++;
         }
-        findReader();
-        sendStateSession();
+        send(this->sockfd, "limit send to offline~\n", 24, 0);
+    }
 
-    // });
-    // t.detach();
-        // if(reader->status == 0){
-        //     int i = 0;
-        //     while(reader->status == 0 && i < 4){
-        //         send(sockfd, "offline\n", 12, 0);
-        //         int ret = recv(sockfd, bufferRecv, sizeof(bufferRecv), 0);
-        //         if(ret > 0){
-        //             writeFile();
-        //             i++;
-        //         } else {
-        //             std::cout << errno << std::endl;
-        //             exit(EXIT_FAILURE);
-        //         }
-        //     }
-        // } else {
-        //     send(sockfd, "online\n", 12, 0);
-        //     std::cout << "talk\n";
-        //     // talk();
-        // }
-    // char bye[16];
-    // strcpy(bye, "bye!\n");
-    // send(sockfd, bye, sizeof(bye), 0);
-
-    delete reader; 
+    delete reader;
+    this->closeSocket();
 }
 
 int Client::writeFile(){

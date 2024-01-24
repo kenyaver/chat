@@ -48,8 +48,9 @@ class Client{
     void findReader() noexcept;
 
     // отправляет клиенту-отправителю статус подключения клиента-получателя
-    void sendStateSession() noexcept;
+    int sendStateSession() noexcept;
 
+    void closeSocket();
 
     // запись в файл полученных сообщений
     int writeFile();

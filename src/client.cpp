@@ -50,7 +50,7 @@ int main(int argc, char* argv[]){
         }
         std:: cout << state << " -> " << err << " bytes\n";
 
-        exit(EXIT_SUCCESS);
+        // exit(EXIT_SUCCESS);
         
         char bufferR[BUFFERrSIZE];
         char bufferS[BUFFERsSize];
