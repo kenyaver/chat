@@ -12,9 +12,18 @@ int socketCheck(int domain, int type, int protocol){
    return sock;
 }
 
+int createTCPsocket(int protocol){
+    int sock = socket(AF_INET, SOCK_STREAM, protocol);
+    if(sock == -1){
+        throw "socket failed";
+    }
+    return sock;
+}
 
-int bindCheck(int fd, struct sockaddr* addr, socklen_t lenAddr){
-    int err = bind(fd, addr, lenAddr);
+
+int bindCheck(int fd, struct sockaddr* addr){
+    socklen_t addrLen = sizeof(*addr);
+    int err = bind(fd, addr, addrLen);
     if(err == -1){
         // perror("bind failed\n");
         // std::cout << errno << '\n';
@@ -100,7 +109,6 @@ int keepAlive(int sock){
     }
 
     if(fidesc.revents && POLLIN){
-        // client ok
         fidesc.revents = 0;
     }
     return 0;

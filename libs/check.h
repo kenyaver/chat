@@ -6,8 +6,10 @@
 // создание сокета
 int socketCheck(int domain, int type, int protocol);
 
+int createTCPsocket(int protocol);
+
 // присоединение сокета к адресу
-int bindCheck(int fd, struct sockaddr* addr, socklen_t lenAddr);
+int bindCheck(int fd, struct sockaddr* addr);
 
 // начало прослушивания порта
 void listenCheck(int sockfd, int backlog);

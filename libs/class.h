@@ -5,11 +5,48 @@
 
 class Client{
     private:
-    char bufferRecv[1024];
-    char bufferSend[1024];
-    char login[8];
-    Client* reader;
-    int status;
+    char bufferRecv[1024]; // буффер для принятия сообщений
+    char bufferSend[1032]; // буффер для отправки сообщений
+    char bufferUnconfirm[4096]; // буффер неподтвержденных сообщений
+    char login[8]; // username клиента
+    Client* reader; // указатель на клиента-получателя
+    int status; // статус клиента
+
+    // обработка и запись в файл сообщений для оффлайн-пользователя
+    void recverOffline();
+
+    // запись в файл
+    int writeFile();
+
+    // принятие сообщений, отправка команд клиенту-получателю и проверка подключения клиентов к серверу
+    void talk();
+
+    // создает команду для отправки клиенту-получателю на основе bufferRecv
+    void setCommand(int id);
+
+    // находит клиента с таким именем и присвает его указателю reader
+    void findReader() noexcept;
+
+    // отправляет клиенту-отправителю статус подключения клиента-получателя
+    int sendStateSession() noexcept;
+
+    // принятие первого сообщения от клиента (логинов) и отправка приветствия клиенту
+    void sendHelloClient();
+
+    // очищает переданное сообщение из буффера неподтвержденных сообщений
+    void clearMessageFromBufferUnconfirm(char* message);
+
+    void checkReader(){
+        char *delim = " ";
+        char* delimFlag = ":";
+        char* newReaderFlag = strtok(bufferRecv, delim);
+        if(strstr(newReaderFlag, ":") != NULL){
+            char* newReader = strtok(newReaderFlag, delimFlag);
+            strcpy(this->reader->login, newReader);
+            this->findReader();
+        }
+    }
+
     public:
     // сокет для общения между клиентом и сервером
     int sockfd;
@@ -41,22 +78,10 @@ class Client{
     // обработка клиента и подготовка к общению
     void handleClient();
 
-    // принятие первого сообщения от клиента (логинов) и отправка приветствия клиенту
-    void sendHelloClient();
 
-    // находит клиента с таким именем и присвает его указателю reader
-    void findReader() noexcept;
 
-    // отправляет клиенту-отправителю статус подключения клиента-получателя
-    int sendStateSession() noexcept;
-
+    // закрывает сокет и задает ему значение -1
     void closeSocket();
-
-    // запись в файл полученных сообщений
-    int writeFile();
-
-    // принятие сообщений, отправка команд клиенту-получателю и проверка подключения клиентов к серверу
-    int talk();
 };
 
 // контейнер всех клиентов

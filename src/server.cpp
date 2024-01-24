@@ -10,10 +10,9 @@ int main(int argc, char* argv[]){
     addr.sin_family = AF_INET;
     addr.sin_port = htons(fromString(argv[1]));
     addr.sin_addr.s_addr = INADDR_ANY;
-    socklen_t addrLen = sizeof(addr);
     try{
-        sock = socketCheck(AF_INET, SOCK_STREAM, 0);
-        bindCheck(sock, (sockaddr*)&addr, addrLen);
+        sock = createTCPsocket(0);
+        bindCheck(sock, reinterpret_cast<sockaddr*>(&addr));
         listenCheck(sock, 20);
     } catch(const char* errorMessage){
         std::cout << errorMessage << std::endl;

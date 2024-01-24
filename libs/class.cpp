@@ -63,6 +63,8 @@ void Client::findReader() noexcept{
 int Client::sendStateSession() noexcept{
     char state[12];
     int res;
+
+    this->findReader();
     if(this->reader->status == 0){
         strcpy(state, "offline\n");
         res = 0;
@@ -98,25 +100,23 @@ void Client::handleClient(){
         return;
     }
 
-    this->findReader();
-
     if(this->sendStateSession() == 0){
         int i = 0;
-        while(i < 4){
-            int ret = recv(this->sockfd, this->bufferRecv, sizeof(bufferRecv), 0);
-            if(ret == -1){
-                throw "error recv message for offline client\n";
-                break;
-            }
+        while(this->sendStateSession() == 0 && i < 4){
             try{
-                this->writeFile();
+                    this->recverOffline();
+                i++;
+                if(i == 4){
+                    send(this->sockfd, "limit send to offline~\n", 24, 0);
+                }
             } catch(const char* errorMessage){
-                std::cout << errorMessage << std::endl;
-                break;
+                throw errorMessage;
+                return;
             }
-            i++;
+            
         }
-        send(this->sockfd, "limit send to offline~\n", 24, 0);
+    } else {
+        std::cout << "talk...\n";
     }
 
     delete reader;
@@ -134,4 +134,76 @@ int Client::writeFile(){
         throw "file is FULL";
     }
     return getFileSize(filename);
+}
+
+void Client::talk(){
+    struct timespec timeout;
+    timeout.tv_sec = 10;
+    struct pollfd fidesc;
+    fidesc.fd = this->sockfd;
+    fidesc.events = POLLIN;
+    int afk = 0; // time of afk client in milliseconds
+    int id = 0;
+    char answer[4];
+    while(afk < 300000){
+        int res = ppoll(&fidesc, 1, &timeout, NULL);
+        if(res == 0){
+            afk += 10000;
+            if(afk == 180000){
+                send(this->sockfd, "you innactive!\n", 16, 0);
+            }
+        }
+
+        if(res == -1){
+            throw "ppoll failed";
+        }
+
+        if(res > 0){
+            fidesc.revents = 0;
+            afk = 0;
+            recv(this->sockfd, bufferRecv, sizeof(bufferRecv), 0);
+            this->checkReader();
+            this->setCommand(id);
+            id++;
+            strcat(bufferUnconfirm, bufferRecv);
+            send(this->reader->sockfd, bufferSend, sizeof(bufferSend), 0);
+            if(keepAlive(this->reader->sockfd) == 0){
+                recv(this->reader->sockfd, answer, sizeof(answer), 0);
+                clearMessageFromBufferUnconfirm(bufferRecv);
+            } else {
+
+            }
+        }
+    }
+}
+
+void Client::setCommand(int id){
+    char id_str[4];
+    toString(id_str, id);
+    sprintf(bufferSend, "%s %s: %s", id_str, this->login, bufferRecv);
+}
+
+void Client::clearMessageFromBufferUnconfirm(char* message){
+    char* find = strstr(bufferUnconfirm, message);
+
+    if (find!=NULL) {
+        char* find_ = find + strlen(message);
+        strcpy (find, find_);
+    }
+}
+
+void Client::recverOffline(){
+    int ret = recv(this->sockfd, this->bufferRecv, sizeof(bufferRecv), 0);
+    if(ret == -1){
+        throw "error recv message for offline client\n";
+        return;
+    }
+    try{
+        this->writeFile();
+    } catch(const char* errorMessage){
+        std::cout << errorMessage << std::endl;
+        return;
+    }
+
+    
 }

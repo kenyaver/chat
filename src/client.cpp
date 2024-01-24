@@ -39,7 +39,7 @@ int main(int argc, char* argv[]){
             close(sock);
             exit(EXIT_FAILURE);
         }
-        std::cout << hello << " -> " << err << " bytes\n"; // !!
+        std::cout << hello << std::endl;
 
         char state[12];
         err = recv(sock, state, sizeof(state), MSG_WAITALL);
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]){
             close(sock);
             exit(EXIT_FAILURE);
         }
-        std:: cout << state << " -> " << err << " bytes\n";
+        std:: cout << state << std::endl;
 
         // exit(EXIT_SUCCESS);
         
