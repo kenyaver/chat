@@ -108,7 +108,12 @@ void Client::handleClient(){
                 throw "error recv message for offline client\n";
                 break;
             }
-            this->writeFile();
+            try{
+                this->writeFile();
+            } catch(const char* errorMessage){
+                std::cout << errorMessage << std::endl;
+                break;
+            }
             i++;
         }
         send(this->sockfd, "limit send to offline~\n", 24, 0);
@@ -121,12 +126,12 @@ void Client::handleClient(){
 int Client::writeFile(){
     char filename[32];
     sprintf(filename, "../offline/%s.txt", reader->login);
-    FILE* file = fopen(filename, "a+");
     if(getFileSize(filename) < 4136){
-        fprintf(file, "%s: %s", login, bufferSend);
+        FILE* file = fopen(filename, "a+");
+        fprintf(file, "%s: %s\n", login, bufferRecv);
+        fclose(file);
     } else{
-        std::cout << "file is FULL\n";
+        throw "file is FULL";
     }
-    fclose(file);
     return getFileSize(filename);
 }
