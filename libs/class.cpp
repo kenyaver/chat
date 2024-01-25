@@ -40,6 +40,44 @@ Client Client::operator()() noexcept{
 
 
 
+void Client::handleClient(){
+    this->reader = new Client();
+    this->status = 1;
+    try{
+        this->sendHelloClient();
+    } catch(const char* errorMessage){
+        std::cout << errorMessage << ": " << errno << '\n';
+        // exit(EXIT_FAILURE);
+        throw "client disconnected";
+        this->~Client();
+        return;
+    }
+
+    if(this->sendStateSession() == 0){
+        int i = 0;
+        while(this->sendStateSession() == 0 && i < 4){
+            try{
+                    this->recverOffline();
+                i++;
+                if(i == 4){
+                    send(this->sockfd, "limit send to offline~\n", 24, 0);
+                }
+            } catch(const char* errorMessage){
+                throw errorMessage;
+                return;
+            }
+            
+        }
+    } else {
+        std::cout << "talk...\n";
+    }
+
+    delete reader;
+    this->closeSocket();
+}
+
+
+
 void Client::acceptClient(int sock, sockaddr_in addr){
     try{
         socklen_t addrLen = sizeof(addr);
@@ -109,44 +147,6 @@ void Client::closeSocket(){
 
 
 
-void Client::handleClient(){
-    this->reader = new Client();
-    this->status = 1;
-    try{
-        this->sendHelloClient();
-    } catch(const char* errorMessage){
-        std::cout << errorMessage << ": " << errno << '\n';
-        // exit(EXIT_FAILURE);
-        throw "client disconnected";
-        this->~Client();
-        return;
-    }
-
-    if(this->sendStateSession() == 0){
-        int i = 0;
-        while(this->sendStateSession() == 0 && i < 4){
-            try{
-                    this->recverOffline();
-                i++;
-                if(i == 4){
-                    send(this->sockfd, "limit send to offline~\n", 24, 0);
-                }
-            } catch(const char* errorMessage){
-                throw errorMessage;
-                return;
-            }
-            
-        }
-    } else {
-        std::cout << "talk...\n";
-    }
-
-    delete reader;
-    this->closeSocket();
-}
-
-
-
 int Client::writeFile(){
     char filename[32];
     sprintf(filename, "../offline/%s.txt", reader->login);
@@ -165,11 +165,12 @@ int Client::writeFile(){
 void Client::talk(){
     struct timespec timeout;
     timeout.tv_sec = 10;
-    struct pollfd fidesc;
+    struct pollfd fidesc;               // создание структур для ppoll
     fidesc.fd = this->sockfd;
     fidesc.events = POLLIN;
+
+
     int afk = 0; // time of afk client in milliseconds
-    int id = 0;
     char answer[4];
     while(afk < 300000){
 
@@ -188,12 +189,7 @@ void Client::talk(){
         if(res > 0){
             fidesc.revents = 0;
             afk = 0;
-            recv(this->sockfd, bufferRecv, sizeof(bufferRecv), 0);
-            this->checkReader();
-            this->setCommand(id);
-            id++;                                                                   // обработка и переотправка сообщений 
-            strcat(bufferUnconfirm, bufferRecv);
-            send(this->reader->sockfd, bufferSend, sizeof(bufferSend), 0);
+            this->forwarding();
             if(keepAlive(this->reader->sockfd) == 0){
                 recv(this->reader->sockfd, answer, sizeof(answer), 0);
                 clearMessageFromBufferUnconfirm(bufferRecv);
@@ -207,10 +203,21 @@ void Client::talk(){
 
 
 
-void Client::setCommand(int id){
+void Client::forwarding(){
+    recv(this->sockfd, bufferRecv, sizeof(bufferRecv), 0);
+    this->checkReader();
+    this->setCommand();                                                    // обработка и переотправка сообщений 
+    strcat(bufferUnconfirm, bufferRecv);
+    send(this->reader->sockfd, bufferSend, sizeof(bufferSend), 0);
+}
+
+
+
+void Client::setCommand(){
     char id_str[4];
-    toString(id_str, id);
+    toString(id_str, this->messageID);
     sprintf(bufferSend, "%s %s: %s", id_str, this->login, bufferRecv);
+    this->messageID++;
 }
 
 

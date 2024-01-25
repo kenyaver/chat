@@ -6,6 +6,7 @@
 // создание сокета
 int socketCheck(int domain, int type, int protocol);
 
+// создание TCP сокета (с парметрами AF_INET, SOCK_STREAM, protocol)
 int createTCPsocket(int protocol);
 
 // присоединение сокета к адресу
