@@ -36,16 +36,7 @@ class Client{
     // очищает переданное сообщение из буффера неподтвержденных сообщений
     void clearMessageFromBufferUnconfirm(char* message);
 
-    void checkReader(){
-        char *delim = " ";
-        char* delimFlag = ":";
-        char* newReaderFlag = strtok(bufferRecv, delim);
-        if(strstr(newReaderFlag, ":") != NULL){
-            char* newReader = strtok(newReaderFlag, delimFlag);
-            strcpy(this->reader->login, newReader);
-            this->findReader();
-        }
-    }
+    void checkReader();
 
     public:
     // сокет для общения между клиентом и сервером

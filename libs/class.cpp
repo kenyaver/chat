@@ -2,10 +2,14 @@
 
 Client::Client() noexcept = default;
 
+
+
 Client::Client(const Client& a) noexcept{
     strcpy(this->login, a.login);
     this->sockfd = a.sockfd;
 }
+
+
 
 Client::Client(int sock, sockaddr *addr, socklen_t *addrLen){
     try{
@@ -15,18 +19,26 @@ Client::Client(int sock, sockaddr *addr, socklen_t *addrLen){
     }
 }
 
+
+
 Client::~Client() noexcept{
     this->status = 0;
 }
+
+
 
 bool Client::operator==(Client& a) noexcept{
     return !strcmp(this->login, a.login);
 }
 
+
+
 Client Client::operator()() noexcept{
     this->handleClient();
     return *this;
 }
+
+
 
 void Client::acceptClient(int sock, sockaddr_in addr){
     try{
@@ -37,6 +49,8 @@ void Client::acceptClient(int sock, sockaddr_in addr){
         throw errorMessage;
     }
 }
+
+
 
 void Client::sendHelloClient(){
     char usernames[20];
@@ -52,6 +66,8 @@ void Client::sendHelloClient(){
     }
 }
 
+
+
 void Client::findReader() noexcept{
     for(auto i: client){
         if(i == *this->reader){
@@ -59,6 +75,8 @@ void Client::findReader() noexcept{
         }
     }
 }
+
+
 
 int Client::sendStateSession() noexcept{
     char state[12];
@@ -77,6 +95,8 @@ int Client::sendStateSession() noexcept{
     return res;
 }
 
+
+
 void Client::closeSocket(){
     if(this->sockfd != -1){
         close(this->sockfd);
@@ -86,6 +106,8 @@ void Client::closeSocket(){
         std::cout << "error: this socket was already closed\n";
     }
 }
+
+
 
 void Client::handleClient(){
     this->reader = new Client();
@@ -123,6 +145,8 @@ void Client::handleClient(){
     this->closeSocket();
 }
 
+
+
 int Client::writeFile(){
     char filename[32];
     sprintf(filename, "../offline/%s.txt", reader->login);
@@ -136,6 +160,8 @@ int Client::writeFile(){
     return getFileSize(filename);
 }
 
+
+
 void Client::talk(){
     struct timespec timeout;
     timeout.tv_sec = 10;
@@ -146,6 +172,7 @@ void Client::talk(){
     int id = 0;
     char answer[4];
     while(afk < 300000){
+
         int res = ppoll(&fidesc, 1, &timeout, NULL);
         if(res == 0){
             afk += 10000;
@@ -164,24 +191,29 @@ void Client::talk(){
             recv(this->sockfd, bufferRecv, sizeof(bufferRecv), 0);
             this->checkReader();
             this->setCommand(id);
-            id++;
+            id++;                                                                   // обработка и переотправка сообщений 
             strcat(bufferUnconfirm, bufferRecv);
             send(this->reader->sockfd, bufferSend, sizeof(bufferSend), 0);
             if(keepAlive(this->reader->sockfd) == 0){
                 recv(this->reader->sockfd, answer, sizeof(answer), 0);
                 clearMessageFromBufferUnconfirm(bufferRecv);
             } else {
-
+                this->recverOffline();
+                break;
             }
         }
     }
 }
+
+
 
 void Client::setCommand(int id){
     char id_str[4];
     toString(id_str, id);
     sprintf(bufferSend, "%s %s: %s", id_str, this->login, bufferRecv);
 }
+
+
 
 void Client::clearMessageFromBufferUnconfirm(char* message){
     char* find = strstr(bufferUnconfirm, message);
@@ -191,6 +223,8 @@ void Client::clearMessageFromBufferUnconfirm(char* message){
         strcpy (find, find_);
     }
 }
+
+
 
 void Client::recverOffline(){
     int ret = recv(this->sockfd, this->bufferRecv, sizeof(bufferRecv), 0);
@@ -204,6 +238,17 @@ void Client::recverOffline(){
         std::cout << errorMessage << std::endl;
         return;
     }
-
-    
 }
+
+
+
+void Client::checkReader(){
+        char *delim = " ";
+        char* delimFlag = ":";
+        char* newReaderFlag = strtok(bufferRecv, delim);
+        if(strstr(newReaderFlag, ":") != NULL){
+            char* newReader = strtok(newReaderFlag, delimFlag);
+            strcpy(this->reader->login, newReader);
+            this->findReader();
+        }
+    }
