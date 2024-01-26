@@ -9,9 +9,6 @@ char* toString(char* str, int val);
 // конвертирует строку, переданную в параметре в число (число возвращается функцией)
 int fromString(const char* s);
 
-// возвращает IP адрес устройства, подключенного к Интернету
-char* getIPaddr(char* IPaddr);
-
 // возвращает размер файла, путь до которого передан в параметре
 int getFileSize(const char* fileName);
 

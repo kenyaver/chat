@@ -1,8 +1,18 @@
 #include "../libs/check.h"
 #include "../libs/function.h"
 
-#define BUFFERrSIZE 1024
-#define BUFFERsSize 1025
+#define BUFFERrSIZE 1032
+#define BUFFERsSize 1032
+
+int getMessage(char* message){
+    char* delim = (char*)" ";
+    char* messageID = strtok(message, delim);
+    return fromString(messageID);
+}
+
+char* returnID(char* id_str, int id){
+    return toString(id_str, id);
+}
 
 int main(int argc, char* argv[]){
     if(strlen(argv[3]) < 9 && strlen(argv[4]) < 9){
@@ -54,13 +64,18 @@ int main(int argc, char* argv[]){
         
         char bufferR[BUFFERrSIZE];
         char bufferS[BUFFERsSize];
+        char* id_str;
         std::thread r([&]{
             while(exitClient(bufferR) == 0 && exitClient(bufferS) == 0){
                 int ret = recv(sock, bufferR, BUFFERrSIZE, 0);
+                
                 if(ret == 0){
                     continue;
                 }
                 if(ret > 0){
+                    if(getMessage(bufferR) != -1){
+                        send(sock, returnID(id_str, getMessage(bufferR)), sizeof(returnID(id_str, getMessage(bufferR))), 0);
+                    }
                     std::cout << bufferR << std::endl;
                 }
                 if(ret == -1){
@@ -70,13 +85,17 @@ int main(int argc, char* argv[]){
         });
 
         std::thread s([&]{
+            int id = 0;
+            char* strID;
             while(exitClient(bufferR) == 0 && exitClient(bufferS) == 0){
                 std::cin.getline(bufferS, BUFFERsSize);
                 if(strlen(bufferS) == BUFFERsSize){
                     std::cout << "error message\n";
                     break;
                 } else {
+                    sprintf(bufferS, "%s %s", toString(strID, id), bufferS);
                     send(sock, bufferS, 1024, 0);
+                    id++;
                 }
             }
         });

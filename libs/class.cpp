@@ -47,20 +47,20 @@ void Client::handleClient(){
         this->sendHelloClient();
     } catch(const char* errorMessage){
         std::cout << errorMessage << ": " << errno << '\n';
-        // exit(EXIT_FAILURE);
         throw "client disconnected";
         this->~Client();
         return;
     }
-
-    if(this->sendStateSession() == 0){
+    char state[12];
+    if(this->stateSession(state) == 0){
+        send(this->sockfd, state, sizeof(state), 0);
         int i = 0;
-        while(this->sendStateSession() == 0 && i < 4){
+        while(this->stateSession(state) == 0 && i < 4){
             try{
-                    this->recverOffline();
+                this->recverOffline();
                 i++;
                 if(i == 4){
-                    send(this->sockfd, "limit send to offline~\n", 24, 0);
+                    send(this->sockfd, "limit send to offline\n", 24, 0);
                 }
             } catch(const char* errorMessage){
                 throw errorMessage;
@@ -68,8 +68,10 @@ void Client::handleClient(){
             }
             
         }
-    } else {
-        std::cout << "talk...\n";
+    } 
+
+    if(this->stateSession(state) == 1){
+        this->talk();
     }
 
     delete reader;
@@ -116,8 +118,7 @@ void Client::findReader() noexcept{
 
 
 
-int Client::sendStateSession() noexcept{
-    char state[12];
+int Client::stateSession(char* state) noexcept{
     int res;
 
     this->findReader();
@@ -128,7 +129,6 @@ int Client::sendStateSession() noexcept{
         strcpy(state, "online\n");
         res = 1;
     }
-    send(this->sockfd, state, sizeof(state), 0);
 
     return res;
 }
@@ -171,7 +171,7 @@ void Client::talk(){
 
 
     int afk = 0; // time of afk client in milliseconds
-    char answer[4];
+    char answer[1024];
     while(afk < 300000){
 
         int res = ppoll(&fidesc, 1, &timeout, NULL);
@@ -192,8 +192,12 @@ void Client::talk(){
             this->forwarding();
             if(keepAlive(this->reader->sockfd) == 0){
                 recv(this->reader->sockfd, answer, sizeof(answer), 0);
+                if(answerCheck(answer)){
+                    this->answerClient(200);
+                }
                 clearMessageFromBufferUnconfirm(bufferRecv);
             } else {
+                this->answerClient(300);
                 this->recverOffline();
                 break;
             }
@@ -203,31 +207,48 @@ void Client::talk(){
 
 
 
+void Client::answerClient(int statusCode){
+    sprintf(bufferSend, "%d: %d", messageID, statusCode);
+    send(this->sockfd, bufferSend, sizeof(bufferSend), 0);
+}
+
+
+
+int Client::answerCheck(char* answer){
+    int answerInt = fromString(answer);
+    if(answerInt != -1){
+        if(answerInt == this->messageID){
+            return 0;
+        }
+    }
+    return 1;
+}
+
+
+
 void Client::forwarding(){
     recv(this->sockfd, bufferRecv, sizeof(bufferRecv), 0);
-    this->checkReader();
-    this->setCommand();                                                    // обработка и переотправка сообщений 
-    strcat(bufferUnconfirm, bufferRecv);
+    this->checkReader();                                             // обработка и переотправка сообщений 
+    for(int i = 0; i < 4; i++){
+        if(bufferUnconfirm[i] == NULL){
+            sprintf(bufferUnconfirm[i], "%s", bufferRecv);          // TODO сделать проверку на зполненность буффера
+            break;
+        }
+    }
     send(this->reader->sockfd, bufferSend, sizeof(bufferSend), 0);
 }
 
 
 
-void Client::setCommand(){
-    char id_str[4];
-    toString(id_str, this->messageID);
-    sprintf(bufferSend, "%s %s: %s", id_str, this->login, bufferRecv);
-    this->messageID++;
-}
-
-
-
 void Client::clearMessageFromBufferUnconfirm(char* message){
-    char* find = strstr(bufferUnconfirm, message);
-
-    if (find!=NULL) {
-        char* find_ = find + strlen(message);
-        strcpy (find, find_);
+    char* find;
+    for(int i = 0; i < 4; i++){
+        find = strstr(bufferUnconfirm[i], message);
+        
+        if (find!=NULL) {
+            char* find_ = find + strlen(message);
+            strcpy (find, find_);
+        }
     }
 }
 
@@ -250,12 +271,12 @@ void Client::recverOffline(){
 
 
 void Client::checkReader(){
-        char *delim = " ";
-        char* delimFlag = ":";
-        char* newReaderFlag = strtok(bufferRecv, delim);
-        if(strstr(newReaderFlag, ":") != NULL){
-            char* newReader = strtok(newReaderFlag, delimFlag);
-            strcpy(this->reader->login, newReader);
-            this->findReader();
-        }
+    char *delim = (char*)" ";
+    char* delimFlag = (char*)":";
+    char* newReaderFlag = strtok(bufferRecv, delim);
+    if(strstr(newReaderFlag, (char*)":") != NULL){
+        char* newReader = strtok(newReaderFlag, delimFlag);
+        strcpy(this->reader->login, newReader);
+        this->findReader();
     }
+}

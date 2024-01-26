@@ -7,7 +7,7 @@ class Client{
     private:
     char bufferRecv[1024]; // буффер для принятия сообщений
     char bufferSend[1032]; // буффер для отправки сообщений
-    char bufferUnconfirm[4096]; // буффер неподтвержденных сообщений
+    char bufferUnconfirm[4][1024]; // буффер неподтвержденных сообщений
     char login[8]; // username клиента
     Client* reader; // указатель на клиента-получателя
     int status; // статус клиента
@@ -22,17 +22,19 @@ class Client{
     // принятие сообщений, отправка команд клиенту-получателю и проверка подключения клиентов к серверу
     void talk();
 
+    void answerClient(int statusCode);
+
+    // проверка ответа от клиента
+    int answerCheck(char* answer);
+
     // пересылает полученные сообщения партнеру
     void forwarding();
-
-    // создает команду для отправки клиенту-получателю на основе bufferRecv
-    void setCommand();
 
     // находит клиента с таким именем и присвает его указателю reader
     void findReader() noexcept;
 
     // отправляет клиенту-отправителю статус подключения клиента-получателя
-    int sendStateSession() noexcept;
+    int stateSession(char* state) noexcept;
 
     // принятие первого сообщения от клиента (логинов) и отправка приветствия клиенту
     void sendHelloClient();
