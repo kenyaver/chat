@@ -4,10 +4,17 @@
 #define BUFFERrSIZE 1032
 #define BUFFERsSize 1032
 
-int getMessage(char* message){
-    char* delim = (char*)" ";
-    char* messageID = strtok(message, delim);
-    return fromString(messageID);
+char* getMessage(char* message, char* messageID){
+    int i = 0;
+    while(message[i] != ' '){
+        messageID[i] = message[i];
+    }
+    if(fromString(messageID) != -1){
+        return messageID;
+    }
+    else{
+        return (char*)"not answer";
+    }
 }
 
 char* returnID(char* id_str, int id){
@@ -67,14 +74,15 @@ int main(int argc, char* argv[]){
         char* id_str;
         std::thread r([&]{
             while(exitClient(bufferR) == 0 && exitClient(bufferS) == 0){
-                int ret = recv(sock, bufferR, BUFFERrSIZE, 0);
+                int ret = recv(sock, bufferR, sizeof(bufferR), 0);
                 
                 if(ret == 0){
                     continue;
                 }
                 if(ret > 0){
-                    if(getMessage(bufferR) != -1){
-                        send(sock, returnID(id_str, getMessage(bufferR)), sizeof(returnID(id_str, getMessage(bufferR))), 0);
+                    id_str = getMessage(bufferR, id_str);
+                    if(strcmp(id_str, "not answer") != 0){
+                        send(sock, id_str, sizeof(id_str), 0);
                     }
                     std::cout << bufferR << std::endl;
                 }
@@ -88,13 +96,16 @@ int main(int argc, char* argv[]){
             int id = 0;
             char* strID;
             while(exitClient(bufferR) == 0 && exitClient(bufferS) == 0){
-                std::cin.getline(bufferS, BUFFERsSize);
-                if(strlen(bufferS) == BUFFERsSize){
+                char buffer[BUFFERsSize];
+                std::cin.getline(buffer, BUFFERsSize);
+                if(strlen(buffer) == BUFFERsSize){
                     std::cout << "error message\n";
                     break;
                 } else {
-                    sprintf(bufferS, "%s %s", toString(strID, id), bufferS);
-                    send(sock, bufferS, 1024, 0);
+                    sprintf(bufferS, "%d %s", id, buffer);
+                    std::cout << bufferS << std::endl;
+                    send(sock, bufferS, sizeof(bufferS), 0);
+                    bzero(bufferS, sizeof(bufferS));
                     id++;
                 }
             }
