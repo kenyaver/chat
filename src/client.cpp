@@ -47,16 +47,6 @@ int main(int argc, char* argv[]){
             exit(EXIT_FAILURE);
         }
         std::cout << "usernames: " << err << " bytes\n";
-        
-        char hello[32];
-
-        err = recv(sock, hello, sizeof(hello), MSG_WAITALL);
-        if(err < 1){
-            std::cout << errno << '\n';
-            close(sock);
-            exit(EXIT_FAILURE);
-        }
-        std::cout << hello << std::endl;
 
         char state[12];
         err = recv(sock, state, sizeof(state), MSG_WAITALL);
@@ -66,8 +56,6 @@ int main(int argc, char* argv[]){
             exit(EXIT_FAILURE);
         }
         std:: cout << state << std::endl;
-
-        // exit(EXIT_SUCCESS);
         
         char bufferR[BUFFERrSIZE];
         char bufferS[BUFFERsSize];
@@ -77,6 +65,7 @@ int main(int argc, char* argv[]){
                 int ret = recv(sock, bufferR, sizeof(bufferR), 0);
                 
                 if(ret == 0){
+                    std::cout << errno << std::endl; 
                     continue;
                 }
                 if(ret > 0){
@@ -94,7 +83,6 @@ int main(int argc, char* argv[]){
 
         std::thread s([&]{
             int id = 0;
-            char* strID;
             while(exitClient(bufferR) == 0 && exitClient(bufferS) == 0){
                 char buffer[BUFFERsSize];
                 std::cin.getline(buffer, BUFFERsSize);
@@ -106,6 +94,7 @@ int main(int argc, char* argv[]){
                     std::cout << bufferS << std::endl;
                     send(sock, bufferS, sizeof(bufferS), 0);
                     bzero(bufferS, sizeof(bufferS));
+                    bzero(buffer, sizeof(buffer));
                     id++;
                 }
             }

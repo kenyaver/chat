@@ -44,13 +44,15 @@ void Client::handleClient(){
     this->reader = new Client();
     this->status = 1;
     try{
-        this->sendHelloClient();
+        this->recvUsernames();
     } catch(const char* errorMessage){
         std::cout << errorMessage << ": " << errno << '\n';
         throw "client disconnected";
-        this->~Client();
+        memset(this, 0, sizeof(this));
+        this->closeSocket();
         return;
     }
+
     char state[12];
     if(this->stateSession(state) == 0){
         send(this->sockfd, state, sizeof(state), 0);
@@ -64,10 +66,10 @@ void Client::handleClient(){
                 }
             } catch(const char* errorMessage){
                 throw errorMessage;
-                return;
+                break;
             }
-            
         }
+        
     } 
 
     if(this->stateSession(state) == 1){
@@ -92,14 +94,11 @@ void Client::acceptClient(int sock, sockaddr_in addr){
 
 
 
-void Client::sendHelloClient(){
+void Client::recvUsernames(){
     char usernames[20];
     int ret = recv(sockfd, usernames, sizeof(usernames), MSG_WAITALL);
     if(ret > 0){
         parseNames(usernames, login, reader->login);
-        char hello[32];
-        sprintf(hello, "Hello %s!\n", login);
-        int err = send(sockfd, hello, sizeof(hello), 0);
         std::cout << login << " connected\n";
     } else {
         throw "error recv usernames";

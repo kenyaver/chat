@@ -1,16 +1,9 @@
-Artem: 0 0 0 0
-Artem: »ê¢B»
-Artem: 1 1 
-Artem: 
-Artem: 0 0 0 0
-Artem: »êBÄ
-Artem: »êBÄ
-Artem: »êBÄ
-Artem: 0 0 0 0
-Artem: »êÇ}u
-Artem: 1 1 
-Artem: 
+
 Artem: 0 Hello
-Artem: »êb∞N
+Artem: 1 How are you
+Artem: 2 im fine
+Artem: 3 cool
+Artem: 0 Hello
 Artem: 1 Hi
-Artem: 
+Artem: 2 Hero
+Artem: 3 Evil
