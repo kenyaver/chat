@@ -279,3 +279,12 @@ void Client::checkReader(){
         this->findReader();
     }
 }
+
+void Client::sendOffline(){
+    char *filename;
+    sprintf(filename, "../offline/%s.txt", this->login);
+    FILE* file = fopen(filename, "r");
+    if(file){
+        
+    }
+}

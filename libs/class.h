@@ -17,6 +17,8 @@ class Client{
     // принятие первого сообщения от клиента (логинов)
     void recvUsernames();
 
+    void sendOffline();
+
 
     // отправляет клиенту-отправителю статус подключения клиента-получателя
     int stateSession(char* state) noexcept;
