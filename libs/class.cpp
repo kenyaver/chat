@@ -1,5 +1,11 @@
 #include "class.h"
 
+
+bool Reader::operator==(Client& a) noexcept{
+    return !strcmp(this->login, a.login);
+}
+
+
 Client::Client() noexcept = default;
 
 
@@ -17,14 +23,14 @@ Client::~Client() noexcept{
 
 
 
-bool Client::operator==(Client& a) noexcept{
-    return !strcmp(this->login, a.login);
+bool Client::operator==(Reader& r){
+    return !strcmp(this->login, r.login);
 }
 
 
 
 void Client::handleClient(){
-    this->reader = new Client();
+    this->reader = new Reader();
     this->status = 1;
     try{
         this->recvUsernames();
@@ -79,23 +85,6 @@ void Client::findReader() noexcept{
 
 
 
-// int Client::stateSession(char* state) noexcept{
-//     int res;
-
-//     this->findReader();
-//     if(this->reader->status == 0){
-//         strcpy(state, "offline\n");
-//         res = 0;
-//     } else {
-//         strcpy(state, "online\n");
-//         res = 1;
-//     }
-
-//     return res;
-// }
-
-
-
 void Client::closeSocket(){
     if(this->sockfd != -1){
         close(this->sockfd);
@@ -108,106 +97,8 @@ void Client::closeSocket(){
 
 
 
-// int Client::writeFile(){
-//     char filename[32];
-//     sprintf(filename, "../offline/%s.txt", reader->login);
-//     if(getFileSize(filename) < 4136){
-//         FILE* file = fopen(filename, "a+");
-//         fprintf(file, "%s: %s\n", login, bufferRecv);
-//         fclose(file);
-//     } else{
-//         throw "file is FULL";
-//     }
-//     return getFileSize(filename);
-// }
 
-
-
-// void Client::talk(){
-//     struct timespec timeout;
-//     timeout.tv_sec = 10;
-//     struct pollfd fidesc;               // создание структур для ppoll
-//     fidesc.fd = this->sockfd;
-//     fidesc.events = POLLIN;
-
-
-//     int afk = 0; // time of afk client in milliseconds
-//     char answer[1024];
-//     while(afk < 300000){
-
-//         int res = ppoll(&fidesc, 1, &timeout, NULL);
-//         if(res == 0){
-//             afk += 10000;
-//             if(afk == 180000){
-//                 send(this->sockfd, "you innactive!\n", 16, 0);
-//             }
-//         }
-
-//         if(res == -1){
-//             throw "ppoll failed";
-//         }
-
-//         if(res > 0){
-//             fidesc.revents = 0;
-//             afk = 0;
-//             this->forwarding();
-//             if(keepAlive(this->reader->sockfd) == 0){
-//                 recv(this->reader->sockfd, answer, sizeof(answer), 0);
-//                 if(answerCheck(answer)){
-//                     this->answerClient(200);
-//                 }
-//                 clearMessageFromBufferUnconfirm(bufferRecv);
-//             } else {
-//                 this->answerClient(300);
-//                 this->recverOffline();
-//                 break;
-//             }
-//         }
-//     }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// void Client::sendOffline(){
-//     char *filename;
-//     sprintf(filename, "../offline/%s.txt", this->login);
-//     FILE* file = fopen(filename, "r");
-//     if(file){
-//         int c;
-//         for(int i = 0; i < 4; i++){
-//             if((c = fgetc(file)) != EOF){
-//                 fgets(this->bufferSend, sizeof(this->bufferSend), file);
-//                 send(this->sockfd, this->bufferSend, sizeof(this->bufferSend), 0);
-//             }
-//         }
-//     }
-// }
-
-
-
-
+// Talk:
 
 void Talk::sendOffline(){
     char *filename;
@@ -376,3 +267,10 @@ void Talk::talk(){
         }
     }
 }
+
+Talk::Talk(){
+    this->talk();
+}
+
+Talk::Talk(Talk& a) = delete;
+Talk::~Talk() = default;

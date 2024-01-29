@@ -3,7 +3,18 @@
 #include "../libs/check.h"
 #include "../libs/function.h"
 
-class Client{
+class Reader{
+    public:
+    char login[8]; // username клиента
+    int sockfd; // сокет для общения между клиентом и сервером
+    int status; // статус клиента
+    char bufferRecv[1032]; // буффер для принятия сообщений
+    char bufferSend[1032]; // буффер для отправки сообщений
+
+    bool operator==(Client& a) noexcept;
+};
+
+class Client: public Reader{
     private:
     // принятие первого сообщения от клиента (логинов)
     void recvUsernames();
@@ -12,19 +23,13 @@ class Client{
     void closeSocket();
 
     protected:
-    char bufferUnconfirm[4][1024]; // буффер неподтвержденных сообщений
-    Client* reader; // указатель на клиента-получателя
+    Reader* reader; // указатель на клиента-получателя
     int messageID; // идентификатор сообщения
 
     // находит клиента с таким именем и присвает его указателю reader
     void findReader() noexcept;
 
     public:
-    char login[8]; // username клиента
-    int sockfd; // сокет для общения между клиентом и сервером
-    int status; // статус клиента
-    char bufferRecv[1032]; // буффер для принятия сообщений
-    char bufferSend[1032]; // буффер для отправки сообщений
 
     // конструктор по умолчанию
     Client() noexcept;
@@ -39,7 +44,7 @@ class Client{
     ~Client() noexcept;
 
     // сравнивает логины клиентов
-    bool operator==(Client& a) noexcept;
+    bool operator==(Reader& a) noexcept;
 
     // принятие клиента
     void acceptClient(int sock, sockaddr_in addr);
@@ -52,6 +57,7 @@ class Client{
 
 
 class Talk: public Client{
+    char bufferUnconfirm[4][1032]; // буффер неподтвержденных сообщений
 
     void sendOffline();
     int stateSession(char* state) noexcept;
@@ -66,7 +72,7 @@ class Talk: public Client{
 
     public:
     Talk();
-    Talk(Client& a);
+    Talk(Talk& a);
     void talk();
     ~Talk();
 };
