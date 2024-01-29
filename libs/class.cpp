@@ -42,7 +42,11 @@ void Client::handleClient(){
         return;
     }
 
+    this->findReader();
+
     // TODO: сделать переход в дочерний класс
+
+    Talk a();
 
     delete reader;
     this->closeSocket();
@@ -269,6 +273,20 @@ void Talk::talk(){
 }
 
 Talk::Talk(){
+    char state[12];
+    int sessionRes = this->stateSession(state);
+    if(sessionRes == 1){
+        this->talk();
+    } else{
+        int i = 0;
+        while(i < 4 && getFileSize(reader->login) < 4128 && this->stateSession(state) == 0){
+            this->recverOffline();
+        }
+        if(i == 4){
+            send(this->sockfd, "limit send to offline client\n", 32, 0);
+            return;
+        }
+    }
     this->talk();
 }
 
