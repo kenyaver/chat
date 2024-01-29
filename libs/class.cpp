@@ -44,8 +44,6 @@ void Client::handleClient(){
 
     this->findReader();
 
-    // TODO: сделать переход в дочерний класс
-
     Talk a();
 
     delete reader;
@@ -173,15 +171,16 @@ int Talk::answerCheck(char* answer){
 
 
 void Talk::forwarding(){
-    recv(this->sockfd, bufferRecv, sizeof(bufferRecv), 0);
-    this->checkReader();                                             // обработка и переотправка сообщений 
+    recv(this->sockfd, this->bufferRecv, sizeof(this->bufferRecv), 0);
+    this->checkReader(); 
     for(int i = 0; i < 4; i++){
         if(bufferUnconfirm[i] == NULL){
-            sprintf(bufferUnconfirm[i], "%s", bufferRecv);          // TODO сделать проверку на зполненность буффера
+            sprintf(this->bufferUnconfirm[i], "%s", this->bufferRecv);          // TODO: сделать проверку на зполненность буффера
             break;
         }
     }
-    send(this->reader->sockfd, bufferSend, sizeof(bufferSend), 0);
+    sprintf(this->bufferSend, "%s", this->bufferRecv);
+    send(this->reader->sockfd, this->bufferSend, sizeof(this->bufferSend), 0);
 }
 
 
@@ -189,7 +188,7 @@ void Talk::forwarding(){
 void Talk::clearMessageFromBufferUnconfirm(char* message){
     char* find;
     for(int i = 0; i < 4; i++){
-        find = strstr(bufferUnconfirm[i], message);
+        find = strstr(this->bufferUnconfirm[i], message);
         
         if (find!=NULL) {
             char* find_ = find + strlen(message);
@@ -203,7 +202,7 @@ void Talk::clearMessageFromBufferUnconfirm(char* message){
 void Talk::checkReader(){
     char *delim = (char*)" ";
     char* delimFlag = (char*)":";
-    char* newReaderFlag = strtok(bufferRecv, delim);
+    char* newReaderFlag = strtok(this->bufferRecv, delim);
     if(strstr(newReaderFlag, (char*)":") != NULL){
         char* newReader = strtok(newReaderFlag, delimFlag);
         strcpy(this->reader->login, newReader);
@@ -236,9 +235,8 @@ void Talk::talk(){
     fidesc.fd = this->sockfd;
     fidesc.events = POLLIN;
 
-
     int afk = 0; // time of afk client in milliseconds
-    char answer[1032];
+    
     while(afk < 300000){
 
         int res = ppoll(&fidesc, 1, &timeout, NULL);
@@ -256,13 +254,20 @@ void Talk::talk(){
         if(res > 0){
             fidesc.revents = 0;
             afk = 0;
+            
             this->forwarding();
+            char answer[1032];
             if(keepAlive(this->reader->sockfd) == 0){
                 recv(this->reader->sockfd, answer, sizeof(answer), 0);
+
                 if(answerCheck(answer)){
                     this->answerClient(200);
+                    clearMessageFromBufferUnconfirm(answer);
+                } else {
+                    sprintf(this->bufferSend, "%s", answer);
+                    send(this->sockfd, this->bufferSend, sizeof(this->bufferSend), 0);
                 }
-                clearMessageFromBufferUnconfirm(bufferRecv);
+
             } else {
                 this->answerClient(300);
                 this->recverOffline();
@@ -279,11 +284,11 @@ Talk::Talk(){
         this->talk();
     } else{
         int i = 0;
-        while(i < 4 && getFileSize(reader->login) < 4128 && this->stateSession(state) == 0){
+        while(i < 4 && getFileSize(this->reader->login) < 4128 && this->stateSession(state) == 0){
             this->recverOffline();
         }
-        if(i == 4){
-            send(this->sockfd, "limit send to offline client\n", 32, 0);
+        if(i == 4 || getFileSize(this->reader->login) >= 4128){
+            send(this->sockfd, "limit send to offline client~\n", 32, 0);
             return;
         }
     }

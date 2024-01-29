@@ -99,7 +99,7 @@ int keepAlive(int sock){
     int ret = ppoll(&fidesc, 1, &timeout, NULL);
     if(ret == -1){
         // unknown error
-        printf("poll error\n");
+        printf("poll error: %d\n", errno);
         return -2;
     }
     
