@@ -1,7 +1,7 @@
 #include "class.h"
 
 
-bool Reader::operator==(Client& a) noexcept{
+bool Reader::operator==(Reader& a) noexcept{
     return !strcmp(this->login, a.login);
 }
 
@@ -23,7 +23,7 @@ Client::~Client() noexcept{
 
 
 
-bool Client::operator==(Reader& r){
+bool Client::operator==(Reader& r) noexcept{
     return !strcmp(this->login, r.login);
 }
 
@@ -41,10 +41,11 @@ void Client::handleClient(){
         this->closeSocket();
         return;
     }
+    // this->sendOffline();
 
     this->findReader();
 
-    Talk a();
+    Talk a = Talk();
 
     delete reader;
     this->closeSocket();
@@ -100,23 +101,10 @@ void Client::closeSocket(){
 
 
 
+
+
+
 // Talk:
-
-void Talk::sendOffline(){
-    char *filename;
-    sprintf(filename, "../offline/%s.txt", this->login);
-    FILE* file = fopen(filename, "r");
-    if(file){
-        int c;
-        for(int i = 0; i < 4; i++){
-            if((c = fgetc(file)) != EOF){
-                fgets(this->bufferSend, sizeof(this->bufferSend), file);
-                send(this->sockfd, this->bufferSend, sizeof(this->bufferSend), 0);
-            }
-        }
-    }
-}
-
 
 
 int Talk::stateSession(char* state) noexcept{
@@ -132,6 +120,29 @@ int Talk::stateSession(char* state) noexcept{
     }
 
     return res;
+}
+
+
+
+void Talk::sendOffline(){
+    char *filename;
+    sprintf(filename, "../offline/%s.txt", this->login);
+    FILE* file = fopen(filename, "r");
+    char offlineMessage[12];
+    if(file){
+        int c;
+        strcpy(offlineMessage, "message");
+        send(this->sockfd, offlineMessage, sizeof(offlineMessage), 0);
+        for(int i = 0; i < 4; i++){
+            if((c = fgetc(file)) != EOF){
+                fgets(this->bufferSend, sizeof(this->bufferSend), file);
+                send(this->sockfd, this->bufferSend, sizeof(this->bufferSend), 0);
+            }
+        }
+    } else {
+        strcpy(offlineMessage, "no message");
+        send(this->sockfd, offlineMessage, sizeof(offlineMessage), 0);
+    }
 }
 
 
@@ -254,7 +265,7 @@ void Talk::talk(){
         if(res > 0){
             fidesc.revents = 0;
             afk = 0;
-            
+
             this->forwarding();
             char answer[1032];
             if(keepAlive(this->reader->sockfd) == 0){
@@ -280,6 +291,8 @@ void Talk::talk(){
 Talk::Talk(){
     char state[12];
     int sessionRes = this->stateSession(state);
+    send(this->sockfd, state, sizeof(state), 0);
+    this->sendOffline();
     if(sessionRes == 1){
         this->talk();
     } else{

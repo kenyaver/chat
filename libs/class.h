@@ -3,6 +3,8 @@
 #include "../libs/check.h"
 #include "../libs/function.h"
 
+class Client;
+
 class Reader{
     public:
     char login[8];
@@ -11,7 +13,7 @@ class Reader{
     char bufferRecv[1032]; // буффер для принятия сообщений
     char bufferSend[1032]; // буффер для отправки сообщений
 
-    bool operator==(Client& a) noexcept;
+    bool operator==(Reader& a) noexcept;
 };
 
 
@@ -45,6 +47,8 @@ class Client: public Reader{
     void acceptClient(int sock, sockaddr_in addr);
 
     void handleClient();
+    
+    
 };
 
 
@@ -53,9 +57,9 @@ class Client: public Reader{
 class Talk: public Client{
     char bufferUnconfirm[4][1032]; // буффер неподтвержденных сообщений
 
-    void sendOffline();
-    int stateSession(char* state) noexcept;
     
+    int stateSession(char* state) noexcept;
+    void sendOffline();
     int writeFile();
     void answerClient(int statusCode);
     int answerCheck(char* answer);

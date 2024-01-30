@@ -1,7 +1,7 @@
 #include "../libs/class.h"
 
 // возвращает собственный IP-адрес в виде char* 
-char* getIPaddr(){
+char* getIPaddr(char* IPaddr){
     const char* google_dns_server = "8.8.8.8";
     int dns_port = 53;
 
@@ -20,7 +20,6 @@ char* getIPaddr(){
     socklen_t namelen = sizeof(name);
     err = getsockname(sock, (struct sockaddr*)&name, &namelen);
 
-    char *IPaddr;
     inet_ntop(AF_INET, &name.sin_addr, IPaddr, 100);
     close(sock);
     return IPaddr;
@@ -36,8 +35,8 @@ sockaddr_in addrInit(char* port){
 }
 
 int main(int argc, char* argv[]){
-    // char *IPaddr = getIPaddr();
-    // std::cout << "server`s IP-address: " << IPaddr << std::endl;
+    char* IPaddr;
+    std::cout << "server`s IP-address: " << getIPaddr(IPaddr) << std::endl;
 
     int sock;
     sockaddr_in addr = addrInit(argv[1]);
