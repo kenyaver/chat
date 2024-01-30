@@ -61,19 +61,6 @@ int main(int argc, char* argv[]){
 
         char bufferR[BUFFERrSIZE];
         char bufferS[BUFFERsSize];
-
-        char offlineMessage[12];
-        recv(sock, offlineMessage, sizeof(offlineMessage), 0);
-        if(strcmp(offlineMessage, "message") == 0){
-            for(int i = 0; i < 4; i++){
-                recv(sock, bufferR, sizeof(bufferR), 0);
-                std::cout << bufferR << std::endl;
-            }
-        } else {
-            std::cout << offlineMessage << std::endl;
-        }
-        
-        
         char* id_str;
         std::thread r([&]{
             while(exitClient(bufferR) == 0 && exitClient(bufferS) == 0){
