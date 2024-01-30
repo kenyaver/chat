@@ -1,4 +1,4 @@
-#include "../libs/class.h"
+#include "../libs/Client.h"
 
 // возвращает собственный IP-адрес в виде char* 
 char* getIPaddr(char* IPaddr){
@@ -35,8 +35,8 @@ sockaddr_in addrInit(char* port){
 }
 
 int main(int argc, char* argv[]){
-    char* IPaddr;
-    std::cout << "server`s IP-address: " << getIPaddr(IPaddr) << std::endl;
+    char* IPaddr = getIPaddr(IPaddr);
+    std::cout << "server`s IP-address: " << IPaddr << std::endl;
 
     int sock;
     sockaddr_in addr = addrInit(argv[1]);
