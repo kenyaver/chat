@@ -1,5 +1,34 @@
 #include "Talk.h"
 
+void Talk::talking(){
+    char state[12];
+    int sessionRes = this->stateSession(state);
+    send(this->sockfd, state, sizeof(state), 0);
+    this->sendOffline();
+    if(sessionRes == 1){
+        this->talk();
+    } else{
+        int i = 0;
+        while(i < 4 && getFileSize(this->reader->username) < 4128 && this->stateSession(state) == 0){
+            this->recverOffline();
+        }
+        if(i == 4 || getFileSize(this->reader->username) >= 4128){
+            send(this->sockfd, "limit send to offline client~\n", 32, 0);
+            return;
+        }
+    }
+    this->talk();
+}
+
+
+void Talk::findReader() noexcept{
+    for(auto i: readerDB){
+        if(i == *this->reader){
+            *reader = i;
+        }
+    }
+}
+
 int Talk::stateSession(char* state) noexcept{
     int res;
 
@@ -19,7 +48,7 @@ int Talk::stateSession(char* state) noexcept{
 
 void Talk::sendOffline(){
     char *filename;
-    sprintf(filename, "../offline/%s.txt", this->login);
+    sprintf(filename, "../offline/%s.txt", this->username);
     FILE* file = fopen(filename, "r");
     char offlineMessage[12];
     if(file){
@@ -42,10 +71,10 @@ void Talk::sendOffline(){
 
 int Talk::writeFile(){
     char filename[32];
-    sprintf(filename, "../offline/%s.txt", reader->login);
+    sprintf(filename, "../offline/%s.txt", reader->username);
     if(getFileSize(filename) < 4136){
         FILE* file = fopen(filename, "a+");
-        fprintf(file, "%s: %s\n", login, bufferRecv);
+        fprintf(file, "%s: %s\n", username, bufferRecv);
         fclose(file);
     } else{
         throw "file is FULL";
@@ -109,7 +138,7 @@ void Talk::checkReader(){
     char* newReaderFlag = strtok(this->bufferRecv, delim);
     if(strstr(newReaderFlag, (char*)":") != NULL){
         char* newReader = strtok(newReaderFlag, delimFlag);
-        strcpy(this->reader->login, newReader);
+        strcpy(this->reader->username, newReader);
         this->findReader();
     }
 }
@@ -181,25 +210,11 @@ void Talk::talk(){
     }
 }
 
-Talk::Talk(){
-    char state[12];
-    int sessionRes = this->stateSession(state);
-    send(this->sockfd, state, sizeof(state), 0);
-    this->sendOffline();
-    if(sessionRes == 1){
-        this->talk();
-    } else{
-        int i = 0;
-        while(i < 4 && getFileSize(this->reader->login) < 4128 && this->stateSession(state) == 0){
-            this->recverOffline();
-        }
-        if(i == 4 || getFileSize(this->reader->login) >= 4128){
-            send(this->sockfd, "limit send to offline client~\n", 32, 0);
-            return;
-        }
-    }
-    this->talk();
-}
+// bool Talk::operator==(Reader& a){
+//     return !strcmp(this->username, a.username);
+// }
+
+Talk::Talk() = default;
 
 Talk::Talk(Talk& a) = delete;
 Talk::~Talk() = default;

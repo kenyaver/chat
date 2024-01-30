@@ -5,18 +5,15 @@
 #include "Reader.h"
 #include "Talk.h"
 
-class Client: public Reader{
+class Client: public Talk{
     private:
     void recvUsernames();
 
     void closeSocket();
 
     protected:
-    Reader* reader; // указатель на клиента-получателя
-    int messageID; // идентификатор сообщения
 
-    // находит клиента с таким именем и присвает его указателю reader
-    void findReader() noexcept;
+    
 
     public:
 
@@ -28,12 +25,9 @@ class Client: public Reader{
 
     ~Client() noexcept;
 
-    // bool operator==(Reader& a) noexcept;
-
     void acceptClient(int sock, sockaddr_in addr);
 
     void handleClient();
-    
     
 };
 

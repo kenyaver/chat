@@ -1,12 +1,6 @@
 all: server client
 
-app: server client
-
-lib: check.o function.o class.o
-
-test: check.o function.o class.o
-	g++ -E  src/server.cpp -o build/server.ii
-	g++ -E  src/client.cpp -o build/client.ii
+lib: check.o function.o Client.o Reader.o Talk.o
 
 check.o:
 	g++ -c libs/check.cpp -o build/check.o
@@ -14,20 +8,23 @@ check.o:
 function.o:
 	g++ -c libs/function.cpp -o build/function.o
 
-class.o:
-	g++ -c libs/class.cpp -o build/class.o
 
-server.o:
-	g++ - c src/server.cpp -o build/server.o
+Reader.o:
+	g++ -c libs/Reader.cpp -o build/Reader.o
 
-client.o:
-	g++ -c src/client.cpp -o build/client.o
+Client.o:
+	g++ -c libs/Client.cpp -o build/Client.o
 
-server: check.o function.o class.o
-	g++ build/check.o build/function.o build/class.o src/server.cpp -o build/server
+Talk.o:
+	g++ -c libs/Talk.cpp -o build/Talk.o
 
-client: check.o function.o class.o
-	g++ build/check.o build/function.o build/class.o src/client.cpp -o build/client
+
+
+server: check.o function.o Client.o Reader.o Talk.o
+	g++ build/check.o build/function.o build/Client.o build/Reader.o build/Talk.o src/server.cpp -o build/server
+
+client: check.o function.o Client.o Reader.o Talk.o
+	g++ build/check.o build/function.o build/Client.o build/Reader.o build/Talk.o src/client.cpp -o build/client
 
 
 clear:

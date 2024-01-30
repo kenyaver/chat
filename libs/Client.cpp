@@ -6,7 +6,7 @@ Client::Client() noexcept = default;
 
 
 Client::Client(const Client& a) noexcept{
-    strcpy(this->login, a.login);
+    strcpy(this->username, a.username);
     this->sockfd = a.sockfd;
 }
 
@@ -18,17 +18,12 @@ Client::~Client() noexcept{
 
 
 
-// bool Client::operator==(Reader& r) noexcept{
-//     return !strcmp(this->login, r.login);
-// }
-
-
-
 void Client::handleClient(){
     this->reader = new Reader();
     this->status = 1;
     try{
         this->recvUsernames();
+        readerDB.push_back(Reader(this->username));
     } catch(const char* errorMessage){
         std::cout << errorMessage << ": " << errno << '\n';
         throw "client disconnected";
@@ -36,12 +31,11 @@ void Client::handleClient(){
         this->closeSocket();
         return;
     }
-    // this->sendOffline();
 
     this->findReader();
 
-    Talk a = Talk();
-
+    this->talking();
+    this->clearReader(this->reader->username);
     delete reader;
     this->closeSocket();
 }
@@ -64,8 +58,8 @@ void Client::recvUsernames(){
     char usernames[20];
     int ret = recv(sockfd, usernames, sizeof(usernames), 0);
     if(ret > 0){
-        parseNames(usernames, login, reader->login);
-        std::cout << login << " connected\n";
+        parseNames(usernames, username, reader->username);
+        std::cout << username << " connected\n";
     } else {
         throw "error recv usernames";
     }
@@ -73,13 +67,7 @@ void Client::recvUsernames(){
 
 
 
-void Client::findReader() noexcept{
-    for(auto i: client){
-        if(i == *this->reader){
-            *reader = i;
-        }
-    }
-}
+
 
 
 
@@ -87,7 +75,7 @@ void Client::closeSocket(){
     if(this->sockfd != -1){
         close(this->sockfd);
         this->sockfd = -1;
-        std::cout << this->login << "`s socket successfully closed\n";
+        std::cout << this->username << "`s socket successfully closed\n";
     } else{
         std::cout << "error: this socket was already closed\n";
     }
