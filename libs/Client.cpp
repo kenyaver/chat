@@ -19,11 +19,12 @@ Client::~Client() noexcept{
 
 
 void Client::handleClient(){
-    this->reader = new Reader();
+    this->reader = new User();
     this->status = 1;
     try{
         this->recvUsernames();
-        readerDB.push_back(Reader(this->username));
+        userDB.push_back(User(this->username, 1));
+        userDB.push_back(User(this->reader->username, 0));
     } catch(const char* errorMessage){
         std::cout << errorMessage << ": " << errno << '\n';
         throw "client disconnected";
@@ -35,7 +36,7 @@ void Client::handleClient(){
     this->findReader();
 
     this->talking();
-    this->clearReader(this->reader->username);
+    this->clearUser(this->reader->username);
     delete reader;
     this->closeSocket();
 }
@@ -64,10 +65,6 @@ void Client::recvUsernames(){
         throw "error recv usernames";
     }
 }
-
-
-
-
 
 
 

@@ -2,13 +2,13 @@
 
 #include "check.h"
 #include "function.h"
-#include "Reader.h"
-#include "Client.h"
+#include "User.h"
 
-class Talk: public Reader{
+
+class Session: public User{
     public:
     char bufferUnconfirm[4][1032]; // буффер неподтвержденных сообщений
-    Reader* reader;
+    User* reader;
     int messageID;
 
     // находит клиента с таким именем и присвает его указателю reader
@@ -26,8 +26,8 @@ class Talk: public Reader{
     void talk();
 
 
-    Talk();
-    Talk(Talk& a);
+    Session();
+    Session(Session& a);
     // bool  operator==(Reader& a);
-    ~Talk();
+    ~Session();
 };

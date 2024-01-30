@@ -2,18 +2,13 @@
 
 #include "check.h"
 #include "function.h"
-#include "Reader.h"
-#include "Talk.h"
+#include "Session.h"
 
-class Client: public Talk{
+class Client: public Session{
     private:
     void recvUsernames();
 
     void closeSocket();
-
-    protected:
-
-    
 
     public:
 

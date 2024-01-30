@@ -1,6 +1,7 @@
-#include "Talk.h"
+#include "Session.h"
+#include "Client.h"
 
-void Talk::talking(){
+void Session::talking(){
     char state[12];
     int sessionRes = this->stateSession(state);
     send(this->sockfd, state, sizeof(state), 0);
@@ -21,15 +22,15 @@ void Talk::talking(){
 }
 
 
-void Talk::findReader() noexcept{
-    for(auto i: readerDB){
+void Session::findReader() noexcept{
+    for(auto i: userDB){
         if(i == *this->reader){
             *reader = i;
         }
     }
 }
 
-int Talk::stateSession(char* state) noexcept{
+int Session::stateSession(char* state) noexcept{
     int res;
 
     this->findReader();
@@ -46,7 +47,7 @@ int Talk::stateSession(char* state) noexcept{
 
 
 
-void Talk::sendOffline(){
+void Session::sendOffline(){
     char *filename;
     sprintf(filename, "../offline/%s.txt", this->username);
     FILE* file = fopen(filename, "r");
@@ -69,7 +70,7 @@ void Talk::sendOffline(){
 
 
 
-int Talk::writeFile(){
+int Session::writeFile(){
     char filename[32];
     sprintf(filename, "../offline/%s.txt", reader->username);
     if(getFileSize(filename) < 4136){
@@ -84,14 +85,14 @@ int Talk::writeFile(){
 
 
 
-void Talk::answerClient(int statusCode){
+void Session::answerClient(int statusCode){
     sprintf(bufferSend, "%d: %d", messageID, statusCode);
     send(this->sockfd, bufferSend, sizeof(bufferSend), 0);
 }
 
 
 
-int Talk::answerCheck(char* answer){
+int Session::answerCheck(char* answer){
     int answerInt = fromString(answer);
     if(answerInt != -1){
         if(answerInt == this->messageID){
@@ -103,7 +104,7 @@ int Talk::answerCheck(char* answer){
 
 
 
-void Talk::forwarding(){
+void Session::forwarding(){
     recv(this->sockfd, this->bufferRecv, sizeof(this->bufferRecv), 0);
     this->checkReader(); 
     for(int i = 0; i < 4; i++){
@@ -118,7 +119,7 @@ void Talk::forwarding(){
 
 
 
-void Talk::clearMessageFromBufferUnconfirm(char* message){
+void Session::clearMessageFromBufferUnconfirm(char* message){
     char* find;
     for(int i = 0; i < 4; i++){
         find = strstr(this->bufferUnconfirm[i], message);
@@ -132,10 +133,10 @@ void Talk::clearMessageFromBufferUnconfirm(char* message){
 
 
 
-void Talk::checkReader(){
+void Session::checkReader(){
     char *delim = (char*)" ";
-    char* delimFlag = (char*)":";
-    char* newReaderFlag = strtok(this->bufferRecv, delim);
+    char *delimFlag = (char*)":";
+    char *newReaderFlag = strtok(this->bufferRecv, delim);
     if(strstr(newReaderFlag, (char*)":") != NULL){
         char* newReader = strtok(newReaderFlag, delimFlag);
         strcpy(this->reader->username, newReader);
@@ -145,7 +146,7 @@ void Talk::checkReader(){
 
 
 
-void Talk::recverOffline(){
+void Session::recverOffline(){
     int ret = recv(this->sockfd, this->bufferRecv, sizeof(bufferRecv), 0);
     if(ret == -1){
         throw "error recv message for offline client\n";
@@ -161,7 +162,7 @@ void Talk::recverOffline(){
 
 
 
-void Talk::talk(){
+void Session::talk(){
     struct timespec timeout;
     timeout.tv_sec = 10;
     struct pollfd fidesc;               // создание структур для ppoll
@@ -210,11 +211,11 @@ void Talk::talk(){
     }
 }
 
-// bool Talk::operator==(Reader& a){
+// bool Session::operator==(Reader& a){
 //     return !strcmp(this->username, a.username);
 // }
 
-Talk::Talk() = default;
+Session::Session() = default;
 
-Talk::Talk(Talk& a) = delete;
-Talk::~Talk() = default;
+Session::Session(Session& a) = delete;
+Session::~Session() = default;

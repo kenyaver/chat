@@ -3,21 +3,21 @@
 #include "check.h"
 #include "function.h"
 
-class Reader{
+class User{
     public:
-    Reader();
-    Reader(char* username);
+    User();
+    User(char* username, int status);
     char username[8];
     int sockfd;
     int status;
     char bufferRecv[1032]; // буффер для принятия сообщений
     char bufferSend[1032]; // буффер для отправки сообщений
 
-    bool operator==(Reader& a) noexcept;
+    bool operator==(User& a) noexcept;
 
-    void clearReader(char* searchReader);
+    void clearUser(char* searchReader);
 
-    ~Reader();
+    ~User();
 };
 
-inline std::vector<Reader> readerDB;
+inline std::vector<User> userDB;
