@@ -5,6 +5,12 @@ Client::Client() noexcept = default;
 
 
 
+Client::Client(int sock){
+    this->sockfd = sock;
+}
+
+
+
 Client::Client(const Client& a) noexcept{
     strcpy(this->username, a.username);
     this->sockfd = a.sockfd;
@@ -40,19 +46,6 @@ void Client::handleClient(){
     delete reader;
     this->closeSocket();
 }
-
-
-
-void Client::acceptClient(int sock, sockaddr_in addr){
-    try{
-        socklen_t addrLen = sizeof(addr);
-        this->sockfd = acceptCheck(sock, (sockaddr*)&addr, &addrLen);
-        std::cout << "new client accepted\n";
-    } catch(const char* errorMessage){
-        throw errorMessage;
-    }
-}
-
 
 
 void Client::recvUsernames(){

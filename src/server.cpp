@@ -52,8 +52,8 @@ int main(int argc, char* argv[]){
 
     for(;;){
         try{
-            client.push_back({});
-            client.back().acceptClient(sock, addr);
+            int accepter = acceptCheck(sock, (sockaddr*)&addr);
+            client.push_back(accepter);
             std::thread t(&Client::handleClient, client.back());
             t.detach();
         } catch(const char* errorMessage){

@@ -20,10 +20,7 @@ class Client: public Session{
 
     ~Client() noexcept;
 
-    void acceptClient(int sock, sockaddr_in addr);
-
     void handleClient();
-    
 };
 
 inline std::vector<Client> client;

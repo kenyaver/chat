@@ -45,8 +45,9 @@ void listenCheck(int sockfd, int backlog){
 }
 
 
-int acceptCheck(int sockfd, struct sockaddr* addr, socklen_t* lenAddr){
-    int res = accept(sockfd, addr, lenAddr);
+int acceptCheck(int sockfd, struct sockaddr* addr){
+    socklen_t addrLen = sizeof(addr);
+    int res = accept(sockfd, addr, &addrLen);
     if(res == -1){
         // printf("accept failed\n");
         // std::cout << errno << '\n';
