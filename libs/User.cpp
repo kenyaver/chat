@@ -2,9 +2,17 @@
 
 User::User() = default;
 
-User::User(char* username, int status){
-    this->status = status;
+User::User(char* username, int sockfd,  int status){
     strcpy(this->username, username);
+    this->sockfd = sockfd;
+    this->status = status;
+}
+
+User::User(User& a): User{a.username, a.sockfd, a.status}{}
+
+User::User(char* username, int status){
+    strcpy(this->username, username);
+    this->status = status;
 }
 
 bool User::operator==(User& a) noexcept{
@@ -19,6 +27,12 @@ void User::clearUser(char* searchReader){
             memset(bufferSend, 0, sizeof(bufferSend));
         }
     }
+}
+
+void User::closeSocket(){
+    close(this->sockfd);
+    this->sockfd = -1;
+    this->status = 0;
 }
 
 User::~User(){

@@ -5,18 +5,21 @@
 
 class User{
     public:
-    User();
-    User(char* username, int status);
     char username[8];
     int sockfd;
     int status;
     char bufferRecv[1032]; // буффер для принятия сообщений
     char bufferSend[1032]; // буффер для отправки сообщений
-
+    
+    User();
+    User(char* username, int sockfd, int status);
+    User(char* username, int status);
+    User(User& a);
     bool operator==(User& a) noexcept;
 
     void clearUser(char* searchReader);
 
+    void closeSocket();
     ~User();
 };
 

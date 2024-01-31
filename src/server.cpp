@@ -1,4 +1,4 @@
-#include "../libs/Client.h"
+#include "../libs/Session.h"
 
 // возвращает собственный IP-адрес в виде char* 
 char* getIPaddr(char* IPaddr){
@@ -53,9 +53,9 @@ int main(int argc, char* argv[]){
     for(;;){
         try{
             int accepter = acceptCheck(sock, (sockaddr*)&addr);
-            client.push_back(accepter);
-            std::thread t(&Client::handleClient, client.back());
-            t.detach();
+            // userDB.push_back(Client(accepter));
+            // std::thread t(&Client::handleClient, userDB.back());
+            // t.detach();
         } catch(const char* errorMessage){
             std::cout << errorMessage << std::endl;
             continue;

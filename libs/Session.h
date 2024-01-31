@@ -3,13 +3,14 @@
 #include "check.h"
 #include "function.h"
 #include "User.h"
+#include "protocol.h"
 
 
-class Session: public User{
+class Session: public Protocol{
     public:
-    char bufferUnconfirm[4][1032]; // буффер неподтвержденных сообщений
-    User* reader;
-    int messageID;
+    // char bufferRecv[1032];
+    // char bufferSend[1032];
+    
 
     // находит клиента с таким именем и присвает его указателю reader
     void findReader() noexcept;
@@ -23,6 +24,7 @@ class Session: public User{
     void recverOffline();
     void checkReader();
     void talking(); // TODO: придумать нормальное название
+    void handleClient();
     void talk();
 
 
