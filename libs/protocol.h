@@ -1,6 +1,4 @@
 #pragma once
-#include "check.h"
-#include "function.h"
 #include "User.h"
 
 class Protocol{
@@ -16,5 +14,11 @@ class Protocol{
     void setMessageStatus();
     void answerClient(int statusCode);
     int answerCheck(char* answer);
+    void sendOffline();
+    int stateSession(char* state) noexcept;
+    void checkReader();
+    void forwarding();
+    void findReader() noexcept;
+    void clearMessageFromBufferUnconfirm(char* message);
     
 };

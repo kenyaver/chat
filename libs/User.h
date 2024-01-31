@@ -17,8 +17,7 @@ class User{
     User(User& a);
     bool operator==(User& a) noexcept;
 
-    void clearUser(char* searchReader);
-
+    void disconnectUser(char* searchReader);
     void closeSocket();
     ~User();
 };

@@ -53,9 +53,10 @@ int main(int argc, char* argv[]){
     for(;;){
         try{
             int accepter = acceptCheck(sock, (sockaddr*)&addr);
-            // userDB.push_back(Client(accepter));
-            // std::thread t(&Client::handleClient, userDB.back());
-            // t.detach();
+            userDB.push_back(User("", accepter));
+            Session session = Session(accepter);
+            std::thread t(&Session::handleClient, session);
+            t.detach();
         } catch(const char* errorMessage){
             std::cout << errorMessage << std::endl;
             continue;

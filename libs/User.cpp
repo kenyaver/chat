@@ -19,12 +19,12 @@ bool User::operator==(User& a) noexcept{
     return !strcmp(this->username, a.username);
 }
 
-void User::clearUser(char* searchReader){
+void User::disconnectUser(char* searchReader){
     for(auto i: userDB){
         if(strcmp(i.username, searchReader) == 0){
             i.status = 0;
-            memset(bufferRecv, 0, sizeof(bufferRecv));
-            memset(bufferSend, 0, sizeof(bufferSend));
+            memset(this->bufferRecv, 0, sizeof(this->bufferRecv));
+            memset(this->bufferSend, 0, sizeof(this->bufferSend));
         }
     }
 }
