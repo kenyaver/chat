@@ -109,3 +109,16 @@ void Protocol::checkReader(){
         this->findReader();
     }
 }
+
+int Protocol::writeFile(){
+    char filename[32];
+    sprintf(filename, "../offline/%s.txt", reader->username);
+    if(getFileSize(filename) < 4136){
+        FILE* file = fopen(filename, "a+");
+        fprintf(file, "%s: %s\n", this->user->username, this->user->bufferRecv);
+        fclose(file);
+    } else{
+        throw "file is FULL";
+    }
+    return getFileSize(filename);
+}

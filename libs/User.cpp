@@ -25,14 +25,11 @@ bool User::operator==(User& a) noexcept{
     return !strcmp(this->username, a.username);
 }
 
-void User::disconnectUser(char* searchReader){
-    for(auto i: userDB){
-        if(strcmp(i.username, searchReader) == 0){
-            i.status = 0;
-            memset(this->bufferRecv, 0, sizeof(this->bufferRecv));
-            memset(this->bufferSend, 0, sizeof(this->bufferSend));
-        }
-    }
+void User::disconnectUser(){
+        this->status = 0;
+        memset(this->bufferRecv, 0, sizeof(this->bufferRecv));
+        memset(this->bufferSend, 0, sizeof(this->bufferSend));
+
 }
 
 void User::closeSocket(){

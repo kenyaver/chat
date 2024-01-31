@@ -18,7 +18,8 @@ void Session::handleClient(){
 
     this->setMod();
 
-    this->reader->disconnectUser(this->reader->username);
+    this->user->disconnectUser();
+
     delete reader;
     this->user->closeSocket();
 }
@@ -107,25 +108,9 @@ void Session::offline(){
     }
 }
 
-
-int Session::writeFile(){
-    char filename[32];
-    sprintf(filename, "../offline/%s.txt", reader->username);
-    if(getFileSize(filename) < 4136){
-        FILE* file = fopen(filename, "a+");
-        fprintf(file, "%s: %s\n", this->user->username, this->user->bufferRecv);
-        fclose(file);
-    } else{
-        throw "file is FULL";
-    }
-    return getFileSize(filename);
-}
-
-
 Session::Session() = default;
 Session::Session(int sockfd){
     this->user->sockfd = sockfd;
 }
-
 Session::Session(Session& a) = default;
 Session::~Session() = default;

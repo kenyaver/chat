@@ -11,13 +11,17 @@ class Protocol{
     int messageID;
 
     void recvUsernames();
-    void setMessageStatus();
+    void sendOffline();
+    void findReader() noexcept;
+    int stateSession(char* state) noexcept;
+
+    void forwarding();
+
+    void checkReader();
     void answerClient(int statusCode);
     int answerCheck(char* answer);
-    void sendOffline();
-    int stateSession(char* state) noexcept;
-    void checkReader();
-    void forwarding();
-    void findReader() noexcept;
     void clearMessageFromBufferUnconfirm(char* message);
+    void setMessageStatus();
+    
+    int writeFile();
 };

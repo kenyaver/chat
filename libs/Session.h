@@ -10,7 +10,6 @@ class Session: public Protocol{
     void setMod();
     void online();
     void offline();
-    int writeFile();
 
     Session();
     Session(int sockfd);
