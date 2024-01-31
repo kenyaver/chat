@@ -7,7 +7,7 @@ class Session: public Protocol{
 
     // находит клиента с таким именем и присвает его указателю reader
     void handleClient();
-    void setMod();// TODO: придумать нормальное название
+    void setMod();
     void online();
     void offline();
     int writeFile();

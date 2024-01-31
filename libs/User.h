@@ -14,7 +14,8 @@ class User{
     User();
     User(char* username, int sockfd, int status);
     User(char* username, int status);
-    User(User& a);
+    User(int sockfd);
+    // User(User& a);
     bool operator==(User& a) noexcept;
 
     void disconnectUser(char* searchReader);

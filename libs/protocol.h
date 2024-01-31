@@ -20,5 +20,4 @@ class Protocol{
     void forwarding();
     void findReader() noexcept;
     void clearMessageFromBufferUnconfirm(char* message);
-    
 };

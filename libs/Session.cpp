@@ -1,5 +1,4 @@
 #include "Session.h"
-#include "Client.h"
 
 void Session::handleClient(){
     this->reader = new User();
@@ -128,5 +127,5 @@ Session::Session(int sockfd){
     this->user->sockfd = sockfd;
 }
 
-Session::Session(Session& a) = delete;
+Session::Session(Session& a) = default;
 Session::~Session() = default;

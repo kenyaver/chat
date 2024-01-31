@@ -1,6 +1,5 @@
 #include "../libs/Session.h"
 
-// возвращает собственный IP-адрес в виде char* 
 char* getIPaddr(char* IPaddr){
     const char* google_dns_server = "8.8.8.8";
     int dns_port = 53;
@@ -25,7 +24,6 @@ char* getIPaddr(char* IPaddr){
     return IPaddr;
 }
 
-// инициализирует структуру sockaddr_in
 sockaddr_in addrInit(char* port){
     sockaddr_in addr;
     addr.sin_family = AF_INET;
@@ -33,6 +31,8 @@ sockaddr_in addrInit(char* port){
     addr.sin_addr.s_addr = INADDR_ANY;
     return addr;
 }
+
+
 
 int main(int argc, char* argv[]){
     char* IPaddr = getIPaddr(IPaddr);
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
     for(;;){
         try{
             int accepter = acceptCheck(sock, (sockaddr*)&addr);
-            userDB.push_back(User("", accepter));
+            userDB.push_back(User(accepter));
             Session session = Session(accepter);
             std::thread t(&Session::handleClient, session);
             t.detach();

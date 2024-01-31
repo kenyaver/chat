@@ -8,11 +8,17 @@ User::User(char* username, int sockfd,  int status){
     this->status = status;
 }
 
-User::User(User& a): User{a.username, a.sockfd, a.status}{}
+// User::User(User& a): User{a.username, a.sockfd, a.status}{
+//     std::cout << "user add to data base\n";
+// }
 
 User::User(char* username, int status){
     strcpy(this->username, username);
     this->status = status;
+}
+
+User::User(int sockfd){
+    this->sockfd = sockfd;
 }
 
 bool User::operator==(User& a) noexcept{
