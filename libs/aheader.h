@@ -32,5 +32,6 @@
 #include <sstream>
 
 #include <vector>
+#include <map>
 
 #endif

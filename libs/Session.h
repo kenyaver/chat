@@ -2,15 +2,23 @@
 
 #include "protocol.h"
 
-class Session: public Protocol{
-    public: 
-
-    // находит клиента с таким именем и присвает его указателю reader
-    void handleClient();
-    void setMod();
-    void online();
-    void offline();
-
+class Session{
+    private:
+    Protocol protocol;
+    User* user;
+    User* partner;
+    int messageID;
+    
+    
+    void setMod(); // -
+    void online(); // -
+    void offline(); // -
+    void sendOffline();
+    int stateSession(char* state) noexcept;
+    void forwarding();
+    public:
+    void handleClient(); // +
+    
     Session();
     Session(int sockfd);
     Session(Session& a);

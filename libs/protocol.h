@@ -2,26 +2,23 @@
 #include "User.h"
 
 class Protocol{
-    protected:
-    User* user;
-    User* reader;
-    int statusCode;
-    char* message;
-    char bufferUnconfirm[4][1032]; // буффер неподтвержденных сообщений
-    int messageID;
+    public:
+    std::map<int, char*> unconfirm; // буффер неподтвержденных сообщений
 
-    void recvUsernames();
-    void sendOffline();
-    void findReader() noexcept;
-    int stateSession(char* state) noexcept;
-
-    void forwarding();
-
-    void checkReader();
+    void parseUsernames(char* usernames, char* usernameUser, char* usernamePartner);
+    void findUser(User& user) noexcept;
+    void setMessageStatus(char* message, int messageID, int statusCode);
+    void appBufferUnconfirm(int messageID, char* message);
+    int parseMessage(char* message);
+   
+    int checkUser(char* message);
     void answerClient(int statusCode);
     int answerCheck(char* answer);
     void clearMessageFromBufferUnconfirm(char* message);
-    void setMessageStatus();
+    
     
     int writeFile();
+
+    Protocol();
+    ~Protocol();
 };

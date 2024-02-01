@@ -1,11 +1,13 @@
 #include "Session.h"
 
 void Session::handleClient(){
-    this->reader = new User();
+    this->partner = new User();
+    this->user = new User();
     this->user->status = 1;
     try{
-        this->recvUsernames();
-        userDB.push_back(User(this->reader->username, 0));
+        int ret = recv(this->user->sockfd, this->user->bufferRecv, sizeof(this->user->bufferRecv), 0);
+        this->protocol.parseUsernames(this->user->bufferRecv, this->user->username, this->partner->username);
+        userDB.push_back(User(this->partner->username, 0));
     } catch(const char* errorMessage){
         std::cout << errorMessage << ": " << errno << '\n';
         throw "client disconnected";
@@ -14,13 +16,14 @@ void Session::handleClient(){
         return;
     }
 
-    this->findReader();
+    this->protocol.findUser(*partner);
 
     this->setMod();
 
     this->user->disconnectUser();
 
-    delete reader;
+    delete partner;
+    delete user;
     this->user->closeSocket();
 }
 
@@ -34,10 +37,10 @@ void Session::setMod(){
         this->online();
     } else{
         int i = 0;
-        while(i < 4 && getFileSize(this->reader->username) < 4128 && this->stateSession(state) == 0){
+        while(i < 4 && getFileSize(this->partner->username) < 4128 && this->stateSession(state) == 0){
             this->offline();
         }
-        if(i == 4 || getFileSize(this->reader->username) >= 4128){
+        if(i == 4 || getFileSize(this->partner->username) >= 4128){
             send(this->user->sockfd, "limit send to offline client~\n", 32, 0);
             return;
         }
@@ -74,19 +77,19 @@ void Session::online(){
 
             this->forwarding();
             char answer[1032];
-            if(keepAlive(this->reader->sockfd) == 0){
-                recv(this->reader->sockfd, answer, sizeof(answer), 0);
+            if(keepAlive(this->partner->sockfd) == 0){
+                recv(this->partner->sockfd, answer, sizeof(answer), 0);
 
-                if(answerCheck(answer)){
-                    this->answerClient(200);
-                    clearMessageFromBufferUnconfirm(answer);
+                if(this->protocol.answerCheck(answer)){
+                    this->protocol.answerClient(200);
+                    this->protocol.clearMessageFromBufferUnconfirm(answer);
                 } else {
                     sprintf(this->user->bufferSend, "%s", answer);
                     send(this->user->sockfd, this->user->bufferSend, sizeof(this->user->bufferSend), 0);
                 }
 
             } else {
-                this->answerClient(300);
+                this->protocol.answerClient(300);
                 this->offline();
                 break;
             }
@@ -101,12 +104,61 @@ void Session::offline(){
         return;
     }
     try{
-        this->writeFile();
+        this->protocol.writeFile();
     } catch(const char* errorMessage){
         std::cout << errorMessage << std::endl;
         return;
     }
 }
+
+void Session::forwarding(){
+    recv(this->user->sockfd, this->user->bufferRecv, sizeof(this->user->bufferRecv), 0);
+    if(this->protocol.checkUser(this->user->bufferRecv) == 1){
+        // смена получателя
+    }
+    this->messageID = this->protocol.parseMessage(this->user->bufferRecv);
+    this->protocol.appBufferUnconfirm(this->messageID, this->user->bufferRecv);
+    sprintf(this->user->bufferSend, "%s", this->user->bufferRecv);
+    send(this->partner->sockfd, this->user->bufferSend, sizeof(this->user->bufferSend), 0);
+}
+
+
+int Session::stateSession(char* state) noexcept{
+    int res;
+
+    this->protocol.findUser(*partner);
+    if(this->partner->status == 0){
+        strcpy(state, "offline\n");
+        res = 0;
+    } else {
+        strcpy(state, "online\n");
+        res = 1;
+    }
+
+    return res;
+}
+
+void Session::sendOffline(){
+    char *filename;
+    sprintf(filename, "../offline/%s.txt", this->user->username);
+    FILE* file = fopen(filename, "r");
+    char offlineMessage[12];
+    if(file){
+        int c;
+        strcpy(offlineMessage, "message");
+        send(this->user->sockfd, offlineMessage, sizeof(offlineMessage), 0);
+        for(int i = 0; i < 4; i++){
+            if((c = fgetc(file)) != EOF){
+                fgets(this->user->bufferSend, sizeof(this->user->bufferSend), file);
+                send(this->user->sockfd, this->user->bufferSend, sizeof(this->user->bufferSend), 0);
+            }
+        }
+    } else {
+        strcpy(offlineMessage, "no message");
+        send(this->user->sockfd, offlineMessage, sizeof(offlineMessage), 0);
+    }
+}
+
 
 Session::Session() = default;
 Session::Session(int sockfd){
