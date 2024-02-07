@@ -28,6 +28,6 @@ int buffCheck(char* buffer);
 int exitClient(char* buffer);
 
 // проверка состояния подключения
-int keepAlive(int sock);
+// int keepAlive(int sock);
 
 #endif

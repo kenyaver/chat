@@ -1,24 +1,21 @@
 #pragma once
-#include "User.h"
+
+#include "check.h"
+#include "function.h"
+#include "user.h"
+
+
 
 class Protocol{
     public:
-    std::map<int, char*> unconfirm; // буффер неподтвержденных сообщений
-
-    void parseUsernames(char* usernames, char* usernameUser, char* usernamePartner);
-    void findUser(User& user) noexcept;
-    void setMessageStatus(char* message, int messageID, int statusCode);
-    void appBufferUnconfirm(int messageID, char* message);
-    int parseMessage(char* message);
-   
-    int checkUser(char* message);
-    void answerClient(int statusCode);
-    int answerCheck(char* answer);
-    void clearMessageFromBufferUnconfirm(char* message);
+    User user;
+    User* partner;
+    // std::map<uint32_t, char*> unconfirm;
+    std::vector<Command> unconfirm;
     
-    
-    int writeFile();
-
-    Protocol();
-    ~Protocol();
+    void setUser();
+    void changePartner();
+    void addToUnconfirm();
+    void removeFromUnconfirm(int messageID);
+    void saveUnconfirm(Command& offlineCommand);
 };

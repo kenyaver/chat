@@ -1,4 +1,5 @@
-#include "../libs/Session.h"
+#include "../libs/check.h"
+#include "../libs/function.h"
 
 char* getIPaddr(char* IPaddr){
     const char* google_dns_server = "8.8.8.8";
@@ -51,16 +52,7 @@ int main(int argc, char* argv[]){
     }
 
     for(;;){
-        try{
-            int accepter = acceptCheck(sock, (sockaddr*)&addr);
-            userDB.push_back(User(accepter));
-            Session session = Session(accepter);
-            std::thread t(&Session::handleClient, session);
-            t.detach();
-        } catch(const char* errorMessage){
-            std::cout << errorMessage << std::endl;
-            continue;
-        }
+        // обработка подключений и перевод в отдельный поток
     }
     close(sock);
     return 0;
