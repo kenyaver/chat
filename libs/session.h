@@ -11,6 +11,6 @@ class Session{
     void recving();
     void handleCommand();
     void sending();
-    int waitAnswer();
+    int waitAnswer(bool *flag);
     void end();
 };

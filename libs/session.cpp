@@ -22,11 +22,13 @@ void Session::recving(){
 }
 
 void Session::handleCommand(){
+    bool flag;
     switch(this->protocol.user.buffrecv.header.type){
         case 0:
         this->protocol.addToUnconfirm();
         this->sending();
-        this->waitAnswer();
+        this->waitAnswer(&flag);
+        // handle_answer();
         break;
         
         case 1:
@@ -38,7 +40,8 @@ void Session::handleCommand(){
         this->protocol.changePartner();
         this->protocol.addToUnconfirm();
         this->sending();
-        this->waitAnswer();
+        this->waitAnswer(&flag);
+        // handle_answer()
         break;
 
         case 3:
@@ -61,8 +64,32 @@ void Session::sending(){
     send(this->protocol.partner->sock, &this->protocol.user.buffsend, sizeof(protocol.user.buffsend), 0);
 }
 
-int Session::waitAnswer(){
-    // TODO: сделать ppoll и таймер
+int Session::waitAnswer(bool *flag){
+    int MILLISECONDS = CLOCKS_PER_SEC / 1000;
+    int end_time = clock() + 3000 * MILLISECONDS;
+
+    struct timespec timeout;
+    timeout.tv_sec = 1;
+    struct pollfd fidesc;
+    fidesc.fd = this->protocol.partner->sock;
+    fidesc.events = POLLIN;
+
+    while(clock() < end_time && !*flag){
+        int ret = ppoll(&fidesc, 1, &timeout, NULL);
+        if(ret == -1){
+            *flag = false;
+        }
+
+        if(ret == 0){
+            *flag = false;
+        }
+
+        if(ret > 1){
+            fidesc.revents = 0;
+            *flag = true;
+        }
+        
+    }
 }
 
 void Session::end(){
