@@ -22,30 +22,29 @@ void Session::recving(){
 }
 
 void Session::handleCommand(){
-    bool flag;
     switch(this->protocol.user.buffrecv.header.type){
         case 0:
         this->protocol.addToUnconfirm();
-        this->sending();
-        this->waitAnswer(&flag);
+        this->sending(this->protocol.user, *this->protocol.partner);
+        this->waitAnswer();
         // handle_answer();
         break;
         
         case 1:
         this->protocol.removeFromUnconfirm(this->protocol.user.buffrecv.header.messageID);
-        this->sending();
+        this->sending(this->protocol.user, *this->protocol.partner);
         break;
 
         case 2:
         this->protocol.changePartner();
         this->protocol.addToUnconfirm();
-        this->sending();
-        this->waitAnswer(&flag);
+        this->sending(this->protocol.user, *this->protocol.partner);
+        this->waitAnswer();
         // handle_answer()
         break;
 
         case 3:
-        this->sending();
+        this->sending(this->protocol.user, *this->protocol.partner);
         this->end();
         break;
 
@@ -59,12 +58,12 @@ void Session::handleCommand(){
     }
 }
 
-void Session::sending(){
-    this->protocol.user.buffsend = this->protocol.user.buffsend;
-    send(this->protocol.partner->sock, &this->protocol.user.buffsend, sizeof(protocol.user.buffsend), 0);
+void Session::sending(User& src, User& dst){
+    src.buffrecv = src.buffsend;
+    send(dst.sock, &src.buffsend, sizeof(src.buffsend), 0);
 }
 
-int Session::waitAnswer(bool *flag){
+int Session::waitAnswer(){
     int MILLISECONDS = CLOCKS_PER_SEC / 1000;
     int end_time = clock() + 3000 * MILLISECONDS;
 
@@ -74,24 +73,46 @@ int Session::waitAnswer(bool *flag){
     fidesc.fd = this->protocol.partner->sock;
     fidesc.events = POLLIN;
 
-    while(clock() < end_time && !*flag){
-        int ret = ppoll(&fidesc, 1, &timeout, NULL);
-        if(ret == -1){
-            *flag = false;
-        }
+    while(clock() < end_time){
+        int res = ppoll(&fidesc, 1, &timeout, NULL);
 
-        if(ret == 0){
-            *flag = false;
-        }
-
-        if(ret > 1){
+        if(res > 1){
             fidesc.revents = 0;
-            *flag = true;
+            this->recvPartner();
+            if(this->handleAnswer()){
+                return 1;
+            }
         }
-        
     }
+    return 0;
+}
+
+void Session::recvPartner(){
+    recv(this->protocol.partner->sock, &this->protocol.partner->buffrecv, sizeof(uint16_t), 0);
+    this->protocol.partner->buffrecv.header.len = ntohs(this->protocol.partner->buffrecv.header.len);
+    this->protocol.partner->buffrecv.message = new char[this->protocol.partner->buffrecv.header.len];
+    recv(this->protocol.partner->sock, &this->protocol.partner->buffrecv + sizeof(this->protocol.partner->buffrecv.header.len), this->protocol.partner->buffrecv.header.len - sizeof(this->protocol.partner->buffrecv.header.len), 0);
+}
+
+int Session::handleAnswer(){
+    this->sending(*this->protocol.partner, this->protocol.user);
+
+    if(this->checkAnswer()){
+        return 1;
+    }
+
+    return 0;
+}
+
+int Session::checkAnswer(){
+    if(this->protocol.partner->buffrecv.header.type == 1){
+        return 1;
+    }
+    return 0;
 }
 
 void Session::end(){
-    // TODO: сделать запись в файл всех обрабатываемых сообщений
+    for(auto i: this->protocol.unconfirm){
+        this->protocol.saveUnconfirm(i);
+    }
 }
