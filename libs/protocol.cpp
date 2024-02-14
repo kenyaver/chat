@@ -30,7 +30,7 @@ void Protocol::removeFromUnconfirm(int messageID){
 
 void Protocol::saveUnconfirm(Command& offlineCommand){
     char* filename;
-    sprintf(filename, "offine/%s.txt", offlineCommand.header.DST);
+    sprintf(filename, "../offline/%s.txt", offlineCommand.header.DST);
     int file = open(filename, O_RDWR);
     write(file, &offlineCommand, sizeof(offlineCommand));
     close(file);

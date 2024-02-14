@@ -2,6 +2,12 @@
 
 void Session::session(){
     // initialization
+    this->recving();
+    this->protocol.setUser();
+    if(this->checkOffline()){
+        this->sendOffline();
+    }
+
     while(1){
         this->recving();
         this->handleCommand();
@@ -13,10 +19,38 @@ void Session::session(){
     this->end();
 }
 
+int Session::checkOffline(){
+    char filepath[24];
+    int exist;
+    sprintf(filepath, "../offline/%s.txt", this->protocol.user.username);
+    FILE* file = fopen(filepath, "r");
+    if(file){
+        exist = 1;
+    } else {
+        exist = 0;
+    }
+    fclose(file);
+    return exist;
+}
+
+void Session::sendOffline(){
+    char filepath[24];
+    sprintf(filepath, "../offline/%s.txt", this->protocol.user.username);
+    while(this->readFile(filepath)){
+        send(this->protocol.user.sock, &this->protocol.user.buffsend, sizeof(this->protocol.user.buffsend), 0);
+    }
+}
+
+int Session::readFile(char *filepath){
+    int file = open(filepath, O_RDONLY);
+    int bytes = read(file, &this->protocol.user.buffsend, sizeof(this->protocol.user.buffsend.header.len));
+    bytes += read(file, &this->protocol.user.buffsend + sizeof(this->protocol.user.buffsend.header.len), this->protocol.user.buffsend.header.len - sizeof(this->protocol.user.buffsend.header.len));
+    return bytes;
+}
+
 void Session::recving(){
-    recv(this->protocol.user.sock, &this->protocol.user.buffrecv.header.len, sizeof(uint16_t), 0);
+    recv(this->protocol.user.sock, &this->protocol.user.buffrecv, sizeof(this->protocol.user.buffrecv.header.len), 0);
     this->protocol.user.buffrecv.header.len = ntohs(this->protocol.user.buffrecv.header.len);
-    int len = this->protocol.user.buffrecv.header.len;
     this->protocol.user.buffrecv.message = (char*)malloc(this->protocol.user.buffrecv.header.len);
     recv(this->protocol.user.sock, &this->protocol.user.buffrecv + sizeof(this->protocol.user.buffrecv.header.len), this->protocol.user.buffrecv.header.len - sizeof(this->protocol.user.buffrecv.header.len), 0);
 }
@@ -46,10 +80,6 @@ void Session::handleCommand(){
         case 3:
         this->sending(this->protocol.user, *this->protocol.partner);
         this->end();
-        break;
-
-        case 4:
-        this->protocol.setUser();
         break;
 
         default:
