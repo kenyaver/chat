@@ -119,9 +119,11 @@ int Session::waitAnswer(){
 
 void Session::recvPartner(){
     recv(this->protocol.partner->sock, &this->protocol.partner->buffrecv, sizeof(uint16_t), 0);
-    this->protocol.partner->buffrecv.header.len = ntohs(this->protocol.partner->buffrecv.header.len);
-    this->protocol.partner->buffrecv.message = new char[this->protocol.partner->buffrecv.header.len];
-    recv(this->protocol.partner->sock, &this->protocol.partner->buffrecv + sizeof(this->protocol.partner->buffrecv.header.len), this->protocol.partner->buffrecv.header.len - sizeof(this->protocol.partner->buffrecv.header.len), 0);
+        this->protocol.partner->buffrecv.header.len = ntohs(this->protocol.partner->buffrecv.header.len);
+    this->protocol.partner->buffrecv.message = new char[this->protocol.partner->buffrecv.header.len - 24];
+    recv(this->protocol.partner->sock,
+        &this->protocol.partner->buffrecv + sizeof(this->protocol.partner->buffrecv.header.len),
+        this->protocol.partner->buffrecv.header.len - sizeof(this->protocol.partner->buffrecv.header.len), 0);
 }
 
 int Session::handleAnswer(){
