@@ -27,7 +27,4 @@ int buffCheck(char* buffer);
 // проверка на спец-символ в сообщении
 int exitClient(char* buffer);
 
-// проверка состояния подключения
-// int keepAlive(int sock);
-
 #endif

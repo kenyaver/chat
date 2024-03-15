@@ -2,21 +2,7 @@
 
 #include "check.h"
 #include "function.h"
-
-class Header{
-    public:
-    uint16_t len;
-    uint16_t type;
-    uint32_t messageID;
-    char SRC[8];
-    char DST[8];
-};
-
-class Command{
-    public:
-    Header header;
-    char *message;
-};
+#include "command.h"
 
 class User{
     public:
@@ -28,4 +14,10 @@ class User{
     void disconnect();
 };
 
-inline std::vector<User> userDB;
+class UserDB{
+    std::vector<User> userDB;
+
+    public:
+    
+};
+

@@ -7,16 +7,13 @@
 class Session{
     private:
     Protocol protocol;
-    void session();
-    int checkOffline();
-    void sendOffline();
-    int readFile(char *filepath);
-    void recving();
+    Session();
+    int waitFDs();
     void handleCommand();
-    void sending(User& src, User& dst);
-    int waitAnswer();
-    void recvPartner();
-    int handleAnswer();
-    int checkAnswer();
+    void handleTimer();
+    
+    int sending();
+    int recving();
+
     void end();
 };
