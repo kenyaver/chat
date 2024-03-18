@@ -33,7 +33,7 @@ void Protocol::removeFromUnconfirm(){
     unconfirm.pop();
 }
 
-void Protocol::saveUnconfirm(char* name){
+void Protocol::clearUnconfirm(char* name){
     char filePuth[24];
     sprintf(filePuth, "../offline/%s.txt", name);
     int file = open(filePuth, O_WRONLY);

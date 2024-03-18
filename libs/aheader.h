@@ -32,6 +32,7 @@
 #include <sstream>
 
 #include <vector>
+#include <list>
 #include <queue>
 #include <map>
 

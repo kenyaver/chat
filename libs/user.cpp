@@ -3,5 +3,8 @@
 void User::disconnect(){
     close(this->sock);
     this->sock = -1;
-    this->status = 0;
+}
+
+void UserDB::addUser(User& newUser){
+    userDB.push_back(newUser);
 }

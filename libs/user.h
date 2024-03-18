@@ -7,7 +7,6 @@
 class User{
     public:
     int sock;
-    int status;
     char username[8];
     Command buffrecv;
     Command buffsend;
@@ -15,9 +14,16 @@ class User{
 };
 
 class UserDB{
-    std::vector<User> userDB;
-
+    std::list<User> userDB;
     public:
-    
+    // используется при подключении клиента
+    void addUser(User& newUser);
+    // используетя после принятия сервером первой команды от клиента для заполнения полей user
+    void updateUserInfo(User& user);
+    // используется для поиска искомого партнера для последующей передачи тому команды
+    User findUser(char* username);
+    // используется при обнаружении факта отключения пользователя от сервера
+    void removeUser();
+    // используется при завершении работы сервера
+    void clearUserDB();
 };
-

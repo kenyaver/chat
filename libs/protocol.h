@@ -3,19 +3,21 @@
 #include "check.h"
 #include "function.h"
 #include "command.h"
+#include "user.h"
+#include "timer.h"
 
 
 class Protocol{
     public:
     std::queue<Command> unconfirm;
-    std::queue<int> timerQueue;
 
-    void addTimer();
-    void removeTimer();
-    void clearTimerQueue();
-
-
+    // unconfirm
     void addToUnconfirm(Command& buffer);
     void removeFromUnconfirm();
-    void saveUnconfirm(char* name);
+    void clearUnconfirm(char* name);
+
+    // recv/send commands
+    void processRecvCommand();
+    void processSendCommand();
+    
 };
