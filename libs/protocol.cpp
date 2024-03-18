@@ -16,3 +16,9 @@ void Protocol::removeTimer(){
     shutdown(td, SHUT_RDWR);
     close(td);
 }
+
+void Protocol::clearTimerQueue(){
+    for(int i = 0; i < timerQueue.size(); i++){
+        removeTimer();
+    }
+}
