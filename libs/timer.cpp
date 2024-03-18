@@ -1,5 +1,7 @@
 #include "timer.h"
 
+std::queue<Timer> timerQueue;
+
 Timer::Timer(int timerfd){
     this->timerfd = timerfd;
 }

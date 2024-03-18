@@ -11,6 +11,6 @@ class Timer{
     void removeTimer();
 };
 
-inline std::queue<Timer> timerQueue;
+
 
 void clearTimerQueue();
