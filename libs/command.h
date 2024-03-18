@@ -14,5 +14,9 @@ class Header{
 class Command{
     public:
     Header header;
-    char *message;
+    char message[];
 };
+
+int recvCommand(int sockfd, Command& buffer);
+
+int sendCommand(int sockfd, Command& buffer);
