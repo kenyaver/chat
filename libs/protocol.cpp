@@ -9,3 +9,10 @@ void Protocol::addTimer(){
     timerfd_settime(td, TFD_TIMER_ABSTIME, &timer, NULL);
     timerQueue.push(td);
 }
+
+void Protocol::removeTimer(){
+    int td = timerQueue.front();
+    timerQueue.pop();
+    shutdown(td, SHUT_RDWR);
+    close(td);
+}
