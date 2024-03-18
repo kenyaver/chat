@@ -7,7 +7,7 @@
 
 class Protocol{
     public:
-    std::vector<Command> unconfirm;
+    std::queue<Command> unconfirm;
     std::queue<int> timerQueue;
 
     void addTimer();

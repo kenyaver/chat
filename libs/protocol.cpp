@@ -26,11 +26,11 @@ void Protocol::clearTimerQueue(){
 
 // unconfirm work
 void Protocol::addToUnconfirm(Command& buffer){
-    unconfirm.push_back(buffer);
+    unconfirm.push(buffer);
 }
 
 void Protocol::removeFromUnconfirm(){
-    unconfirm.erase(unconfirm.cbegin());
+    unconfirm.pop();
 }
 
 void Protocol::saveUnconfirm(char* name){
@@ -38,7 +38,9 @@ void Protocol::saveUnconfirm(char* name){
     sprintf(filePuth, "../offline/%s.txt", name);
     int file = open(filePuth, O_WRONLY);
     for(int i = 0; i < unconfirm.size(); i++){
-        unconfirm.at(i).header.type = 3;
-        write(file, &unconfirm.at(i), unconfirm.at(i).header.len);
+        Command filer(unconfirm.front());
+        unconfirm.pop();
+        filer.header.type = 2;
+        write(file, &filer, filer.header.len);
     }
 }
