@@ -16,6 +16,6 @@ class Protocol{
 
 
     void addToUnconfirm(Command& buffer);
-    void removeFromUnconfirm(int messageID);
+    void removeFromUnconfirm();
     void saveUnconfirm(Command& offlineCommand);
 };

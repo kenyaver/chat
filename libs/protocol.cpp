@@ -29,3 +29,6 @@ void Protocol::addToUnconfirm(Command& buffer){
     unconfirm.push_back(buffer);
 }
 
+void Protocol::removeFromUnconfirm(){
+    unconfirm.erase(unconfirm.cbegin());
+}
