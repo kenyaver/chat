@@ -1,5 +1,6 @@
 #include "protocol.h"
 
+// Timer work
 void Protocol::addTimer(){
     int td = timerfd_create(CLOCK_REALTIME, 0);
     struct itimerspec timer;
@@ -22,3 +23,9 @@ void Protocol::clearTimerQueue(){
         removeTimer();
     }
 }
+
+// unconfirm work
+void Protocol::addToUnconfirm(Command& buffer){
+    unconfirm.push_back(buffer);
+}
+

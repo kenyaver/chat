@@ -15,7 +15,7 @@ class Protocol{
     void clearTimerQueue();
 
 
-    void addToUnconfirm();
+    void addToUnconfirm(Command& buffer);
     void removeFromUnconfirm(int messageID);
     void saveUnconfirm(Command& offlineCommand);
 };
