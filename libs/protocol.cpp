@@ -32,3 +32,13 @@ void Protocol::addToUnconfirm(Command& buffer){
 void Protocol::removeFromUnconfirm(){
     unconfirm.erase(unconfirm.cbegin());
 }
+
+void Protocol::saveUnconfirm(char* name){
+    char filePuth[24];
+    sprintf(filePuth, "../offline/%s.txt", name);
+    int file = open(filePuth, O_WRONLY);
+    for(int i = 0; i < unconfirm.size(); i++){
+        unconfirm.at(i).header.type = 3;
+        write(file, &unconfirm.at(i), unconfirm.at(i).header.len);
+    }
+}
