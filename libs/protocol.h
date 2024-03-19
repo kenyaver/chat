@@ -5,14 +5,15 @@
 #include "user.h"
 
 
-class Protocol{
+class protocol{
     Online online;
     Timer timer;
     Unconfirm unconfirm;  
     public:
+    void addUser(User& user);
     // recv/send commands
-    void processRecvCommand();
-    void processSendCommand();
+    void processRecvCommand(int sockfd, Command* buffer);
+    void processSendCommand(int sockfd, Command& buffer);
     
     //disconnect
     void disconnectClient();
