@@ -6,14 +6,14 @@ void setNetCommandToHost(Command& h){
     h.header.messageID = ntohs(h.header.messageID);
 }
 
-int recvCommand(int sockfd, Command& buffer){
-    int byte = recv(sockfd, &buffer.header, sizeof(Header), 0);
+int recvCommand(int sockfd, Command* buffer){
+    int byte = recv(sockfd, &buffer->header, sizeof(Header), 0);
     if(byte == -1){
         return byte;
     }
-    setNetCommandToHost(buffer);
-    realloc(&buffer, buffer.header.len);
-    byte += recv(sockfd, &buffer.message, buffer.header.len - sizeof(Header), 0);
+    setNetCommandToHost(*buffer);
+    buffer = (Command*)realloc(buffer, buffer->header.len);
+    byte += recv(sockfd, buffer->message, buffer->header.len - sizeof(Header), 0);
     return byte;
 }
 

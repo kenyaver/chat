@@ -1,4 +1,5 @@
-#include "aheader.h"
+#pragma once
+
 #include "command.h"
 
 class Unconfirm{

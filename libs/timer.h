@@ -1,3 +1,5 @@
+#pragma once
+
 #include "aheader.h"
 
 class Timer{
