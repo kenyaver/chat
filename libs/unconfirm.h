@@ -2,8 +2,9 @@
 #include "command.h"
 
 class Unconfirm{
+    std::queue<Command> unconfirm;
     public:
     void addToUnconfirm(Command& buffer);
     void removeFromUnconfirm();
-    void clearUnconfirm(char* name);
+    void saveUnconfirm(char* name);
 };

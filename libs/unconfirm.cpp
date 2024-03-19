@@ -1,7 +1,5 @@
 #include "unconfirm.h"
 
-inline std::queue<Command> unconfirm;
-
 void Unconfirm::addToUnconfirm(Command& buffer){
     unconfirm.push(buffer);
 }
@@ -10,7 +8,7 @@ void Unconfirm::removeFromUnconfirm(){
     unconfirm.pop();
 }
 
-void Unconfirm::clearUnconfirm(char* name){
+void Unconfirm::saveUnconfirm(char* name){
     char filePuth[24];
     sprintf(filePuth, "../offline/%s.txt", name);
     int file = open(filePuth, O_WRONLY);

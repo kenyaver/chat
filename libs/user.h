@@ -10,16 +10,17 @@ class User{
     char username[8];
     Command buffrecv;
     Command buffsend;
+    bool operator==(char* username);
     void disconnect();
+    // используетя после принятия сервером первой команды от клиента для заполнения полей user
+    void updateUserInfo(char* username);
 };
 
-class UserDB{
-    std::list<User> userDB;
+class Online{
+    std::list<User> online;
     public:
     // используется при подключении клиента
     void addUser(User& newUser);
-    // используетя после принятия сервером первой команды от клиента для заполнения полей user
-    void updateUserInfo(User& user);
     // используется для поиска искомого партнера для последующей передачи тому команды
     User findUser(char* username);
     // используется при обнаружении факта отключения пользователя от сервера
