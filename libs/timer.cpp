@@ -1,16 +1,5 @@
 #include "timer.h"
 
-std::queue<Timer> timerQueue;
-
-Timer::Timer(int timerfd){
-    this->timerfd = timerfd;
-}
-
-Timer Timer::operator=(Timer& a){
-    this->timerfd = a.timerfd;
-    return *this;
-}
-
 void Timer::addTimer(){
     int td = timerfd_create(CLOCK_REALTIME, 0);
     struct itimerspec timer;
@@ -22,15 +11,13 @@ void Timer::addTimer(){
 }
 
 void Timer::removeTimer(){
-    Timer td = timerQueue.front();
-    shutdown(td.timerfd, SHUT_RDWR);
-    close(td.timerfd);
-    timerQueue.pop();
+    shutdown(this->timerQueue.front(), SHUT_RDWR);
+    close(this->timerQueue.front());
+    this->timerQueue.pop();
 }
 
-void clearTimerQueue(){
-    for(int i = 0; i < timerQueue.size(); i++){
-        Timer tmp = timerQueue.front();
-        tmp.removeTimer();
+void Timer::clearTimerQueue(){
+    for(int i = 0; i < this->timerQueue.size(); i++){
+        this->removeTimer();
     }
 }

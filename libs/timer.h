@@ -3,16 +3,10 @@
 #include "aheader.h"
 
 class Timer{
-    int timerfd;
+    std::queue<int> timerQueue;
 
     public:
-    Timer(int timerfd);
-    Timer operator=(Timer& a);
-
     void addTimer();
     void removeTimer();
+    void clearTimerQueue();
 };
-
-
-
-void clearTimerQueue();

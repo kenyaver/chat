@@ -12,7 +12,6 @@ class User{
     Command *bufferSend;
     Command *bufferRecv;
     int sock;
-    
     Timer timer;
     Unconfirm unconfirm;
     Offline offline;

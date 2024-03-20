@@ -3,11 +3,11 @@
 #include "check.h"
 #include "function.h"
 
-void protocol::addUser(User& user){
+void Protocol::addUser(User& user){
     onlineList.addUser(user);
     this->user = onlineList.findUser(user.username);
 }
 
-void protocol::processRecvCommand(User& user){
+void Protocol::processRecvCommand(User& user){
     
 }

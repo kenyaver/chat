@@ -4,7 +4,7 @@
 #include "user.h"
 
 
-class protocol{
+class Protocol{
     User* user;
     User* partner;
     OnlineList onlineList;
