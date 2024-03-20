@@ -27,16 +27,16 @@ User* OnlineList::findUser(char* username){
     return NULL;
 }
 
-void Online::removeUser(char* username){
-    for(auto i = online.begin(); i != online.end(); i++){
+void OnlineList::removeUser(char* username){
+    for(auto i = onlineList.begin(); i != onlineList.end(); i++){
         i->disconnect();
-        online.erase(i);
+        onlineList.erase(i);
         return;
     }
 }
 
-void Online::clearUserDB(){
-    for(auto i = online.begin(); i != online.end(); i++){
+void OnlineList::clearUserDB(){
+    for(auto i = onlineList.begin(); i != onlineList.end(); i++){
         removeUser(i->username);       
     }
 }

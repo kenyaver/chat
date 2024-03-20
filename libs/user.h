@@ -2,6 +2,8 @@
 
 
 #include "command.h"
+#include "timer.h"
+#include "unconfirm.h"
 
 class User{
     public:
@@ -9,6 +11,8 @@ class User{
     char username[8];
     Command bufferSend;
     Command bufferRecv;
+    Timer timer;
+    Unconfirm unconfirm;
     bool operator==(char* username);
     void disconnect();
     // используетя после принятия сервером первой команды от клиента для заполнения полей user
