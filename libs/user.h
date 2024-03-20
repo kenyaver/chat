@@ -15,8 +15,8 @@ class User{
     void updateUserInfo(char* username);
 };
 
-class Online{
-    std::list<User> online;
+class OnlineList{
+    std::list<User> onlineList;
     public:
     // используется при подключении клиента
     void addUser(User& newUser);

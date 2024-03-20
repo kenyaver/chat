@@ -6,7 +6,7 @@
 
 
 class protocol{
-    Online online;
+    OnlineList onlineList;
     Timer timer;
     Unconfirm unconfirm;  
     public:

@@ -14,12 +14,12 @@ void User::updateUserInfo(char* username){
     memcpy(this->username, username, 8);
 }
 
-void Online::addUser(User& newUser){
-    online.push_back(newUser);
+void OnlineList::addUser(User& newUser){
+    onlineList.push_back(newUser);
 }
 
-User* Online::findUser(char* username){
-    for(auto i = online.begin(); i != online.end(); i++){
+User* OnlineList::findUser(char* username){
+    for(auto i = onlineList.begin(); i != onlineList.end(); i++){
         if(*i == username){
             return &*i;
         }
