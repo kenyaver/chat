@@ -14,7 +14,8 @@ class User{
     int sock;
     Timer timer;
     Unconfirm unconfirm;
-    Offline offline;
+
+
     bool operator==(char* username);
     void disconnect();
     // используетя после принятия сервером первой команды от клиента для заполнения полей user

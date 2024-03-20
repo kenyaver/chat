@@ -8,17 +8,16 @@ class Protocol{
     User* user;
     User* partner;
     OnlineList onlineList;
+    Offline offline;
     public:
     void addUser(User& user);
-    // \param sockfd сокет, по которому пришла команда
-    // \param buffer буффер, в который будет записана команда
+    // \param user пользователь, от которого принимается команда на сервер в bufferRecv
     // \note Функция будет обрабатывать пришедшую команду в соответствии с протоколом общения
-    void processRecvCommand(User& user);
+    void processRecvCommand();
 
-    // \param sockfd сокет, по которому пришла команда
-    // \param buffer буффер, в который будет записана команда
+    // \param user пользователь, которому отправляется команда из bufferSend
     // \note Функция будет отправлять команду в соответствии с протоколом общения
-    void processSendCommand(User& user);
+    void processSendCommand();
 
     // \note очищение буффера неподтвержденных сообщений, запись их в файл, удаление пользователя из списка онлайн-пользователей, очищение очереди тайймеров
     void clearUser();
