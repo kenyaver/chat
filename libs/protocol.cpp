@@ -41,3 +41,27 @@ void Protocol::processSendCommand(){
     this->partner->timer.addTimer();
     this->partner->unconfirm.addToUnconfirm(*this->partner->bufferSend);
 }
+
+void Protocol::clearUser(){
+    this->user->timer.clearTimerQueue();
+    this->onlineList.removeUser(this->user->username);
+    this->offline.setPath(this->user->username);
+    for(int i = 0; i < this->user->unconfirm.size(); i++){
+        
+        Command *tmp = &this->user->unconfirm.getCommand();
+        tmp->header.type = 2;
+        this->offline.writeFile(*tmp);
+        
+        //TODO: вынести в отдельную функцию изменение команды до ответного вида
+        tmp->header.type = 1;
+        tmp->header.len = sizeof(Header) + 4;
+        tmp = (Command*)realloc(tmp, tmp->header.len);
+        memcpy(tmp->message, "300", 4);
+        User* recver = this->onlineList.findUser(tmp->header.SRC); 
+        if(recver != nullptr){
+            sendCommand(recver->sock, *tmp);
+        }
+    
+        this->user->unconfirm.removeFromUnconfirm();
+    }
+}
