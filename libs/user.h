@@ -4,15 +4,18 @@
 #include "command.h"
 #include "timer.h"
 #include "unconfirm.h"
+#include "offline.h"
 
 class User{
     public:
-    int sock;
     char username[8];
-    Command bufferSend;
-    Command bufferRecv;
+    Command *bufferSend;
+    Command *bufferRecv;
+    int sock;
+    
     Timer timer;
     Unconfirm unconfirm;
+    Offline offline;
     bool operator==(char* username);
     void disconnect();
     // используетя после принятия сервером первой команды от клиента для заполнения полей user

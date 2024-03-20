@@ -8,11 +8,6 @@ void protocol::addUser(User& user){
     this->user = onlineList.findUser(user.username);
 }
 
-void protocol::processRecvCommand(int sockfd, Command& buffer){
-    recvCommand(sockfd, &buffer);
-    if(buffer.header.type == 1){
-        
-    } else {
-
-    }
+void protocol::processRecvCommand(User& user){
+    
 }
