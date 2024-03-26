@@ -7,7 +7,7 @@
 class Session{
     private:
     Protocol protocol;
-    Session();
+    Session(int sock);
     int waitFDs();
     void handleCommand();
     void handleTimer();

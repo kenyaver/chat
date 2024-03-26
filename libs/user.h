@@ -13,10 +13,11 @@ class User{
     Command *bufferRecv;
     int sock;
     Timer timer;
-    Unconfirm unconfirm;
+    std::queue<Command> unconfirm;
 
 
     bool operator==(char* username);
+    void clearQueueUnconfirm();
     void disconnect();
     // используетя после принятия сервером первой команды от клиента для заполнения полей user
     void updateUserInfo(char* username);

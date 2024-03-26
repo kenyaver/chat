@@ -22,7 +22,7 @@ void Protocol::processRecvCommand(){
         }
     } else {
         this->user->timer.removeTimer();
-        this->user->unconfirm.removeFromUnconfirm();
+        this->user->unconfirm.pop();
         //TODO: вынести в отдельную функцию (повторение кода - ай-ай-ай)
         this->partner = this->onlineList.findUser(this->user->bufferRecv->header.DST);
         if(partner != NULL){
@@ -39,7 +39,7 @@ void Protocol::processRecvCommand(){
 void Protocol::processSendCommand(){
     sendCommand(this->partner->sock, *this->partner->bufferSend);
     this->partner->timer.addTimer();
-    this->partner->unconfirm.addToUnconfirm(*this->partner->bufferSend);
+    this->partner->unconfirm.push(*this->partner->bufferSend);
 }
 
 void Protocol::clearUser(){
@@ -48,7 +48,7 @@ void Protocol::clearUser(){
     this->offline.setPath(this->user->username);
     for(int i = 0; i < this->user->unconfirm.size(); i++){
         
-        Command *tmp = &this->user->unconfirm.getCommand();
+        Command *tmp = &this->user->unconfirm.front();
         tmp->header.type = 2;
         this->offline.writeFile(*tmp);
         
@@ -61,7 +61,5 @@ void Protocol::clearUser(){
         if(recver != nullptr){
             sendCommand(recver->sock, *tmp);
         }
-    
-        this->user->unconfirm.removeFromUnconfirm();
     }
 }

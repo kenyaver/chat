@@ -5,11 +5,12 @@
 
 
 class Protocol{
-    User* user;
-    User* partner;
     OnlineList onlineList;
     Offline offline;
     public:
+    User* user;
+    User* partner;
+    
     void addUser(User& user);
     // \note Функция будет обрабатывать пришедшую команду в соответствии с протоколом общения
     void processRecvCommand();

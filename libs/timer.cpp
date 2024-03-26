@@ -1,5 +1,9 @@
 #include "timer.h"
 
+int Timer::getFirstTimer(){
+    return timerQueue.front();
+}
+
 void Timer::addTimer(){
     int td = timerfd_create(CLOCK_REALTIME, 0);
     struct itimerspec timer;
