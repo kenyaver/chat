@@ -12,8 +12,8 @@ class Session{
     void handleCommand();
     void handleTimer();
     
-    int sending();
-    int recving();
+    // int sending();
+    // int recving();
 
     void end();
 };

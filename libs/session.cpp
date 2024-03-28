@@ -50,3 +50,7 @@ void Session::handleTimer(){
         this->end();
     }
 }
+
+void Session::end(){
+    this->protocol.clearUserList();
+}

@@ -15,6 +15,7 @@ void User::disconnect(){
     close(this->sock);
     this->sock = -1;
     this->clearQueueUnconfirm();
+    this->timer.clearTimerQueue();
 }
 
 void User::updateUserInfo(char* username){

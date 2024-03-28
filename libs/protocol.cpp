@@ -63,3 +63,7 @@ void Protocol::clearUser(){
         }
     }
 }
+
+void Protocol::clearUserList(){
+    onlineList.clearUserDB();
+}
