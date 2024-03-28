@@ -2,9 +2,7 @@
 
 
 #include "aheader.h"
-#include "command.h"
 #include "user.h"
-#include "timer.h"
 
 class OnlineList{
     std::list<User> onlineList;

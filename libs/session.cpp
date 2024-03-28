@@ -11,7 +11,6 @@ int Session::waitFDs(){
     nfds_t nfd = 2;
     fds[0].fd = this->protocol.user->sock;
     fds[0].events = POLLIN | POLLRDHUP;
-
     fds[1].fd = this->protocol.user->timer.getFirstTimer();
     fds[1].events = POLLIN | POLLRDHUP;
     int ret = 0;
@@ -20,27 +19,17 @@ int Session::waitFDs(){
         if(ret > 0){
             if(fds[0].revents != 0){
                 if(fds[0].revents != POLLRDHUP){
-                    this->protocol.processRecvCommand();
+                    this->protocol.handleCommand();
+                    fds[0].revents = 0;
                 } else {
+                    fds[0].revents = 0;
                     break;
                 }
             } else {
-                this->handleTimer();
+                this->protocol.handleTimer();
+                fds[1].revents = 0;
             }
-            fds[0].revents = 0;
         }
     }
-    this->end();
-}
-
-void Session::handleTimer(){
-    uint64_t exp;
-    int byte = read(this->protocol.user->timer.getFirstTimer(), &exp, sizeof(exp));
-    if(byte != -1){
-        this->end();
-    }
-}
-
-void Session::end(){
     this->protocol.clearUser();
 }
