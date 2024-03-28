@@ -1,6 +1,7 @@
 #pragma once
 
 #include "offline.h"
+#include "onlineList.h"
 #include "user.h"
 
 
