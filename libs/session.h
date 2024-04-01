@@ -8,5 +8,5 @@ class Session{
     private:
     Protocol protocol;
     Session(int sock);
-    int waitFDs();
+    int worker();
 };

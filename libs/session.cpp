@@ -6,7 +6,7 @@ Session::Session(int sock){
     this->protocol.addUser(you);
 }
 
-int Session::waitFDs(){
+int Session::worker(){
     this->protocol.helloUser();
     struct pollfd fds[2];
     nfds_t nfd = 2;
