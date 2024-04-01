@@ -15,4 +15,4 @@ build/client
 /.testProject
 
 #ignore offline
-offline/*
+offlineTXT/*
