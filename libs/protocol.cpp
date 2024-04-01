@@ -17,6 +17,11 @@ void Protocol::handleCommand(){
     }
 }
 
+void Protocol::helloUser(){
+    recvCommand(this->user->sock, this->user->bufferRecv);
+    memcpy(this->user->username, this->user->bufferRecv->header.SRC, 8);
+}
+
 void Protocol::processSendCommand(){
     this->partner = this->onlineList.findUser(this->user->bufferRecv->header.DST);
     if(partner != NULL){

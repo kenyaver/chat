@@ -7,6 +7,7 @@ Session::Session(int sock){
 }
 
 int Session::waitFDs(){
+    this->protocol.helloUser();
     struct pollfd fds[2];
     nfds_t nfd = 2;
     fds[0].fd = this->protocol.user->sock;
