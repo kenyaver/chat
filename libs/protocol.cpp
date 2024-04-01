@@ -20,6 +20,11 @@ void Protocol::handleCommand(){
 void Protocol::helloUser(){
     recvCommand(this->user->sock, this->user->bufferRecv);
     memcpy(this->user->username, this->user->bufferRecv->header.SRC, 8);
+    this->processSendCommand();
+    if(this->user->bufferRecv->header.type == 1){
+        this->partner->unconfirm.push(*this->partner->bufferSend);
+        this->partner->timer.addTimer();
+    }
 }
 
 void Protocol::processSendCommand(){
