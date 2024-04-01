@@ -14,5 +14,5 @@ build/client
 /.trash
 /.testProject
 
-#ignore all .txt
-*.txt
+#ignore offline
+offline/*

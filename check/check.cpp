@@ -25,9 +25,6 @@ int bindCheck(int fd, struct sockaddr* addr){
     socklen_t addrLen = sizeof(*addr);
     int err = bind(fd, addr, addrLen);
     if(err == -1){
-        // perror("bind failed\n");
-        // std::cout << errno << '\n';
-        // exit(EXIT_FAILURE);
         throw "bind failed";
     }
     return err;
@@ -37,9 +34,6 @@ int bindCheck(int fd, struct sockaddr* addr){
 void listenCheck(int sockfd, int backlog){
     int res = listen(sockfd, 16);
     if(res == -1){
-        // perror("listen failed\n");
-        // std::cout << errno << '\n';
-        // exit(EXIT_FAILURE);
         throw "listen failed";
     }
 }
@@ -49,9 +43,6 @@ int acceptCheck(int sockfd, struct sockaddr* addr){
     socklen_t addrLen = sizeof(addr);
     int res = accept(sockfd, addr, &addrLen);
     if(res == -1){
-        // printf("accept failed\n");
-        // std::cout << errno << '\n';
-        // exit(EXIT_FAILURE);
         throw "accept failed";
     }
     return res;
@@ -61,9 +52,6 @@ int acceptCheck(int sockfd, struct sockaddr* addr){
 int connectCheck(int sockfd, const struct sockaddr* addr, socklen_t addrlen){
     int res = connect(sockfd, addr, addrlen);
     if(res == -1){
-        // perror("connect fail\n");
-        // std::cout << errno << '\n';
-        // exit(EXIT_FAILURE);
         throw "connect failed\n";
     }
     return res;
@@ -99,13 +87,11 @@ int keepAlive(int sock){
 
     int ret = ppoll(&fidesc, 1, &timeout, NULL);
     if(ret == -1){
-        // unknown error
         printf("poll error: %d\n", errno);
         return -2;
     }
     
     if(ret == 0){
-        // client not connect
         return -1;
     }
 

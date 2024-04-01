@@ -1,5 +1,6 @@
-#include "../libs/check.h"
-#include "../libs/function.h"
+#include "check.h"
+#include "function.h"
+#include "session.h"
 
 char* getIPaddr(char* IPaddr){
     const char* google_dns_server = "8.8.8.8";
@@ -34,13 +35,13 @@ sockaddr_in addrInit(char* port){
 }
 
 
-
 int main(int argc, char* argv[]){
     char* IPaddr = getIPaddr(IPaddr);
     std::cout << "server`s IP-address: " << IPaddr << std::endl;
 
     int sock;
     sockaddr_in addr = addrInit(argv[1]);
+    socklen_t addrlen = sizeof(addr);
 
     try{
         sock = createTCPsocket(0);
@@ -51,9 +52,14 @@ int main(int argc, char* argv[]){
         exit(EXIT_FAILURE);
     }
 
+    std::vector<std::thread> handler;
+    
     for(;;){
-        // обработка подключений и перевод в отдельный поток
+        int accepter = accept(sock, (struct sockaddr*)&addr, &addrlen);
+        handler.push_back(std::thread(&Session::worker));
+        handler.back().detach();
     }
+
     close(sock);
     return 0;
 }

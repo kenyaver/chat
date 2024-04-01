@@ -5,7 +5,7 @@
 #include "protocol.h"
 
 class Session{
-    private:
+    public:
     Protocol protocol;
     Session(int sock);
     int worker();
