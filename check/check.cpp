@@ -1,4 +1,9 @@
 #include "check.h"
+#include <sys/poll.h>
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
+#include <stdio.h>
 
 
 int socketCheck(int domain, int type, int protocol){
@@ -40,7 +45,7 @@ void listenCheck(int sockfd, int backlog){
 
 
 int acceptCheck(int sockfd, struct sockaddr* addr){
-    socklen_t addrLen = sizeof(addr);
+    socklen_t addrLen = sizeof(*addr);
     int res = accept(sockfd, addr, &addrLen);
     if(res == -1){
         throw "accept failed";

@@ -1,8 +1,6 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
-#include "aheader.h"
-
 // конвертирует целочисленное значение, переданное во втором парамете, в строку, переданную в первом параметре
 char* toString(char* str, int val);
 

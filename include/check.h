@@ -1,7 +1,8 @@
 #ifndef CHECK_H
 #define CHECK_H
 
-#include "aheader.h"
+#include <sys/socket.h>
+#include <sys/types.h>
 
 // создание сокета с проверкой на валидность
 int socketCheck(int domain, int type, int protocol);

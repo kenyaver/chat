@@ -1,4 +1,9 @@
 #include "command.h"
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <arpa/inet.h>
+
+
 
 void setNetCommandToHost(Command& h){
     h.header.len = ntohs(h.header.len);

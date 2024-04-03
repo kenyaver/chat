@@ -1,6 +1,8 @@
 #pragma once
 
-#include "aheader.h"
+#include <unistd.h>
+#include <stdint.h>
+
 
 class Header{
     public:
