@@ -1,4 +1,6 @@
 #include "user.h"
+#include <string.h>
+#include <sys/socket.h>
 
 bool User::operator==(char* username){
     return !strcmp(this->username, username);

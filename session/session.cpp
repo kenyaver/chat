@@ -1,4 +1,6 @@
 #include "session.h"
+#include <sys/poll.h>
+
 
 Session::Session(int sock){
     User you;

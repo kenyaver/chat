@@ -2,6 +2,8 @@
 
 #include "check.h"
 #include "function.h"
+#include <string.h>
+#include <stdlib.h>
 
 void Protocol::addUser(User& user){
     onlineList.addUser(user);

@@ -1,7 +1,6 @@
 #pragma once
 
-
-#include "aheader.h"
+#include <list>
 #include "user.h"
 
 class OnlineList{

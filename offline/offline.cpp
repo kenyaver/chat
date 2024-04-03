@@ -1,5 +1,9 @@
 #include "offline.h"
 #include "function.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
 
 
 void Offline::setPath(char* username){
