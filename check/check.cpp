@@ -1,5 +1,6 @@
 #include "check.h"
 #include <sys/poll.h>
+#include <sys/socket.h>
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>

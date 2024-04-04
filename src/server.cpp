@@ -1,6 +1,13 @@
 #include "check.h"
 #include "function.h"
 #include "session.h"
+#include <iostream>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <string.h>
+#include <vector>
+#include <thread>
 
 char* getIPaddr(char* IPaddr){
     const char* google_dns_server = "8.8.8.8";
@@ -56,7 +63,8 @@ int main(int argc, char* argv[]){
     
     for(;;){
         int accepter = accept(sock, (struct sockaddr*)&addr, &addrlen);
-        handler.push_back(std::thread(&Session::worker));
+        Session session(accepter);
+        handler.push_back(std::thread(&Session::worker, session));
         handler.back().detach();
     }
 

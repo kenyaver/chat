@@ -3,7 +3,6 @@
 
 #include "command.h"
 #include "timer.h"
-#include "offline.h"
 
 class User{
     public:

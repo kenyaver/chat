@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/chat.dir/src/server.cpp.o -o chat  check/libcheck.a command/libcommand.a function/libfunction.a offline/liboffline.a onlineList/libonlineList.a protocol/libprotocol.a session/libsession.a timer/libtimer.a user/libuser.a 

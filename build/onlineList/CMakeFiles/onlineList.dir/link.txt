@@ -1,0 +1,2 @@
+/usr/bin/ar qc libonlineList.a CMakeFiles/onlineList.dir/onlineList.cpp.o
+/usr/bin/ranlib libonlineList.a

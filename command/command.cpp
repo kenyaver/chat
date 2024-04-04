@@ -1,8 +1,7 @@
 #include "command.h"
 #include <sys/socket.h>
-#include <stdlib.h>
 #include <arpa/inet.h>
-
+#include <stdlib.h>
 
 
 void setNetCommandToHost(Command& h){

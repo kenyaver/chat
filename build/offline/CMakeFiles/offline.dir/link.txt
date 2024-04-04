@@ -1,0 +1,2 @@
+/usr/bin/ar qc liboffline.a CMakeFiles/offline.dir/offline.cpp.o
+/usr/bin/ranlib liboffline.a

@@ -1,7 +1,4 @@
 #include "protocol.h"
-
-#include "check.h"
-#include "function.h"
 #include <string.h>
 #include <stdlib.h>
 
