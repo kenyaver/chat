@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcheck.a CMakeFiles/check.dir/check.cpp.o
-/usr/bin/ranlib libcheck.a

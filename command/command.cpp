@@ -1,4 +1,4 @@
-#include "command.h"
+#include "../include/command.h"
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <stdlib.h>

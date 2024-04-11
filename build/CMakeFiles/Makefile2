@@ -63,445 +63,70 @@ CMAKE_BINARY_DIR = /home/garipov/Documents/chat/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/chat.dir/all
-all: check/all
-all: command/all
-all: function/all
-all: offline/all
-all: onlineList/all
-all: protocol/all
-all: session/all
-all: timer/all
-all: user/all
+all: CMakeFiles/server.dir/all
+all: CMakeFiles/client.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall: check/preinstall
-preinstall: command/preinstall
-preinstall: function/preinstall
-preinstall: offline/preinstall
-preinstall: onlineList/preinstall
-preinstall: protocol/preinstall
-preinstall: session/preinstall
-preinstall: timer/preinstall
-preinstall: user/preinstall
+preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/chat.dir/clean
-clean: check/clean
-clean: command/clean
-clean: function/clean
-clean: offline/clean
-clean: onlineList/clean
-clean: protocol/clean
-clean: session/clean
-clean: timer/clean
-clean: user/clean
+clean: CMakeFiles/server.dir/clean
+clean: CMakeFiles/client.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Directory level rules for directory check
-
-# Recursive "all" directory target.
-check/all: check/CMakeFiles/check.dir/all
-.PHONY : check/all
-
-# Recursive "preinstall" directory target.
-check/preinstall:
-.PHONY : check/preinstall
-
-# Recursive "clean" directory target.
-check/clean: check/CMakeFiles/check.dir/clean
-.PHONY : check/clean
-
-#=============================================================================
-# Directory level rules for directory command
-
-# Recursive "all" directory target.
-command/all: command/CMakeFiles/command.dir/all
-.PHONY : command/all
-
-# Recursive "preinstall" directory target.
-command/preinstall:
-.PHONY : command/preinstall
-
-# Recursive "clean" directory target.
-command/clean: command/CMakeFiles/command.dir/clean
-.PHONY : command/clean
-
-#=============================================================================
-# Directory level rules for directory function
-
-# Recursive "all" directory target.
-function/all: function/CMakeFiles/function.dir/all
-.PHONY : function/all
-
-# Recursive "preinstall" directory target.
-function/preinstall:
-.PHONY : function/preinstall
-
-# Recursive "clean" directory target.
-function/clean: function/CMakeFiles/function.dir/clean
-.PHONY : function/clean
-
-#=============================================================================
-# Directory level rules for directory offline
-
-# Recursive "all" directory target.
-offline/all: offline/CMakeFiles/offline.dir/all
-.PHONY : offline/all
-
-# Recursive "preinstall" directory target.
-offline/preinstall:
-.PHONY : offline/preinstall
-
-# Recursive "clean" directory target.
-offline/clean: offline/CMakeFiles/offline.dir/clean
-.PHONY : offline/clean
-
-#=============================================================================
-# Directory level rules for directory onlineList
-
-# Recursive "all" directory target.
-onlineList/all: onlineList/CMakeFiles/onlineList.dir/all
-.PHONY : onlineList/all
-
-# Recursive "preinstall" directory target.
-onlineList/preinstall:
-.PHONY : onlineList/preinstall
-
-# Recursive "clean" directory target.
-onlineList/clean: onlineList/CMakeFiles/onlineList.dir/clean
-.PHONY : onlineList/clean
-
-#=============================================================================
-# Directory level rules for directory protocol
-
-# Recursive "all" directory target.
-protocol/all: protocol/CMakeFiles/protocol.dir/all
-.PHONY : protocol/all
-
-# Recursive "preinstall" directory target.
-protocol/preinstall:
-.PHONY : protocol/preinstall
-
-# Recursive "clean" directory target.
-protocol/clean: protocol/CMakeFiles/protocol.dir/clean
-.PHONY : protocol/clean
-
-#=============================================================================
-# Directory level rules for directory session
-
-# Recursive "all" directory target.
-session/all: session/CMakeFiles/session.dir/all
-.PHONY : session/all
-
-# Recursive "preinstall" directory target.
-session/preinstall:
-.PHONY : session/preinstall
-
-# Recursive "clean" directory target.
-session/clean: session/CMakeFiles/session.dir/clean
-.PHONY : session/clean
-
-#=============================================================================
-# Directory level rules for directory timer
-
-# Recursive "all" directory target.
-timer/all: timer/CMakeFiles/timer.dir/all
-.PHONY : timer/all
-
-# Recursive "preinstall" directory target.
-timer/preinstall:
-.PHONY : timer/preinstall
-
-# Recursive "clean" directory target.
-timer/clean: timer/CMakeFiles/timer.dir/clean
-.PHONY : timer/clean
-
-#=============================================================================
-# Directory level rules for directory user
-
-# Recursive "all" directory target.
-user/all: user/CMakeFiles/user.dir/all
-.PHONY : user/all
-
-# Recursive "preinstall" directory target.
-user/preinstall:
-.PHONY : user/preinstall
-
-# Recursive "clean" directory target.
-user/clean: user/CMakeFiles/user.dir/clean
-.PHONY : user/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/chat.dir
+# Target rules for target CMakeFiles/server.dir
 
 # All Build rule for target.
-CMakeFiles/chat.dir/all: check/CMakeFiles/check.dir/all
-CMakeFiles/chat.dir/all: command/CMakeFiles/command.dir/all
-CMakeFiles/chat.dir/all: function/CMakeFiles/function.dir/all
-CMakeFiles/chat.dir/all: offline/CMakeFiles/offline.dir/all
-CMakeFiles/chat.dir/all: onlineList/CMakeFiles/onlineList.dir/all
-CMakeFiles/chat.dir/all: protocol/CMakeFiles/protocol.dir/all
-CMakeFiles/chat.dir/all: session/CMakeFiles/session.dir/all
-CMakeFiles/chat.dir/all: timer/CMakeFiles/timer.dir/all
-CMakeFiles/chat.dir/all: user/CMakeFiles/user.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/chat.dir/build.make CMakeFiles/chat.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/chat.dir/build.make CMakeFiles/chat.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=1,2 "Built target chat"
-.PHONY : CMakeFiles/chat.dir/all
+CMakeFiles/server.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=3,4 "Built target server"
+.PHONY : CMakeFiles/server.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/chat.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 20
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/chat.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : CMakeFiles/chat.dir/rule
-
-# Convenience name for target.
-chat: CMakeFiles/chat.dir/rule
-.PHONY : chat
-
-# clean rule for target.
-CMakeFiles/chat.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/chat.dir/build.make CMakeFiles/chat.dir/clean
-.PHONY : CMakeFiles/chat.dir/clean
-
-#=============================================================================
-# Target rules for target check/CMakeFiles/check.dir
-
-# All Build rule for target.
-check/CMakeFiles/check.dir/all:
-	$(MAKE) $(MAKESILENT) -f check/CMakeFiles/check.dir/build.make check/CMakeFiles/check.dir/depend
-	$(MAKE) $(MAKESILENT) -f check/CMakeFiles/check.dir/build.make check/CMakeFiles/check.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=3,4 "Built target check"
-.PHONY : check/CMakeFiles/check.dir/all
-
-# Build rule for subdir invocation for target.
-check/CMakeFiles/check.dir/rule: cmake_check_build_system
+CMakeFiles/server.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 check/CMakeFiles/check.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/server.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : check/CMakeFiles/check.dir/rule
+.PHONY : CMakeFiles/server.dir/rule
 
 # Convenience name for target.
-check: check/CMakeFiles/check.dir/rule
-.PHONY : check
+server: CMakeFiles/server.dir/rule
+.PHONY : server
 
 # clean rule for target.
-check/CMakeFiles/check.dir/clean:
-	$(MAKE) $(MAKESILENT) -f check/CMakeFiles/check.dir/build.make check/CMakeFiles/check.dir/clean
-.PHONY : check/CMakeFiles/check.dir/clean
+CMakeFiles/server.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/clean
+.PHONY : CMakeFiles/server.dir/clean
 
 #=============================================================================
-# Target rules for target command/CMakeFiles/command.dir
+# Target rules for target CMakeFiles/client.dir
 
 # All Build rule for target.
-command/CMakeFiles/command.dir/all:
-	$(MAKE) $(MAKESILENT) -f command/CMakeFiles/command.dir/build.make command/CMakeFiles/command.dir/depend
-	$(MAKE) $(MAKESILENT) -f command/CMakeFiles/command.dir/build.make command/CMakeFiles/command.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=5,6 "Built target command"
-.PHONY : command/CMakeFiles/command.dir/all
+CMakeFiles/client.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=1,2 "Built target client"
+.PHONY : CMakeFiles/client.dir/all
 
 # Build rule for subdir invocation for target.
-command/CMakeFiles/command.dir/rule: cmake_check_build_system
+CMakeFiles/client.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 command/CMakeFiles/command.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/client.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : command/CMakeFiles/command.dir/rule
+.PHONY : CMakeFiles/client.dir/rule
 
 # Convenience name for target.
-command: command/CMakeFiles/command.dir/rule
-.PHONY : command
+client: CMakeFiles/client.dir/rule
+.PHONY : client
 
 # clean rule for target.
-command/CMakeFiles/command.dir/clean:
-	$(MAKE) $(MAKESILENT) -f command/CMakeFiles/command.dir/build.make command/CMakeFiles/command.dir/clean
-.PHONY : command/CMakeFiles/command.dir/clean
-
-#=============================================================================
-# Target rules for target function/CMakeFiles/function.dir
-
-# All Build rule for target.
-function/CMakeFiles/function.dir/all:
-	$(MAKE) $(MAKESILENT) -f function/CMakeFiles/function.dir/build.make function/CMakeFiles/function.dir/depend
-	$(MAKE) $(MAKESILENT) -f function/CMakeFiles/function.dir/build.make function/CMakeFiles/function.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=7,8 "Built target function"
-.PHONY : function/CMakeFiles/function.dir/all
-
-# Build rule for subdir invocation for target.
-function/CMakeFiles/function.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 function/CMakeFiles/function.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : function/CMakeFiles/function.dir/rule
-
-# Convenience name for target.
-function: function/CMakeFiles/function.dir/rule
-.PHONY : function
-
-# clean rule for target.
-function/CMakeFiles/function.dir/clean:
-	$(MAKE) $(MAKESILENT) -f function/CMakeFiles/function.dir/build.make function/CMakeFiles/function.dir/clean
-.PHONY : function/CMakeFiles/function.dir/clean
-
-#=============================================================================
-# Target rules for target offline/CMakeFiles/offline.dir
-
-# All Build rule for target.
-offline/CMakeFiles/offline.dir/all:
-	$(MAKE) $(MAKESILENT) -f offline/CMakeFiles/offline.dir/build.make offline/CMakeFiles/offline.dir/depend
-	$(MAKE) $(MAKESILENT) -f offline/CMakeFiles/offline.dir/build.make offline/CMakeFiles/offline.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=9,10 "Built target offline"
-.PHONY : offline/CMakeFiles/offline.dir/all
-
-# Build rule for subdir invocation for target.
-offline/CMakeFiles/offline.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 offline/CMakeFiles/offline.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : offline/CMakeFiles/offline.dir/rule
-
-# Convenience name for target.
-offline: offline/CMakeFiles/offline.dir/rule
-.PHONY : offline
-
-# clean rule for target.
-offline/CMakeFiles/offline.dir/clean:
-	$(MAKE) $(MAKESILENT) -f offline/CMakeFiles/offline.dir/build.make offline/CMakeFiles/offline.dir/clean
-.PHONY : offline/CMakeFiles/offline.dir/clean
-
-#=============================================================================
-# Target rules for target onlineList/CMakeFiles/onlineList.dir
-
-# All Build rule for target.
-onlineList/CMakeFiles/onlineList.dir/all:
-	$(MAKE) $(MAKESILENT) -f onlineList/CMakeFiles/onlineList.dir/build.make onlineList/CMakeFiles/onlineList.dir/depend
-	$(MAKE) $(MAKESILENT) -f onlineList/CMakeFiles/onlineList.dir/build.make onlineList/CMakeFiles/onlineList.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=11,12 "Built target onlineList"
-.PHONY : onlineList/CMakeFiles/onlineList.dir/all
-
-# Build rule for subdir invocation for target.
-onlineList/CMakeFiles/onlineList.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 onlineList/CMakeFiles/onlineList.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : onlineList/CMakeFiles/onlineList.dir/rule
-
-# Convenience name for target.
-onlineList: onlineList/CMakeFiles/onlineList.dir/rule
-.PHONY : onlineList
-
-# clean rule for target.
-onlineList/CMakeFiles/onlineList.dir/clean:
-	$(MAKE) $(MAKESILENT) -f onlineList/CMakeFiles/onlineList.dir/build.make onlineList/CMakeFiles/onlineList.dir/clean
-.PHONY : onlineList/CMakeFiles/onlineList.dir/clean
-
-#=============================================================================
-# Target rules for target protocol/CMakeFiles/protocol.dir
-
-# All Build rule for target.
-protocol/CMakeFiles/protocol.dir/all:
-	$(MAKE) $(MAKESILENT) -f protocol/CMakeFiles/protocol.dir/build.make protocol/CMakeFiles/protocol.dir/depend
-	$(MAKE) $(MAKESILENT) -f protocol/CMakeFiles/protocol.dir/build.make protocol/CMakeFiles/protocol.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=13,14 "Built target protocol"
-.PHONY : protocol/CMakeFiles/protocol.dir/all
-
-# Build rule for subdir invocation for target.
-protocol/CMakeFiles/protocol.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 protocol/CMakeFiles/protocol.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : protocol/CMakeFiles/protocol.dir/rule
-
-# Convenience name for target.
-protocol: protocol/CMakeFiles/protocol.dir/rule
-.PHONY : protocol
-
-# clean rule for target.
-protocol/CMakeFiles/protocol.dir/clean:
-	$(MAKE) $(MAKESILENT) -f protocol/CMakeFiles/protocol.dir/build.make protocol/CMakeFiles/protocol.dir/clean
-.PHONY : protocol/CMakeFiles/protocol.dir/clean
-
-#=============================================================================
-# Target rules for target session/CMakeFiles/session.dir
-
-# All Build rule for target.
-session/CMakeFiles/session.dir/all:
-	$(MAKE) $(MAKESILENT) -f session/CMakeFiles/session.dir/build.make session/CMakeFiles/session.dir/depend
-	$(MAKE) $(MAKESILENT) -f session/CMakeFiles/session.dir/build.make session/CMakeFiles/session.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=15,16 "Built target session"
-.PHONY : session/CMakeFiles/session.dir/all
-
-# Build rule for subdir invocation for target.
-session/CMakeFiles/session.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 session/CMakeFiles/session.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : session/CMakeFiles/session.dir/rule
-
-# Convenience name for target.
-session: session/CMakeFiles/session.dir/rule
-.PHONY : session
-
-# clean rule for target.
-session/CMakeFiles/session.dir/clean:
-	$(MAKE) $(MAKESILENT) -f session/CMakeFiles/session.dir/build.make session/CMakeFiles/session.dir/clean
-.PHONY : session/CMakeFiles/session.dir/clean
-
-#=============================================================================
-# Target rules for target timer/CMakeFiles/timer.dir
-
-# All Build rule for target.
-timer/CMakeFiles/timer.dir/all:
-	$(MAKE) $(MAKESILENT) -f timer/CMakeFiles/timer.dir/build.make timer/CMakeFiles/timer.dir/depend
-	$(MAKE) $(MAKESILENT) -f timer/CMakeFiles/timer.dir/build.make timer/CMakeFiles/timer.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=17,18 "Built target timer"
-.PHONY : timer/CMakeFiles/timer.dir/all
-
-# Build rule for subdir invocation for target.
-timer/CMakeFiles/timer.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 timer/CMakeFiles/timer.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : timer/CMakeFiles/timer.dir/rule
-
-# Convenience name for target.
-timer: timer/CMakeFiles/timer.dir/rule
-.PHONY : timer
-
-# clean rule for target.
-timer/CMakeFiles/timer.dir/clean:
-	$(MAKE) $(MAKESILENT) -f timer/CMakeFiles/timer.dir/build.make timer/CMakeFiles/timer.dir/clean
-.PHONY : timer/CMakeFiles/timer.dir/clean
-
-#=============================================================================
-# Target rules for target user/CMakeFiles/user.dir
-
-# All Build rule for target.
-user/CMakeFiles/user.dir/all:
-	$(MAKE) $(MAKESILENT) -f user/CMakeFiles/user.dir/build.make user/CMakeFiles/user.dir/depend
-	$(MAKE) $(MAKESILENT) -f user/CMakeFiles/user.dir/build.make user/CMakeFiles/user.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/garipov/Documents/chat/build/CMakeFiles --progress-num=19,20 "Built target user"
-.PHONY : user/CMakeFiles/user.dir/all
-
-# Build rule for subdir invocation for target.
-user/CMakeFiles/user.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 user/CMakeFiles/user.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/garipov/Documents/chat/build/CMakeFiles 0
-.PHONY : user/CMakeFiles/user.dir/rule
-
-# Convenience name for target.
-user: user/CMakeFiles/user.dir/rule
-.PHONY : user
-
-# clean rule for target.
-user/CMakeFiles/user.dir/clean:
-	$(MAKE) $(MAKESILENT) -f user/CMakeFiles/user.dir/build.make user/CMakeFiles/user.dir/clean
-.PHONY : user/CMakeFiles/user.dir/clean
+CMakeFiles/client.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/clean
+.PHONY : CMakeFiles/client.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

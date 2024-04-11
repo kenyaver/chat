@@ -1,6 +1,6 @@
-#include "check.h"
-#include "function.h"
-#include "session.h"
+#include "../include/check.h"
+#include "../include/function.h"
+#include "../include/session.h"
 #include <iostream>
 #include <sys/socket.h>
 #include <arpa/inet.h>

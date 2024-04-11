@@ -117,141 +117,61 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named chat
+# Target rules for targets named server
 
 # Build rule for target.
-chat: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 chat
-.PHONY : chat
+server: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 server
+.PHONY : server
 
 # fast build rule for target.
-chat/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/chat.dir/build.make CMakeFiles/chat.dir/build
-.PHONY : chat/fast
+server/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
+.PHONY : server/fast
 
 #=============================================================================
-# Target rules for targets named check
+# Target rules for targets named client
 
 # Build rule for target.
-check: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 check
-.PHONY : check
+client: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 client
+.PHONY : client
 
 # fast build rule for target.
-check/fast:
-	$(MAKE) $(MAKESILENT) -f check/CMakeFiles/check.dir/build.make check/CMakeFiles/check.dir/build
-.PHONY : check/fast
+client/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/build
+.PHONY : client/fast
 
-#=============================================================================
-# Target rules for targets named command
+src/client.o: src/client.cpp.o
+.PHONY : src/client.o
 
-# Build rule for target.
-command: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 command
-.PHONY : command
+# target to build an object file
+src/client.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/client.cpp.o
+.PHONY : src/client.cpp.o
 
-# fast build rule for target.
-command/fast:
-	$(MAKE) $(MAKESILENT) -f command/CMakeFiles/command.dir/build.make command/CMakeFiles/command.dir/build
-.PHONY : command/fast
+src/client.i: src/client.cpp.i
+.PHONY : src/client.i
 
-#=============================================================================
-# Target rules for targets named function
+# target to preprocess a source file
+src/client.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/client.cpp.i
+.PHONY : src/client.cpp.i
 
-# Build rule for target.
-function: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 function
-.PHONY : function
+src/client.s: src/client.cpp.s
+.PHONY : src/client.s
 
-# fast build rule for target.
-function/fast:
-	$(MAKE) $(MAKESILENT) -f function/CMakeFiles/function.dir/build.make function/CMakeFiles/function.dir/build
-.PHONY : function/fast
-
-#=============================================================================
-# Target rules for targets named offline
-
-# Build rule for target.
-offline: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 offline
-.PHONY : offline
-
-# fast build rule for target.
-offline/fast:
-	$(MAKE) $(MAKESILENT) -f offline/CMakeFiles/offline.dir/build.make offline/CMakeFiles/offline.dir/build
-.PHONY : offline/fast
-
-#=============================================================================
-# Target rules for targets named onlineList
-
-# Build rule for target.
-onlineList: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 onlineList
-.PHONY : onlineList
-
-# fast build rule for target.
-onlineList/fast:
-	$(MAKE) $(MAKESILENT) -f onlineList/CMakeFiles/onlineList.dir/build.make onlineList/CMakeFiles/onlineList.dir/build
-.PHONY : onlineList/fast
-
-#=============================================================================
-# Target rules for targets named protocol
-
-# Build rule for target.
-protocol: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 protocol
-.PHONY : protocol
-
-# fast build rule for target.
-protocol/fast:
-	$(MAKE) $(MAKESILENT) -f protocol/CMakeFiles/protocol.dir/build.make protocol/CMakeFiles/protocol.dir/build
-.PHONY : protocol/fast
-
-#=============================================================================
-# Target rules for targets named session
-
-# Build rule for target.
-session: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 session
-.PHONY : session
-
-# fast build rule for target.
-session/fast:
-	$(MAKE) $(MAKESILENT) -f session/CMakeFiles/session.dir/build.make session/CMakeFiles/session.dir/build
-.PHONY : session/fast
-
-#=============================================================================
-# Target rules for targets named timer
-
-# Build rule for target.
-timer: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 timer
-.PHONY : timer
-
-# fast build rule for target.
-timer/fast:
-	$(MAKE) $(MAKESILENT) -f timer/CMakeFiles/timer.dir/build.make timer/CMakeFiles/timer.dir/build
-.PHONY : timer/fast
-
-#=============================================================================
-# Target rules for targets named user
-
-# Build rule for target.
-user: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 user
-.PHONY : user
-
-# fast build rule for target.
-user/fast:
-	$(MAKE) $(MAKESILENT) -f user/CMakeFiles/user.dir/build.make user/CMakeFiles/user.dir/build
-.PHONY : user/fast
+# target to generate assembly for a file
+src/client.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/client.cpp.s
+.PHONY : src/client.cpp.s
 
 src/server.o: src/server.cpp.o
 .PHONY : src/server.o
 
 # target to build an object file
 src/server.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/chat.dir/build.make CMakeFiles/chat.dir/src/server.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/server.cpp.o
 .PHONY : src/server.cpp.o
 
 src/server.i: src/server.cpp.i
@@ -259,7 +179,7 @@ src/server.i: src/server.cpp.i
 
 # target to preprocess a source file
 src/server.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/chat.dir/build.make CMakeFiles/chat.dir/src/server.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/server.cpp.i
 .PHONY : src/server.cpp.i
 
 src/server.s: src/server.cpp.s
@@ -267,7 +187,7 @@ src/server.s: src/server.cpp.s
 
 # target to generate assembly for a file
 src/server.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/chat.dir/build.make CMakeFiles/chat.dir/src/server.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/server.cpp.s
 .PHONY : src/server.cpp.s
 
 # Help Target
@@ -278,16 +198,11 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... chat"
-	@echo "... check"
-	@echo "... command"
-	@echo "... function"
-	@echo "... offline"
-	@echo "... onlineList"
-	@echo "... protocol"
-	@echo "... session"
-	@echo "... timer"
-	@echo "... user"
+	@echo "... client"
+	@echo "... server"
+	@echo "... src/client.o"
+	@echo "... src/client.i"
+	@echo "... src/client.s"
 	@echo "... src/server.o"
 	@echo "... src/server.i"
 	@echo "... src/server.s"

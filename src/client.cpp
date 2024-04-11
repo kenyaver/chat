@@ -1,5 +1,11 @@
-#include "../libs/check.h"
-#include "../libs/function.h"
+#include "../include/check.h"
+#include "../include/function.h"
+#include "../include/command.h"
+#include <string.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <iostream>
+#include <thread>
 
 #define BUFFERrSIZE 1032
 #define BUFFERsSize 1032

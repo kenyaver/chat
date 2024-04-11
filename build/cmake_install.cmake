@@ -42,20 +42,6 @@ if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/garipov/Documents/chat/build/check/cmake_install.cmake")
-  include("/home/garipov/Documents/chat/build/command/cmake_install.cmake")
-  include("/home/garipov/Documents/chat/build/function/cmake_install.cmake")
-  include("/home/garipov/Documents/chat/build/offline/cmake_install.cmake")
-  include("/home/garipov/Documents/chat/build/onlineList/cmake_install.cmake")
-  include("/home/garipov/Documents/chat/build/protocol/cmake_install.cmake")
-  include("/home/garipov/Documents/chat/build/session/cmake_install.cmake")
-  include("/home/garipov/Documents/chat/build/timer/cmake_install.cmake")
-  include("/home/garipov/Documents/chat/build/user/cmake_install.cmake")
-
-endif()
-
 if(CMAKE_INSTALL_COMPONENT)
   set(CMAKE_INSTALL_MANIFEST "install_manifest_${CMAKE_INSTALL_COMPONENT}.txt")
 else()

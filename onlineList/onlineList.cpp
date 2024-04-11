@@ -1,4 +1,4 @@
-#include "onlineList.h"
+#include "../include/onlineList.h"
 
 void OnlineList::addUser(User& newUser){
     onlineList.push_back(newUser);

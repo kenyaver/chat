@@ -8,5 +8,5 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_LIB})
 
-target_link_libraries(protocol)
+# target_link_libraries(protocol)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE_DIR})

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcommand.a CMakeFiles/command.dir/command.cpp.o
-/usr/bin/ranlib libcommand.a
