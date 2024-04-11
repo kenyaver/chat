@@ -1,4 +1,0 @@
-/home/garipov/Documents/chat/build/CMakeFiles/server.dir
-/home/garipov/Documents/chat/build/CMakeFiles/client.dir
-/home/garipov/Documents/chat/build/CMakeFiles/edit_cache.dir
-/home/garipov/Documents/chat/build/CMakeFiles/rebuild_cache.dir
