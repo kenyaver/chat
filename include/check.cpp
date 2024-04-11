@@ -1,4 +1,4 @@
-#include "../include/check.h"
+#include "check.h"
 #include <sys/poll.h>
 #include <sys/socket.h>
 #include <unistd.h>

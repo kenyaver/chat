@@ -1,4 +1,4 @@
-#include "../include/function.h"
+#include "function.h"
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
