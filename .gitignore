@@ -3,8 +3,7 @@
 
 #ignore .out
 *.out
-build/server
-build/client
+build/*
 
 #ignore object-files
 *.o

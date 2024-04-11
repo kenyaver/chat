@@ -17,7 +17,6 @@ class User{
     bool operator==(char* username);
     void clearQueueUnconfirm();
     void disconnect();
-    // используетя после принятия сервером первой команды от клиента для заполнения полей user
     void updateUserInfo(char* username);
 };
 

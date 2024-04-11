@@ -9,8 +9,9 @@ set(SERVER server)
 set(CLIENT client)
 
 # set(${HEADER} aheader.h check.h command.h function.h offline.h onlineList.h protocol.h session.h timer.h user.h)
-set(${LIBS} check.cpp command.cpp function.cpp offline.cpp onlineList.cpp protocol.cpp session.cpp timer.cpp user.cpp)
-set(${LIBC} check.cpp function.cpp command.cpp)
+set(${LIBS} check/check.cpp command/command.cpp function/function.cpp offline/offline.cpp onliineList/onlineList.cpp protocol/protocol.cpp session/session.cpp 
+            timer/timer.cpp user/user.cpp)
+set(${LIBC} check/check.cpp function/function.cpp command/command.cpp)
 
 add_executable(${SERVER} ${CHAT_SRCS} ${LIBS})
 add_executable(${CLIENT} ${CHAT_SRCC} ${LIBC})
