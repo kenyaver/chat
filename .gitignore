@@ -3,7 +3,7 @@
 
 #ignore .out
 *.out
-build/*
+build/include/*
 
 #ignore object-files
 *.o

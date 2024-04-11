@@ -4,11 +4,42 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <poll.h>
 #include <iostream>
 #include <thread>
+#include <atomic>
+#include <algorithm>
+#include <string>
 
-#define BUFFERrSIZE 1032
-#define BUFFERsSize 1032
+#define BUFFERrSIZE 1024
+#define BUFFERsSIZE 1024
+
+void sendAnswer(int sock, Command* command){
+    std::swap(command->header.SRC, command->header.DST);
+    command = (Command*)realloc(command,sizeof(command->header) + 4 * sizeof(char));
+    memcpy(command->message, "300", 4);
+    command->header.type = 1;
+    sendCommand(sock, *command);
+}
+
+void printCommand(Command* command){
+    std::cout << "from: " << command->header.SRC << std::endl;
+    if(command->header.type == 1){
+        std::cout << "answer for ID: " << command->header.messageID << std::endl;
+    }
+    std::cout << "\nmessage: " << command->message << std::endl;
+}
+
+void setCommand(std::string& buffer, std::string& src, std::string& dst, int* id, Command* command){
+    command = (Command*)realloc(command, sizeof(command->header) + buffer.size());
+    memcpy(command->message, buffer.c_str(), buffer.size());
+    command->header.len = sizeof(command->header) + buffer.size();
+    command->header.messageID = *id;
+    *id += 1;
+    memcpy(command->header.SRC, src.c_str(), 8);
+    memcpy(command->header.DST, dst.c_str(), 8);
+    command->header.type = 0;
+}
 
 int main(int argc, char* argv[]){
     if(strlen(argv[3]) < 9 && strlen(argv[4]) < 9){
@@ -26,16 +57,63 @@ int main(int argc, char* argv[]){
             exit(EXIT_FAILURE);
         }
         std::cout << "connected to server\n";
+        
+        std::string name;
+        std::cout << "your name: ";
+        std::getline(std::cin, name);
+        if(name.size() == 0 || name.size() > 7){
+            std::cout << "bad name" << std::endl;
+            exit(1);
+        }
 
+        std::atomic<int> work{0};
+        Command *rCommand = (Command*)calloc(24, sizeof(char));
+        Command *sCommand = (Command*)calloc(24, sizeof(char));
         std::thread r([&]{
-            while(1){
-                
+            struct pollfd pfd;
+            pfd.fd = sock;
+            pfd.events = POLLIN | POLLRDHUP | POLLHUP;
+
+            while(work.load() == 0){
+                int ret = poll(&pfd, 1, 3000);
+                if(ret < 0){
+                    std::cerr << "error: " << errno << std::endl;
+                    work.store(1);
+                    return;
+                }
+                if(ret == 0){
+                    continue;
+                }
+
+                if(ret > 0){
+                    recvCommand(sock, rCommand);
+                    printCommand(rCommand);
+                    if(rCommand->header.type == 0){
+                        sendAnswer(sock, rCommand);
+                    }
+                }
             }
+            return;
         });
 
         int id = 0;
-        while(1){
-            
+        while(work.load() == 0){
+            std::string dst;
+            std::cout << "input DST:\n";
+            std::getline(std::cin, dst);
+            if(dst.size() == 0 || dst.size() > 7){
+                std::cout << "bad DST" << std::endl;
+                continue;
+            }
+            std::string buffer;
+            std::cout << "input message:\n";   
+            std::getline(std::cin, buffer);
+            if(buffer.size() == 0 || buffer.size() > 999){
+                std::cout << "bad message" << std::endl;
+                continue;
+            }
+            setCommand(buffer, name, dst, &id, sCommand);
+            sendCommand(sock, *sCommand);
         }
 
         r.join();
