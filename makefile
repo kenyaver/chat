@@ -3,38 +3,38 @@ all: server client
 lib: check.o function.o command.o user.o timer.o offline.o onlineList.o protocol.o session.o
 
 check.o:
-	g++ -c include/check.cpp -o build/check.o
+	g++ -c include/check.cpp -o build/include/check.o
 
 function.o:
-	g++ -c include/function.cpp -o build/function.o
+	g++ -c include/function.cpp -o build/include/function.o
 
 command.o:
-	g++ -c include/command.cpp -o build/command.o
+	g++ -c include/command.cpp -o build/include/command.o
 
 user.o:
-	g++ -c include/user.cpp -o build/user.o
+	g++ -c include/user.cpp -o build/include/user.o
 
 timer.o:
-	g++ -c include/timer.cpp -o build/timer.o
+	g++ -c include/timer.cpp -o build/include/timer.o
 
 offline.o:
-	g++ -c include/offline.cpp -o build/offline.o
+	g++ -c include/offline.cpp -o build/include/offline.o
 
 onlineList.o:
-	g++ -c include/onlineList.cpp -o build/onlineList.o
+	g++ -c include/onlineList.cpp -o build/include/onlineList.o
 
 protocol.o:
-	g++ -c include/protocol.cpp -o build/protocol.o
+	g++ -c include/protocol.cpp -o build/include/protocol.o
 
 session.o:
-	g++ -c include/Session.cpp -o build/Session.o
+	g++ -c include/session.cpp -o build/include/session.o
 
-server: check.o function.o command.o user.o timer.o onlineList.o offline.o protocol.o ession.o
-	g++ build/check.o build/function.o build/command.o build/user.o build/timer.o build/onlineList.o build/offline.o build/protocol.o build/ession.o src/server.cpp -o build/server
+server: check.o function.o command.o user.o timer.o onlineList.o offline.o protocol.o session.o
+	g++ build/include/check.o build/include/function.o build/include/command.o build/include/user.o build/include/timer.o build/include/onlineList.o build/include/offline.o build/include/protocol.o build/include/session.o src/server.cpp -o build/server
 
 client: check.o function.o command.o
-	g++ build/check.o build/function.o build/command.o src/client.cpp -o build/client
+	g++ build/include/check.o build/include/function.o build/include/command.o src/client.cpp -o build/client
 
 
 clear:
-	rm build/*
+	rm -r build/*
