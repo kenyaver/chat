@@ -1,6 +1,8 @@
 #include "protocol.h"
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <inttypes.h>
 
 void Protocol::addUser(User& user){
     onlineList.addUser(user);
@@ -8,7 +10,11 @@ void Protocol::addUser(User& user){
 }
 
 void Protocol::handleCommand(){
-    recvCommand(this->user->sock, this->user->bufferRecv);
+    int byte = recvCommand(this->user->sock, this->user->bufferRecv);
+    if(byte == -1){
+        log.writeLog((char*)"bad recv from user\n");
+        return;
+    }
     this->processSendCommand();
 }
 
@@ -16,6 +22,7 @@ int Protocol::helloUser(){
     int byte;
     byte = recvCommand(this->user->sock, this->user->bufferRecv);
     if(byte == -1){
+        log.writeLog((char*)"bad recv hello user\n");
         return -1;
     }
     memcpy(this->user->username, this->user->bufferRecv->header.SRC, 8);
@@ -28,7 +35,11 @@ void Protocol::processSendCommand(){
     if(partner != NULL){
         this->partner->bufferSend = (Command*)realloc(this->partner->bufferSend, this->user->bufferRecv->header.len);
         memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
-        sendCommand(this->partner->sock, *this->partner->bufferSend);
+        int err = sendCommand(this->partner->sock, *this->partner->bufferSend);
+        if(err == -1){
+            log.writeLog((char*)"bad send to user\n");
+            return;
+        }
         if(this->user->bufferSend->header.type == 0){
             this->partner->unconfirm.push(*this->partner->bufferSend);
             this->partner->timer.addTimer();

@@ -3,6 +3,7 @@
 #include "offline.h"
 #include "onlineList.h"
 #include "user.h"
+#include "loger.h"
 
 
 class Protocol{

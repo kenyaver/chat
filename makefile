@@ -1,12 +1,12 @@
 all: server client
 
-lib: check.o function.o command.o user.o timer.o offline.o onlineList.o protocol.o session.o
+lib: check.o command.o user.o timer.o offline.o onlineList.o protocol.o session.o
 
 check.o:
 	g++ -c include/check.cpp -o build/include/check.o
 
-function.o:
-	g++ -c include/function.cpp -o build/include/function.o
+loger.o:
+	g++ -c include/loger.cpp -o build/include/loger.o
 
 command.o:
 	g++ -c include/command.cpp -o build/include/command.o
@@ -29,11 +29,11 @@ protocol.o:
 session.o:
 	g++ -c include/session.cpp -o build/include/session.o
 
-server: check.o function.o command.o user.o timer.o onlineList.o offline.o protocol.o session.o
-	g++ -g build/include/check.o build/include/function.o build/include/command.o build/include/user.o build/include/timer.o build/include/onlineList.o build/include/offline.o build/include/protocol.o build/include/session.o src/server.cpp -o build/server
+server: check.o command.o user.o loger.o timer.o onlineList.o offline.o protocol.o session.o
+	g++ -g build/include/check.o build/include/loger.o build/include/command.o build/include/user.o build/include/timer.o build/include/onlineList.o build/include/offline.o build/include/protocol.o build/include/session.o src/server.cpp -o build/server
 
-client: check.o function.o command.o
-	g++ -g build/include/check.o build/include/function.o build/include/command.o src/client.cpp -o build/client
+client: check.o command.o
+	g++ -g build/include/check.o build/include/command.o src/client.cpp -o build/client
 
 
 clear:
