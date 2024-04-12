@@ -6,6 +6,9 @@
 #include <sys/socket.h>
 
 int Timer::getFirstTimer(){
+    if(timerQueue.empty()){
+        return -1;
+    }
     return timerQueue.front();
 }
 

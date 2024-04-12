@@ -42,7 +42,6 @@ void setCommand(std::string& buffer, std::string& src, std::string& dst, int* id
 }
 
 int main(int argc, char* argv[]){
-    if(strlen(argv[3]) < 9 && strlen(argv[4]) < 9){
         int sock = socket(AF_INET, SOCK_STREAM, 0);
         sockaddr_in addr;
         addr.sin_family = AF_INET;
@@ -118,6 +117,5 @@ int main(int argc, char* argv[]){
 
         r.join();
         close(sock);
-    }
     return 0;
 }

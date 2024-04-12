@@ -27,7 +27,7 @@ void Protocol::helloUser(){
 }
 
 void Protocol::processSendCommand(){
-    this->partner = this->onlineList.findUser(this->user->bufferRecv->header.DST);
+    this->partner = onlineList.findUser(this->user->bufferRecv->header.DST);
     if(partner != NULL){
         this->partner->bufferSend = (Command*)realloc(this->partner->bufferSend, this->user->bufferRecv->header.len);
         memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
@@ -40,7 +40,7 @@ void Protocol::processSendCommand(){
 
 void Protocol::clearUser(){
     this->user->timer.clearTimerQueue();
-    this->onlineList.removeUser(this->user->username);
+    onlineList.removeUser(this->user->username);
     this->offline.setPath(this->user->username);
     for(int i = 0; i < this->user->unconfirm.size(); i++){
         
@@ -52,7 +52,7 @@ void Protocol::clearUser(){
         tmp->header.len = sizeof(Header) + 4;
         tmp = (Command*)realloc(tmp, tmp->header.len);
         memcpy(tmp->message, "300", 4);
-        User* recver = this->onlineList.findUser(tmp->header.SRC); 
+        User* recver = onlineList.findUser(tmp->header.SRC); 
         if(recver != nullptr){
             sendCommand(recver->sock, *tmp);
         }

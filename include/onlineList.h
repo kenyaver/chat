@@ -15,3 +15,5 @@ class OnlineList{
     void removeUser(char* username);
     void clearUserDB();
 };
+
+inline OnlineList onlineList;

@@ -30,10 +30,10 @@ session.o:
 	g++ -c include/session.cpp -o build/include/session.o
 
 server: check.o function.o command.o user.o timer.o onlineList.o offline.o protocol.o session.o
-	g++ build/include/check.o build/include/function.o build/include/command.o build/include/user.o build/include/timer.o build/include/onlineList.o build/include/offline.o build/include/protocol.o build/include/session.o src/server.cpp -o build/server
+	g++ -g build/include/check.o build/include/function.o build/include/command.o build/include/user.o build/include/timer.o build/include/onlineList.o build/include/offline.o build/include/protocol.o build/include/session.o src/server.cpp -o build/server
 
 client: check.o function.o command.o
-	g++ build/include/check.o build/include/function.o build/include/command.o src/client.cpp -o build/client
+	g++ -g build/include/check.o build/include/function.o build/include/command.o src/client.cpp -o build/client
 
 
 clear:

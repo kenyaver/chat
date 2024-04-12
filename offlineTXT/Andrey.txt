@@ -1,9 +1,0 @@
-
-Artem: 0 Hello
-Artem: 1 How are you
-Artem: 2 im fine
-Artem: 3 cool
-Artem: 0 Hello
-Artem: 1 Hi
-Artem: 2 Hero
-Artem: 3 Evil

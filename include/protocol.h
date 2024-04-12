@@ -6,7 +6,7 @@
 
 
 class Protocol{
-    OnlineList onlineList;
+    // OnlineList onlineList;
     Offline offline;
     public:
     User* user;
