@@ -1,7 +1,6 @@
 #pragma once
 
 #include "command.h"
-#include "function.h"
 
 class Offline{
     char path[24];

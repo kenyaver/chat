@@ -1,5 +1,4 @@
 #include "../include/check.h"
-#include "../include/function.h"
 #include "../include/command.h"
 #include <string.h>
 #include <arpa/inet.h>
@@ -17,7 +16,7 @@
 void sendAnswer(int sock, Command* command){
     std::swap(command->header.SRC, command->header.DST);
     command = (Command*)realloc(command,sizeof(command->header) + 4 * sizeof(char));
-    memcpy(command->message, "300", 4);
+    memcpy(command->message, "200", 4);
     command->header.type = 1;
     sendCommand(sock, *command);
 }
@@ -31,9 +30,9 @@ void printCommand(Command* command){
 }
 
 void setCommand(std::string& buffer, std::string& src, std::string& dst, int* id, Command* command){
-    command = (Command*)realloc(command, sizeof(command->header) + buffer.size());
-    memcpy(command->message, buffer.c_str(), buffer.size());
-    command->header.len = sizeof(command->header) + buffer.size();
+    command = (Command*)realloc(command, sizeof(command->header) + buffer.size() + 1);
+    memcpy(command->message, buffer.c_str(), buffer.size() + 1);
+    command->header.len = sizeof(command->header) + buffer.size() + 1;
     command->header.messageID = *id;
     *id += 1;
     memcpy(command->header.SRC, src.c_str(), 8);
@@ -57,10 +56,10 @@ int main(int argc, char* argv[]){
         }
         std::cout << "connected to server\n";
         
-        std::string name;
+        std::string src;
         std::cout << "your name: ";
-        std::getline(std::cin, name);
-        if(name.size() == 0 || name.size() > 7){
+        std::getline(std::cin, src);
+        if(src.size() == 0 || src.size() > 7){
             std::cout << "bad name" << std::endl;
             exit(1);
         }
@@ -69,6 +68,7 @@ int main(int argc, char* argv[]){
         Command *rCommand = (Command*)calloc(24, sizeof(char));
         Command *sCommand = (Command*)calloc(24, sizeof(char));
         std::thread r([&]{
+            int byte;
             struct pollfd pfd;
             pfd.fd = sock;
             pfd.events = POLLIN | POLLRDHUP | POLLHUP;
@@ -85,10 +85,21 @@ int main(int argc, char* argv[]){
                 }
 
                 if(ret > 0){
-                    recvCommand(sock, rCommand);
-                    printCommand(rCommand);
-                    if(rCommand->header.type == 0){
-                        sendAnswer(sock, rCommand);
+                    if(pfd.revents == POLLIN){
+                        byte = recvCommand(sock, rCommand);
+                        if(byte != -1){
+                            printCommand(rCommand);
+                        if(rCommand->header.type == 0){
+                            sendAnswer(sock, rCommand);
+                        }
+                        } else {
+                            std::cout << "error message" << std::endl;
+                            work.store(1);
+                        }
+                    } else {
+                        std::cout << "server died" << std::endl;
+                        pfd.revents = 0;
+                        work.store(1);
                     }
                 }
             }
@@ -111,8 +122,9 @@ int main(int argc, char* argv[]){
                 std::cout << "bad message" << std::endl;
                 continue;
             }
-            setCommand(buffer, name, dst, &id, sCommand);
+            setCommand(buffer, src, dst, &id, sCommand);
             sendCommand(sock, *sCommand);
+            
         }
 
         r.join();

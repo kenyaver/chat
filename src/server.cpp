@@ -1,5 +1,4 @@
 #include "../include/check.h"
-#include "../include/function.h"
 #include "../include/session.h"
 #include <iostream>
 #include <sys/socket.h>
@@ -36,7 +35,7 @@ char* getIPaddr(char* IPaddr){
 sockaddr_in addrInit(char* port){
     sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(fromString(port));
+    addr.sin_port = htons(atoi(port));
     addr.sin_addr.s_addr = INADDR_ANY;
     return addr;
 }
@@ -64,6 +63,7 @@ int main(int argc, char* argv[]){
     for(;;){
         int accepter = accept(sock, (struct sockaddr*)&addr, &addrlen);
         Session session(accepter);
+        session.worker();
         handler.push_back(std::thread(&Session::worker, session));
         handler.back().detach();
     }

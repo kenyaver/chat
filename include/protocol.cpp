@@ -10,20 +10,17 @@ void Protocol::addUser(User& user){
 void Protocol::handleCommand(){
     recvCommand(this->user->sock, this->user->bufferRecv);
     this->processSendCommand();
-    if(this->user->bufferRecv->header.type == 1){
-        this->partner->unconfirm.push(*this->partner->bufferSend);
-        this->partner->timer.addTimer();
-    }
 }
 
-void Protocol::helloUser(){
-    recvCommand(this->user->sock, this->user->bufferRecv);
+int Protocol::helloUser(){
+    int byte;
+    byte = recvCommand(this->user->sock, this->user->bufferRecv);
+    if(byte == -1){
+        return -1;
+    }
     memcpy(this->user->username, this->user->bufferRecv->header.SRC, 8);
     this->processSendCommand();
-    if(this->user->bufferRecv->header.type == 1){
-        this->partner->unconfirm.push(*this->partner->bufferSend);
-        this->partner->timer.addTimer();
-    }
+    return 0;
 }
 
 void Protocol::processSendCommand(){
@@ -32,6 +29,10 @@ void Protocol::processSendCommand(){
         this->partner->bufferSend = (Command*)realloc(this->partner->bufferSend, this->user->bufferRecv->header.len);
         memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
         sendCommand(this->partner->sock, *this->partner->bufferSend);
+        if(this->user->bufferSend->header.type == 0){
+            this->partner->unconfirm.push(*this->partner->bufferSend);
+            this->partner->timer.addTimer();
+        }
     } else {
         this->offline.setPath(this->user->bufferRecv->header.DST);
         this->offline.writeFile(*this->user->bufferRecv);

@@ -14,7 +14,7 @@ class Protocol{
     
     void addUser(User& user);
     void handleCommand();
-    void helloUser();
+    int helloUser();
     void processSendCommand();
     void handleTimer();
     // \note очищение буффера неподтвержденных сообщений, запись их в файл, удаление пользователя из списка онлайн-пользователей, очищение очереди таймеров

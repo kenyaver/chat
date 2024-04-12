@@ -3,10 +3,30 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <cstdlib>
+#include <sys/stat.h>
 
 
 void Offline::setPath(char* username){
     sprintf(this->path, "../offline/%s.txt", username);
+}
+
+int getFileSize(const char* fileName){
+	int file_size = 0;
+	struct stat fileStatbuff;
+	int fd = open(fileName, O_RDONLY);
+	if(fd == -1){
+		file_size = -1;
+	}
+	else{
+		if ((fstat(fd, &fileStatbuff) != 0) || (!S_ISREG(fileStatbuff.st_mode))) {
+			file_size = -1;
+		}
+		else{
+			file_size = fileStatbuff.st_size;
+		}
+		close(fd);
+	}
+	return file_size;
 }
 
 bool Offline::checkFile(){
