@@ -12,7 +12,7 @@ void setNetCommandToHost(Command& h){
     h.header.messageID = ntohs(h.header.messageID);
 }
 
-int recvCommand(int sockfd, Command* buffer){
+int recvCommand(int sockfd, Command* &buffer){
     int byte = recv(sockfd, &buffer->header, sizeof(buffer->header), 0);
     if(byte == -1){
         return byte;

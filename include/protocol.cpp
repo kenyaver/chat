@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <inttypes.h>
+#include <iostream>
 
 void Protocol::addUser(User& user){
     onlineList.addUser(user);
@@ -12,7 +13,7 @@ void Protocol::addUser(User& user){
 void Protocol::handleCommand(){
     int byte = recvCommand(this->user->sock, this->user->bufferRecv);
     if(byte == -1){
-        log.writeLog((char*)"bad recv from user\n");
+        std::cout << "bad handle command" << std::endl;
         return;
     }
     this->processSendCommand();
@@ -22,7 +23,7 @@ int Protocol::helloUser(){
     int byte;
     byte = recvCommand(this->user->sock, this->user->bufferRecv);
     if(byte == -1){
-        log.writeLog((char*)"bad recv hello user\n");
+        std::cout << "bad handle hello user" << std::endl;
         return -1;
     }
     memcpy(this->user->username, this->user->bufferRecv->header.SRC, 8);
@@ -37,7 +38,7 @@ void Protocol::processSendCommand(){
         memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
         int err = sendCommand(this->partner->sock, *this->partner->bufferSend);
         if(err == -1){
-            log.writeLog((char*)"bad send to user\n");
+            std::cout << "bad send to user" << std::endl;
             return;
         }
         if(this->user->bufferSend->header.type == 0){

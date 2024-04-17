@@ -67,6 +67,7 @@ int main(int argc, char* argv[]){
         std::atomic<int> work{0};
         Command *rCommand = (Command*)calloc(24, sizeof(char));
         Command *sCommand = (Command*)calloc(24, sizeof(char));
+        
         std::thread r([&]{
             int byte;
             struct pollfd pfd;

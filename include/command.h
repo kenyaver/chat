@@ -18,7 +18,7 @@ class Command{
 };
 
 // \return возвращает количество считанных байт
-int recvCommand(int sockfd, Command* buffer);
+int recvCommand(int sockfd, Command* &buffer);
 
 // return возвращает количество отправленных байт
 int sendCommand(int sockfd, Command& buffer);
