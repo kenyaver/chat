@@ -10,8 +10,8 @@
 #include <algorithm>
 #include <string>
 
-#define BUFFERrSIZE 1024
-#define BUFFERsSIZE 1024
+Command *rCommand = (Command*)calloc(1, sizeof(Header));
+Command *sCommand = (Command*)calloc(1, sizeof(Header));
 
 void sendAnswer(int sock, Command* command){
     std::swap(command->header.SRC, command->header.DST);
@@ -30,11 +30,11 @@ void printCommand(Command* command){
 }
 
 void setCommand(std::string& buffer, std::string& src, std::string& dst, int* id, Command* command){
-    command = (Command*)realloc(command, sizeof(command->header) + buffer.size() + 1);
+    command = (Command*)realloc(command, sizeof(Header) + buffer.size() + 1);
     memcpy(command->message, buffer.c_str(), buffer.size() + 1);
     command->header.len = sizeof(command->header) + buffer.size() + 1;
     command->header.messageID = *id;
-    *id ++;
+    *id++;
     memcpy(command->header.SRC, src.c_str(), 8);
     memcpy(command->header.DST, dst.c_str(), 8);
     command->header.type = 0;
@@ -65,8 +65,7 @@ int main(int argc, char* argv[]){
         }
 
         std::atomic<int> work{0};
-        Command *rCommand = (Command*)calloc(1, sizeof(Header));
-        Command *sCommand = (Command*)calloc(1, sizeof(Header));
+        
         
         std::thread r([&]{
             int byte;
