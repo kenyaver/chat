@@ -33,7 +33,7 @@ int Protocol::helloUser(){
 
 void Protocol::processSendCommand(){
     this->partner = onlineList.findUser(this->user->bufferRecv->header.DST);
-    if(partner != NULL){
+    if(partner != nullptr){
         this->partner->bufferSend = (Command*)realloc(this->partner->bufferSend, this->user->bufferRecv->header.len);
         memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
         int err = sendCommand(this->partner->sock, *this->partner->bufferSend);
