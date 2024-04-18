@@ -7,13 +7,16 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <mutex>
+#include <chrono>
 #include <algorithm>
 #include <string>
 
+std::mutex mut;
 Command *rCommand = (Command*)calloc(1, sizeof(Header));
 Command *sCommand = (Command*)calloc(1, sizeof(Header));
 
-void sendAnswer(int sock, Command* command){
+void sendAnswer(int sock, Command* &command){
     std::swap(command->header.SRC, command->header.DST);
     command = (Command*)realloc(command,sizeof(command->header) + 4 * sizeof(char));
     memcpy(command->message, "200", 4);
@@ -22,22 +25,24 @@ void sendAnswer(int sock, Command* command){
 }
 
 void printCommand(Command* command){
+    mut.lock();
     std::cout << "\rfrom: " << command->header.SRC << std::endl;
     if(command->header.type == 1){
         std::cout << "answer for ID: " << command->header.messageID << std::endl;
     }
     std::cout << "message: " << command->message << std::endl;
+    mut.unlock();
 }
 
-void setCommand(std::string& buffer, std::string& src, std::string& dst, int* id, Command* command){
+int setCommand(std::string& buffer, std::string& src, std::string& dst, int id, Command* &command){
     command = (Command*)realloc(command, sizeof(Header) + buffer.size() + 1);
     memcpy(command->message, buffer.c_str(), buffer.size() + 1);
     command->header.len = sizeof(command->header) + buffer.size() + 1;
-    command->header.messageID = *id;
-    *id++;
+    command->header.messageID = id;
     memcpy(command->header.SRC, src.c_str(), 8);
     memcpy(command->header.DST, dst.c_str(), 8);
     command->header.type = 0;
+    return id++;
 }
 
 int main(int argc, char* argv[]){
@@ -109,6 +114,7 @@ int main(int argc, char* argv[]){
         int id = 0;
         while(work.load() == 0){
             std::string dst;
+            mut.lock();
             std::cout << "DST: ";
             std::getline(std::cin, dst);
             if(dst.size() == 0 || dst.size() > 7){
@@ -121,9 +127,10 @@ int main(int argc, char* argv[]){
                 std::cout << "bad message" << std::endl;
                 continue;
             }
-            setCommand(buffer, src, dst, &id, sCommand);
+            mut.unlock();
+            id = setCommand(buffer, src, dst, id, sCommand);
             sendCommand(sock, *sCommand);
-            
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
         }
 
         r.join();
