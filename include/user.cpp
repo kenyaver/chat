@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 User::User(){
-    this->bufferRecv = (Command*)malloc(sizeof(this->bufferRecv->header));
-    this->bufferSend = (Command*)malloc(sizeof(this->bufferRecv->header));
+    this->bufferRecv = NULL;
+    this->bufferSend = NULL;
 }
 
 bool User::operator==(char* username){

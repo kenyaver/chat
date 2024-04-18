@@ -76,6 +76,7 @@ void Protocol::clearUser(){
         if(recver != nullptr){
             sendCommand(recver->sock, *tmp);
         }
+        this->user->unconfirm.pop();
     }
 }
 
