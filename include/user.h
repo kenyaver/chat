@@ -13,7 +13,7 @@ class User{
     Timer timer;
     std::queue<Command> unconfirm;
 
-
+    User();
     bool operator==(char* username);
     void clearQueueUnconfirm();
     void disconnect();

@@ -2,6 +2,12 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <stdlib.h>
+
+User::User(){
+    this->bufferRecv = (Command*)malloc(sizeof(this->bufferRecv->header));
+    this->bufferSend = (Command*)malloc(sizeof(this->bufferRecv->header));
+}
 
 bool User::operator==(char* username){
     return !strcmp(this->username, username);

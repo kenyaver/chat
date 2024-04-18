@@ -7,7 +7,7 @@
 
 
 void Offline::setPath(char* username){
-    sprintf(this->path, "../offline/%s.txt", username);
+    sprintf(this->path, "../offlineTXT/%s.txt", username);
 }
 
 int getFileSize(const char* fileName){

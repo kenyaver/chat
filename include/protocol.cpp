@@ -47,7 +47,14 @@ void Protocol::processSendCommand(){
         }
     } else {
         this->offline.setPath(this->user->bufferRecv->header.DST);
+        this->user->bufferRecv->header.type = 2;
         this->offline.writeFile(*this->user->bufferRecv);
+
+        this->user->bufferRecv->header.type = 1;
+        this->user->bufferRecv->header.len = sizeof(Header) + 4;
+        this->user->bufferRecv = (Command*)realloc(this->user->bufferRecv, this->user->bufferRecv->header.len);
+        memcpy(this->user->bufferRecv->message, "300", 4);
+        sendCommand(this->user->sock, *this->user->bufferRecv);
     }
 }
 
