@@ -3,11 +3,13 @@
 
 #ignore .out
 *.out
-build/include/*.o
+
 
 #ignore object-files
 *.o
 *.ii
+build/client
+build/server
 
 #ignore trash
 /.trash

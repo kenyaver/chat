@@ -22,11 +22,11 @@ void sendAnswer(int sock, Command* command){
 }
 
 void printCommand(Command* command){
-    std::cout << "from: " << command->header.SRC << std::endl;
+    std::cout << "\rfrom: " << command->header.SRC << std::endl;
     if(command->header.type == 1){
         std::cout << "answer for ID: " << command->header.messageID << std::endl;
     }
-    std::cout << "\nmessage: " << command->message << std::endl;
+    std::cout << "message: " << command->message << std::endl;
 }
 
 void setCommand(std::string& buffer, std::string& src, std::string& dst, int* id, Command* command){
@@ -34,7 +34,7 @@ void setCommand(std::string& buffer, std::string& src, std::string& dst, int* id
     memcpy(command->message, buffer.c_str(), buffer.size() + 1);
     command->header.len = sizeof(command->header) + buffer.size() + 1;
     command->header.messageID = *id;
-    *id += 1;
+    *id ++;
     memcpy(command->header.SRC, src.c_str(), 8);
     memcpy(command->header.DST, dst.c_str(), 8);
     command->header.type = 0;
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]){
         std::cout << "connected to server\n";
         
         std::string src;
-        std::cout << "your name: ";
+        std::cout << "SRC: ";
         std::getline(std::cin, src);
         if(src.size() == 0 || src.size() > 7){
             std::cout << "bad name" << std::endl;
@@ -65,8 +65,8 @@ int main(int argc, char* argv[]){
         }
 
         std::atomic<int> work{0};
-        Command *rCommand = (Command*)calloc(24, sizeof(char));
-        Command *sCommand = (Command*)calloc(24, sizeof(char));
+        Command *rCommand = (Command*)calloc(1, sizeof(Header));
+        Command *sCommand = (Command*)calloc(1, sizeof(Header));
         
         std::thread r([&]{
             int byte;
@@ -110,14 +110,13 @@ int main(int argc, char* argv[]){
         int id = 0;
         while(work.load() == 0){
             std::string dst;
-            std::cout << "input DST:\n";
+            std::cout << "DST: ";
             std::getline(std::cin, dst);
             if(dst.size() == 0 || dst.size() > 7){
-                std::cout << "bad DST" << std::endl;
                 continue;
             }
             std::string buffer;
-            std::cout << "input message:\n";   
+            std::cout << "message: ";   
             std::getline(std::cin, buffer);
             if(buffer.size() == 0 || buffer.size() > 999){
                 std::cout << "bad message" << std::endl;

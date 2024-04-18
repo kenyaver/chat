@@ -1,18 +1,22 @@
 #include "session.h"
 #include <sys/poll.h>
+#include <iostream>
 
 
 Session::Session(int sock){
+    std::cout << "start init user" << std::endl;
     User you;
     you.sock = sock;
     this->protocol.addUser(you);
 }
 
 void Session::worker(){
+    std::cout << "start session user" << std::endl;
     int err = this->protocol.helloUser();
     if(err == -1){
         return;
     }
+    std::cout << "success hello user" << std::endl;
     struct pollfd fds[2];
     nfds_t nfd = 2;
     fds[0].fd = this->protocol.user->sock;

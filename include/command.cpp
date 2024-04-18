@@ -17,7 +17,7 @@ int recvCommand(int sockfd, Command* &buffer){
     if(byte == -1){
         return byte;
     }
-    setNetCommandToHost(*buffer);
+    // setNetCommandToHost(*buffer);
     buffer = (Command*)realloc(buffer, buffer->header.len);
     byte += recv(sockfd, buffer->message, buffer->header.len - sizeof(Header), 0);
     return byte;
@@ -31,7 +31,7 @@ void setHostCommandToNet(Command& h){
 
 int sendCommand(int sockfd, Command& buffer){
     int len = buffer.header.len;
-    setHostCommandToNet(buffer);
+    // setHostCommandToNet(buffer);
     int byte = send(sockfd, &buffer, len, 0);
     return byte;
 }

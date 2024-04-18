@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <iostream>
+#include <algorithm>
 
 void Protocol::addUser(User& user){
     onlineList.addUser(user);
@@ -53,6 +54,7 @@ void Protocol::processSendCommand(){
         this->user->bufferRecv->header.type = 1;
         this->user->bufferRecv->header.len = sizeof(Header) + 4;
         this->user->bufferRecv = (Command*)realloc(this->user->bufferRecv, this->user->bufferRecv->header.len);
+        std::swap(this->user->bufferRecv->header.SRC, this->user->bufferRecv->header.DST);
         memcpy(this->user->bufferRecv->message, "300", 4);
         sendCommand(this->user->sock, *this->user->bufferRecv);
     }
