@@ -36,16 +36,16 @@ void Protocol::processSendCommand(){
     this->partner = onlineList.findUser(this->user->bufferRecv->header.DST);
     if(partner != NULL){
         std::cout << "partner online" << std::endl;
-        this->partner->bufferSend = (Command*)realloc(this->partner->bufferSend, this->user->bufferRecv->header.len);
-        // memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
-        this->partner->bufferSend = std::move(this->user->bufferRecv);
-        int err = sendCommand(this->partner->sock, *this->partner->bufferSend);
+        // this->partner->bufferSend = (Command*)realloc(this->partner->bufferSend, this->user->bufferRecv->header.len);
+        // // memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
+        // this->partner->bufferSend = std::move(this->user->bufferRecv);
+        int err = sendCommand(this->partner->sock, *this->user->bufferRecv);
         if(err == -1){
             std::cout << "bad send to user" << std::endl;
             return;
         }
-        if(this->user->bufferSend->header.type == 0){
-            this->partner->unconfirm.push(*this->partner->bufferSend);
+        if(this->user->bufferRecv->header.type == 0){
+            this->partner->unconfirm.push(*this->user->bufferRecv);
             this->partner->timer.addTimer();
         }
     } else {

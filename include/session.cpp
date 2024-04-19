@@ -33,6 +33,7 @@ void Session::worker(){
                     this->protocol.handleCommand();
                     fds[0].revents = 0;
                 } else {
+                    this->protocol.clearUser();
                     fds[0].revents = 0;
                     break;
                 }

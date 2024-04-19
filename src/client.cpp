@@ -42,7 +42,8 @@ int setCommand(std::string& buffer, std::string& src, std::string& dst, int id, 
     memcpy(command->header.SRC, src.c_str(), 8);
     memcpy(command->header.DST, dst.c_str(), 8);
     command->header.type = 0;
-    return id++;
+    id++;
+    return id;
 }
 
 int main(int argc, char* argv[]){
