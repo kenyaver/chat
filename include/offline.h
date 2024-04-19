@@ -3,7 +3,7 @@
 #include "command.h"
 
 class Offline{
-    char path[24];
+    char path[26];
     public:
     void setPath(char* username);
 

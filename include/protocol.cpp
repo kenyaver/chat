@@ -50,9 +50,9 @@ void Protocol::processSendCommand(){
         }
     } else {
         std::cout << "partner offline" << std::endl;
-        // this->offline.setPath(this->user->bufferRecv->header.DST);
-        // this->user->bufferRecv->header.type = 2;
-        // this->offline.writeFile(*this->user->bufferRecv);
+        this->offline.setPath(this->user->bufferRecv->header.DST);
+        this->user->bufferRecv->header.type = 2;
+        this->offline.writeFile(*this->user->bufferRecv);
         std::cout << "command writed in file" << std::endl;
         this->user->bufferRecv->header.type = 1;
         this->user->bufferRecv->header.len = sizeof(Header) + 4;

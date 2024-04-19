@@ -118,6 +118,8 @@ int main(int argc, char* argv[]){
             std::cout << "DST: ";
             std::getline(std::cin, dst);
             if(dst.size() == 0 || dst.size() > 7){
+                mut.unlock();
+                std::this_thread::sleep_for(std::chrono::milliseconds(500));
                 continue;
             }
             std::string buffer;
@@ -125,6 +127,7 @@ int main(int argc, char* argv[]){
             std::getline(std::cin, buffer);
             if(buffer.size() == 0 || buffer.size() > 999){
                 std::cout << "bad message" << std::endl;
+                mut.unlock();
                 continue;
             }
             mut.unlock();
