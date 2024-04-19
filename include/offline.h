@@ -11,7 +11,7 @@ class Offline{
     bool checkFile();
 
     // \return возвращает количество считанных байт из файла
-    int readFile(Command* buffer);
+    int readFile(Command* &buffer);
 
     // \return возвращает количество записанных байт в файл
     int writeFile(Command& buffer);

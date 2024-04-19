@@ -37,7 +37,7 @@ bool Offline::checkFile(){
     }
 }
 
-int Offline::readFile(Command* buffer){
+int Offline::readFile(Command* &buffer){
     int file = open(this->path, O_RDONLY);
     int byte = read(file, &buffer->header, sizeof(buffer->header));
     buffer = (Command*)realloc(buffer, buffer->header.len);
@@ -47,7 +47,7 @@ int Offline::readFile(Command* buffer){
 }
 
 int Offline::writeFile(Command& buffer){
-    int file = open(this->path, O_RDONLY);
+    int file = open(this->path, O_WRONLY);
     int byte = write(file, &buffer, buffer.header.len);
     close(file);
     return byte;

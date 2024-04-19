@@ -130,7 +130,7 @@ int main(int argc, char* argv[]){
             mut.unlock();
             id = setCommand(buffer, src, dst, id, sCommand);
             sendCommand(sock, *sCommand);
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
 
         r.join();

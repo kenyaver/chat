@@ -34,9 +34,11 @@ int Protocol::helloUser(){
 
 void Protocol::processSendCommand(){
     this->partner = onlineList.findUser(this->user->bufferRecv->header.DST);
-    if(partner != nullptr){
+    if(partner != NULL){
+        std::cout << "partner online" << std::endl;
         this->partner->bufferSend = (Command*)realloc(this->partner->bufferSend, this->user->bufferRecv->header.len);
-        memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
+        // memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
+        this->partner->bufferSend = std::move(this->user->bufferRecv);
         int err = sendCommand(this->partner->sock, *this->partner->bufferSend);
         if(err == -1){
             std::cout << "bad send to user" << std::endl;
@@ -47,16 +49,20 @@ void Protocol::processSendCommand(){
             this->partner->timer.addTimer();
         }
     } else {
-        this->offline.setPath(this->user->bufferRecv->header.DST);
-        this->user->bufferRecv->header.type = 2;
-        this->offline.writeFile(*this->user->bufferRecv);
-
+        std::cout << "partner offline" << std::endl;
+        // this->offline.setPath(this->user->bufferRecv->header.DST);
+        // this->user->bufferRecv->header.type = 2;
+        // this->offline.writeFile(*this->user->bufferRecv);
+        std::cout << "command writed in file" << std::endl;
         this->user->bufferRecv->header.type = 1;
         this->user->bufferRecv->header.len = sizeof(Header) + 4;
         this->user->bufferRecv = (Command*)realloc(this->user->bufferRecv, this->user->bufferRecv->header.len);
         std::swap(this->user->bufferRecv->header.SRC, this->user->bufferRecv->header.DST);
         memcpy(this->user->bufferRecv->message, "300", 4);
-        sendCommand(this->user->sock, *this->user->bufferRecv);
+        int err = sendCommand(this->user->sock, *this->user->bufferRecv);
+        if(err == -1){
+            std::cout << "bad send answer" << std::endl;
+        }
     }
 }
 
@@ -65,7 +71,6 @@ void Protocol::clearUser(){
     onlineList.removeUser(this->user->username);
     this->offline.setPath(this->user->username);
     for(int i = 0; i < this->user->unconfirm.size(); i++){
-        
         Command *tmp = &this->user->unconfirm.front();
         tmp->header.type = 2;
         this->offline.writeFile(*tmp);
@@ -75,7 +80,7 @@ void Protocol::clearUser(){
         tmp = (Command*)realloc(tmp, tmp->header.len);
         memcpy(tmp->message, "300", 4);
         User* recver = onlineList.findUser(tmp->header.SRC); 
-        if(recver != nullptr){
+        if(recver != NULL){
             sendCommand(recver->sock, *tmp);
         }
         this->user->unconfirm.pop();
