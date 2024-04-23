@@ -47,6 +47,13 @@ int setCommand(std::string& buffer, std::string& src, std::string& dst, int id, 
     return id;
 }
 
+int checkExit(std::string& buffer){
+    if(buffer.find("~") != std::string::npos){
+        return 1;
+    }
+    return 0;
+}
+
 int main(int argc, char* argv[]){
         int sock = socket(AF_INET, SOCK_STREAM, 0);
         sockaddr_in addr;
@@ -130,7 +137,13 @@ int main(int argc, char* argv[]){
             if(buffer.size() == 0 || buffer.size() > 999){
                 std::cout << "bad message" << std::endl;
                 mut.unlock();
+                std::this_thread::sleep_for(std::chrono::milliseconds(500));
                 continue;
+            }
+            if(checkExit(buffer)){
+                mut.unlock();
+                work.store(1);
+                break;
             }
             mut.unlock();
             id = setCommand(buffer, src, dst, id, sCommand);

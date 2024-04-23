@@ -74,13 +74,12 @@ void Protocol::clearUser(){
         Command *tmp = &this->user->unconfirm.front();
         tmp->header.type = 2;
         this->offline.writeFile(*tmp);
-        
-        tmp->header.type = 1;
-        tmp->header.len = sizeof(Header) + 4;
-        tmp = (Command*)realloc(tmp, tmp->header.len);
-        memcpy(tmp->message, "300", 4);
         User* recver = onlineList.findUser(tmp->header.SRC); 
         if(recver != NULL){
+            tmp->header.type = 1;
+            tmp->header.len = sizeof(Header) + 4;
+            tmp = (Command*)realloc(tmp, tmp->header.len);
+            memcpy(tmp->message, "300", 4);
             sendCommand(recver->sock, *tmp);
         }
         this->user->unconfirm.pop();
