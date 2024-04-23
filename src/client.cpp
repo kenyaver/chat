@@ -31,6 +31,7 @@ void printCommand(Command* command){
         std::cout << "answer for ID: " << command->header.messageID << std::endl;
     }
     std::cout << "message: " << command->message << std::endl;
+    std::cout << std::endl;
     mut.unlock();
 }
 

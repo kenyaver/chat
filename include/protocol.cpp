@@ -12,7 +12,7 @@ void Protocol::addUser(User& user){
 }
 
 void Protocol::handleCommand(){
-    int byte = recvCommand(this->user->sock, this->user->bufferRecv);
+    int byte = recvCommand(this->user->sock, this->user->buffer);
     if(byte == -1){
         std::cout << "bad handle command" << std::endl;
         return;
@@ -22,44 +22,44 @@ void Protocol::handleCommand(){
 
 int Protocol::helloUser(){
     int byte;
-    byte = recvCommand(this->user->sock, this->user->bufferRecv);
+    byte = recvCommand(this->user->sock, this->user->buffer);
     if(byte == -1){
         std::cout << "bad handle hello user" << std::endl;
         return -1;
     }
-    memcpy(this->user->username, this->user->bufferRecv->header.SRC, 8);
+    memcpy(this->user->username, this->user->buffer->header.SRC, 8);
     this->processSendCommand();
+    if(this->offline.readFile(this->user->buffer) == 0){
+        sendCommand(this->user->sock, *this->user->buffer);
+    }
     return 0;
 }
 
 void Protocol::processSendCommand(){
-    this->partner = onlineList.findUser(this->user->bufferRecv->header.DST);
+    this->partner = onlineList.findUser(this->user->buffer->header.DST);
     if(partner != NULL){
         std::cout << "partner online" << std::endl;
-        // this->partner->bufferSend = (Command*)realloc(this->partner->bufferSend, this->user->bufferRecv->header.len);
-        // // memcpy(this->partner->bufferSend, this->user->bufferRecv, this->user->bufferRecv->header.len);
-        // this->partner->bufferSend = std::move(this->user->bufferRecv);
-        int err = sendCommand(this->partner->sock, *this->user->bufferRecv);
+        int err = sendCommand(this->partner->sock, *this->user->buffer);
         if(err == -1){
             std::cout << "bad send to user" << std::endl;
             return;
         }
-        if(this->user->bufferRecv->header.type == 0){
-            this->partner->unconfirm.push(*this->user->bufferRecv);
+        if(this->user->buffer->header.type == 0){
+            this->partner->unconfirm.push(*this->user->buffer);
             this->partner->timer.addTimer();
         }
     } else {
         std::cout << "partner offline" << std::endl;
-        this->offline.setPath(this->user->bufferRecv->header.DST);
-        this->user->bufferRecv->header.type = 2;
-        this->offline.writeFile(*this->user->bufferRecv);
+        this->offline.setPath(this->user->buffer->header.DST);
+        this->user->buffer->header.type = 2;
+        this->offline.writeFile(*this->user->buffer);
         std::cout << "command writed in file" << std::endl;
-        this->user->bufferRecv->header.type = 1;
-        this->user->bufferRecv->header.len = sizeof(Header) + 4;
-        this->user->bufferRecv = (Command*)realloc(this->user->bufferRecv, this->user->bufferRecv->header.len);
-        std::swap(this->user->bufferRecv->header.SRC, this->user->bufferRecv->header.DST);
-        memcpy(this->user->bufferRecv->message, "300", 4);
-        int err = sendCommand(this->user->sock, *this->user->bufferRecv);
+        this->user->buffer->header.type = 1;
+        this->user->buffer->header.len = sizeof(Header) + 4;
+        this->user->buffer = (Command*)realloc(this->user->buffer, this->user->buffer->header.len);
+        std::swap(this->user->buffer->header.SRC, this->user->buffer->header.DST);
+        memcpy(this->user->buffer->message, "300", 4);
+        int err = sendCommand(this->user->sock, *this->user->buffer);
         if(err == -1){
             std::cout << "bad send answer" << std::endl;
         }

@@ -7,8 +7,7 @@
 class User{
     public:
     char username[8];
-    Command *bufferSend;
-    Command *bufferRecv;
+    Command *buffer;
     int sock;
     Timer timer;
     std::queue<Command> unconfirm;

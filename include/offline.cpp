@@ -41,42 +41,37 @@ bool Offline::checkFile(){
 }
 
 void readHeader(std::ifstream& in, Command& buffer){
-    in >> buffer.header.len
-    >> buffer.header.type
-    >> buffer.header.messageID
-    >> buffer.header.SRC
-    >> buffer.header.DST;
+    // in >> buffer.header.len
+    // >> buffer.header.type
+    // >> buffer.header.messageID
+    // >> buffer.header.SRC
+    // >> buffer.header.DST;
+    in.read((char*)&buffer.header, 24);
 }
 
 int Offline::readFile(Command* &buffer){
-    // int file = open(this->path, O_RDONLY);
-    // int byte = read(file, &buffer->header, sizeof(buffer->header));
-    // buffer = (Command*)realloc(buffer, buffer->header.len);
-    // byte = read(file, buffer->message, buffer->header.len - sizeof(buffer->header));
-    // close(file);
-    std::ifstream reader(this->path, std::ios::in);
-    readHeader(reader, *buffer);
-    buffer = (Command*)realloc(buffer, buffer->header.len);
-    reader >> buffer->message;
-    reader.close();
+    std::ifstream reader(this->path, std::ios::binary | std::ios::in);
+    if(reader.is_open()){
+        while(!reader.eof()){
+            reader.read((char*)&buffer->header, 24);
+            buffer = (Command*)realloc(buffer, buffer->header.len);
+            reader.read((char*)buffer->message, buffer->header.len - sizeof(Header));
+            reader.close();
+            remove(this->path);
+        }
+    } else {
+        return 1;
+    }
     return 0;
 }
 
 int Offline::writeFile(Command& buffer){
-    // int file = open(this->path, O_WRONLY);
-    // int byte = write(file, &buffer, buffer.header.len);
-    // close(file);
-    std::ofstream writer(this->path, std::ios::app);
+    std::ofstream writer(this->path, std::ios::binary | std::ios::app);
     if(!writer.is_open()){
         writer.close();
-        writer.open(this->path, std::ios::out);
+        writer.open(this->path, std::ios::binary | std::ios::out);
     }
-    writer << buffer.header.len
-        << buffer.header.type
-        << buffer.header.messageID
-        << buffer.header.SRC
-        << buffer.header.DST
-        << buffer.message;
+    writer.write((char*)&buffer, buffer.header.len);
     writer.close();
     return 0;
 }

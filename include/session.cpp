@@ -29,7 +29,7 @@ void Session::worker(){
         ret = poll(fds, 2, -1);
         if(ret > 0){
             if(fds[0].revents != 0){
-                if(fds[0].revents != POLLRDHUP && fds[0].revents != POLLHUP){
+                if(fds[0].revents == POLLIN){
                     this->protocol.handleCommand();
                     fds[0].revents = 0;
                 } else {

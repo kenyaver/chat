@@ -63,7 +63,6 @@ int main(int argc, char* argv[]){
     for(;;){
         int accepter = accept(sock, (struct sockaddr*)&addr, &addrlen);
         Session session(accepter);
-        session.worker();
         handler.push_back(std::thread(&Session::worker, session));
         handler.back().detach();
     }
