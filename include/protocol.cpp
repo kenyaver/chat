@@ -71,7 +71,7 @@ void Protocol::clearUser(){
     onlineList.removeUser(this->user->username);
     this->offline.setPath(this->user->username);
     for(int i = 0; i < this->user->unconfirm.size(); i++){
-        Command *tmp = &this->user->unconfirm.front();
+        Command *tmp = this->user->unconfirm.front();
         tmp->header.type = 2;
         this->offline.writeFile(*tmp);
         User* recver = onlineList.findUser(tmp->header.SRC); 

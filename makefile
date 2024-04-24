@@ -14,6 +14,9 @@ command.o:
 user.o:
 	g++ -c include/user.cpp -o build/include/user.o
 
+unconfirm.o:
+	g++ -c include/unconfirm.cpp -o build/include/unconfirm.o
+
 timer.o:
 	g++ -c include/timer.cpp -o build/include/timer.o
 
@@ -29,8 +32,8 @@ protocol.o:
 session.o:
 	g++ -c include/session.cpp -o build/include/session.o
 
-server: check.o command.o user.o timer.o onlineList.o offline.o protocol.o session.o
-	g++ -g build/include/check.o build/include/command.o build/include/user.o build/include/timer.o build/include/onlineList.o build/include/offline.o build/include/protocol.o build/include/session.o src/server.cpp -o build/server
+server: check.o command.o user.o unconfirm.o timer.o onlineList.o offline.o protocol.o session.o
+	g++ -g build/include/check.o build/include/command.o build/include/user.o build/include/unconfirm.o build/include/timer.o build/include/onlineList.o build/include/offline.o build/include/protocol.o build/include/session.o src/server.cpp -o build/server
 
 client: check.o command.o
 	g++ -g build/include/check.o build/include/command.o src/client.cpp -o build/client

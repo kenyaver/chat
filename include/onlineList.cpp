@@ -1,7 +1,7 @@
 #include "onlineList.h"
 #include <mutex>
 
-std::mutex mut;
+static std::mutex mut;
 
 void OnlineList::addUser(User& newUser){
     mut.lock();

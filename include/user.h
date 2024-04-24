@@ -3,6 +3,7 @@
 
 #include "command.h"
 #include "timer.h"
+#include "unconfirm.h"
 
 class User{
     public:
@@ -10,7 +11,7 @@ class User{
     Command *buffer;
     int sock;
     Timer timer;
-    std::queue<Command> unconfirm;
+    Unconfirm unconfirm;
 
     User();
     bool operator==(char* username);
