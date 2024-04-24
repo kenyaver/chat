@@ -40,15 +40,6 @@ bool Offline::checkFile(){
     }
 }
 
-void readHeader(std::ifstream& in, Command& buffer){
-    // in >> buffer.header.len
-    // >> buffer.header.type
-    // >> buffer.header.messageID
-    // >> buffer.header.SRC
-    // >> buffer.header.DST;
-    in.read((char*)&buffer.header, 24);
-}
-
 int Offline::readFile(Command* &buffer){
     std::ifstream reader(this->path, std::ios::binary | std::ios::in);
     if(reader.is_open()){
@@ -57,8 +48,8 @@ int Offline::readFile(Command* &buffer){
             buffer = (Command*)realloc(buffer, buffer->header.len);
             reader.read((char*)buffer->message, buffer->header.len - sizeof(Header));
             reader.close();
-            remove(this->path);
         }
+        remove(this->path);
     } else {
         return 1;
     }
@@ -68,7 +59,6 @@ int Offline::readFile(Command* &buffer){
 int Offline::writeFile(Command& buffer){
     std::ofstream writer(this->path, std::ios::binary | std::ios::app);
     if(!writer.is_open()){
-        writer.close();
         writer.open(this->path, std::ios::binary | std::ios::out);
     }
     writer.write((char*)&buffer, buffer.header.len);

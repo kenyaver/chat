@@ -86,10 +86,6 @@ void Protocol::clearUser(){
     }
 }
 
-void Protocol::clearUserList(){
-    onlineList.clearUserDB();
-}
-
 void Protocol::handleTimer(){
     uint64_t exp;
     int byte = read(this->user->timer.getFirstTimer(), &exp, sizeof(exp));

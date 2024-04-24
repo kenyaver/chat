@@ -13,7 +13,6 @@ class OnlineList{
 
     // \param username юзернейм, по которому определяется, какого пользователя исключить
     void removeUser(char* username);
-    void clearUserDB();
 };
 
 inline OnlineList onlineList;

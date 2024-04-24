@@ -31,11 +31,3 @@ void OnlineList::removeUser(char* username){
     }
     mut.unlock();
 }
-
-void OnlineList::clearUserDB(){
-    mut.lock();
-    for(auto i = onlineList.begin(); i != onlineList.end(); i++){
-        removeUser(i->username);       
-    }
-    mut.unlock();
-}

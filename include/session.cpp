@@ -22,10 +22,11 @@ void Session::worker(){
     nfds_t nfd = 2;
     fds[0].fd = this->protocol.user->sock;
     fds[0].events = POLLIN | POLLRDHUP | POLLHUP;
-    fds[1].fd = this->protocol.user->timer.getFirstTimer();
-    fds[1].events = POLLIN;
+    
     int ret = 0;
     while(ret != -1){
+        fds[1].fd = this->protocol.user->timer.getFirstTimer();
+        fds[1].events = POLLIN;
         ret = poll(fds, 2, -1);
         if(ret > 0){
             if(fds[0].revents != 0){
@@ -33,7 +34,6 @@ void Session::worker(){
                     this->protocol.handleCommand();
                     fds[0].revents = 0;
                 } else {
-                    this->protocol.clearUser();
                     fds[0].revents = 0;
                     break;
                 }
@@ -41,6 +41,8 @@ void Session::worker(){
                 this->protocol.handleTimer();
                 fds[1].revents = 0;
             }
+        } else {
+            break;
         }
     }
     this->protocol.clearUser();

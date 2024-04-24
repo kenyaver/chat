@@ -66,6 +66,7 @@ int main(int argc, char* argv[]){
         handler.push_back(std::thread(&Session::worker, session));
         handler.back().detach();
     }
+    
 
     close(sock);
     return 0;
