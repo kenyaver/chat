@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <sys/stat.h>
 #include <fstream>
+#include "command.h"
+#include "onlineList.h"
 
 
 void Offline::setPath(char* username){
@@ -42,17 +44,18 @@ bool Offline::checkFile(){
 
 int Offline::readFile(Command* &buffer){
     std::ifstream reader(this->path, std::ios::binary | std::ios::in);
-    if(reader.is_open()){
-        while(!reader.eof()){
-            reader.read((char*)&buffer->header, 24);
-            buffer = (Command*)realloc(buffer, buffer->header.len);
-            reader.read((char*)buffer->message, buffer->header.len - sizeof(Header));
-            reader.close();
-        }
-        remove(this->path);
-    } else {
+    if(!reader.is_open()){
         return 1;
     }
+    User* recver = onlineList.findUser(buffer->header.DST);
+    while(!reader.eof()){
+        reader.read((char*)&buffer->header, 24);
+        buffer = (Command*)realloc(buffer, buffer->header.len);
+        reader.read((char*)buffer->message, buffer->header.len - sizeof(Header));
+        sendCommand(recver->sock, *buffer);
+    }
+    printf("success read\n");
+    reader.close();
     return 0;
 }
 
@@ -63,5 +66,6 @@ int Offline::writeFile(Command& buffer){
     }
     writer.write((char*)&buffer, buffer.header.len);
     writer.close();
+    printf("success write\n");
     return 0;
 }

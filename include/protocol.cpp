@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 
 void Protocol::addUser(User& user){
@@ -29,9 +30,8 @@ int Protocol::helloUser(){
     }
     memcpy(this->user->username, this->user->buffer->header.SRC, 8);
     this->processSendCommand();
-    if(this->offline.readFile(this->user->buffer) == 0){
-        sendCommand(this->user->sock, *this->user->buffer);
-    }
+    this->offline.setPath(this->user->username);
+    this->offline.readFile(this->user->buffer);
     return 0;
 }
 
