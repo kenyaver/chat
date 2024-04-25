@@ -30,8 +30,8 @@ int Protocol::helloUser(){
     }
     memcpy(this->user->username, this->user->buffer->header.SRC, 8);
     this->processSendCommand();
-    this->offline.setPath(this->user->username);
-    this->offline.readFile(this->user->buffer);
+    this->user->offline.setPath(this->user->username);
+    this->user->offline.readFile(this->user->buffer);
     return 0;
 }
 
@@ -50,9 +50,9 @@ void Protocol::processSendCommand(){
         }
     } else {
         std::cout << "partner offline" << std::endl;
-        this->offline.setPath(this->user->buffer->header.DST);
+        this->user->offline.setPath(this->user->buffer->header.DST);
         this->user->buffer->header.type = 2;
-        this->offline.writeFile(*this->user->buffer);
+        this->user->offline.writeFile(*this->user->buffer);
         std::cout << "command writed in file" << std::endl;
         this->user->buffer->header.type = 1;
         this->user->buffer->header.len = sizeof(Header) + 4;
@@ -69,17 +69,17 @@ void Protocol::processSendCommand(){
 void Protocol::clearUser(){
     this->user->timer.clearTimerQueue();
     onlineList.removeUser(this->user->username);
-    this->offline.setPath(this->user->username);
-    for(int i = 0; i < this->user->unconfirm.size(); i++){
+    this->user->offline.setPath(this->user->username);
+    while(this->user->unconfirm.size() != 0){
         Command *tmp = this->user->unconfirm.front();
         tmp->header.type = 2;
-        this->offline.writeFile(*tmp);
-        User* recver = onlineList.findUser(tmp->header.SRC); 
+        this->user->offline.writeFile(*tmp);
+        User* recver = onlineList.findUser(tmp->header.SRC);
         if(recver != NULL){
             tmp->header.type = 1;
-            tmp->header.len = sizeof(Header) + 4;
+            tmp->header.len = sizeof(Header) + 3;
             tmp = (Command*)realloc(tmp, tmp->header.len);
-            memcpy(tmp->message, "300", 4);
+            memcpy(tmp->message, "300", 3);
             sendCommand(recver->sock, *tmp);
         }
         this->user->unconfirm.pop();

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <sys/stat.h>
+#include <iostream>
 #include <fstream>
 #include "command.h"
 #include "onlineList.h"
@@ -52,10 +53,16 @@ int Offline::readFile(Command* &buffer){
         reader.read((char*)&buffer->header, 24);
         buffer = (Command*)realloc(buffer, buffer->header.len);
         reader.read((char*)buffer->message, buffer->header.len - sizeof(Header));
+        std::cout << "len: " << buffer->header.len
+                << "\ntype: " << buffer->header.type
+                << "\nmessageID: " << buffer->header.messageID
+                << "\nsrc: " << buffer->header.SRC
+                << "\ndst: " << buffer->header.DST << std::endl; 
         sendCommand(recver->sock, *buffer);
     }
     printf("success read\n");
     reader.close();
+    remove(this->path);
     return 0;
 }
 
