@@ -33,13 +33,14 @@ void Session::worker(){
                 if(fds[0].revents == POLLIN){
                     this->protocol.handleCommand();
                     fds[0].revents = 0;
-                } else {
+                } else{
                     fds[0].revents = 0;
                     break;
                 }
             } else {
-                this->protocol.handleTimer();
                 fds[1].revents = 0;
+                this->protocol.handleTimer();
+                break;
             }
         } else {
             break;

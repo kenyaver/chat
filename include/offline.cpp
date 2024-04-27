@@ -13,7 +13,6 @@
 void Offline::setPath(char* username){
     sprintf(this->path, "offlineTXT/%s.bin", username);
     write(STDIN_FILENO, this->path, 26);
-    FILE* file;
 }
 
 int getFileSize(const char* fileName){
@@ -48,9 +47,9 @@ int Offline::readFile(Command* &buffer){
     if(!reader.is_open()){
         return 1;
     }
-    User* recver = onlineList.findUser(buffer->header.DST);
     while(!reader.eof()){
         reader.read((char*)&buffer->header, 24);
+        User* recver = onlineList.findUser(buffer->header.DST);
         buffer = (Command*)realloc(buffer, buffer->header.len);
         reader.read((char*)buffer->message, buffer->header.len - sizeof(Header));
         std::cout << "len: " << buffer->header.len
