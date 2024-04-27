@@ -12,7 +12,7 @@
 
 void Offline::setPath(char* username){
     sprintf(this->path, "offlineTXT/%s.bin", username);
-    write(STDIN_FILENO, this->path, 26);
+    std::cout << this->path << std::endl;
 }
 
 int getFileSize(const char* fileName){
@@ -32,14 +32,6 @@ int getFileSize(const char* fileName){
 		close(fd);
 	}
 	return file_size;
-}
-
-bool Offline::checkFile(){
-    if(getFileSize(this->path) == 0){
-        return false;
-    } else {
-        return true;
-    }
 }
 
 int Offline::readFile(Command* &buffer){
