@@ -19,7 +19,7 @@ Command *sCommand = (Command*)calloc(1, sizeof(Header));
 void sendAnswer(int sock, Command* &command){
     std::swap(command->header.SRC, command->header.DST);
     command = (Command*)realloc(command,sizeof(command->header) + 4 * sizeof(char));
-    memcpy(command->message, "200", 4);
+    memcpy(command->message, "200", 3);
     command->header.type = 1;
     sendCommand(sock, *command);
 }
@@ -36,9 +36,9 @@ void printCommand(Command* command){
 }
 
 int setCommand(std::string& buffer, std::string& src, std::string& dst, int id, Command* &command){
-    command = (Command*)realloc(command, sizeof(Header) + buffer.size() + 1);
-    memcpy(command->message, buffer.c_str(), buffer.size() + 1);
-    command->header.len = sizeof(command->header) + buffer.size() + 1;
+    command = (Command*)realloc(command, sizeof(Header) + buffer.size());
+    memcpy(command->message, buffer.c_str(), buffer.size());
+    command->header.len = sizeof(command->header) + buffer.size();
     command->header.messageID = id;
     memcpy(command->header.SRC, src.c_str(), 8);
     memcpy(command->header.DST, dst.c_str(), 8);
@@ -79,7 +79,6 @@ int main(int argc, char* argv[]){
         }
 
         std::atomic<int> work{0};
-        
         
         std::thread r([&]{
             int byte;
@@ -134,7 +133,7 @@ int main(int argc, char* argv[]){
             std::string buffer;
             std::cout << "message: ";   
             std::getline(std::cin, buffer);
-            if(buffer.size() == 0 || buffer.size() > 999){
+            if(buffer.size() == 0 || buffer.size() > 1000){
                 std::cout << "bad message" << std::endl;
                 mut.unlock();
                 std::this_thread::sleep_for(std::chrono::milliseconds(500));
