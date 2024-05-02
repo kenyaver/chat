@@ -8,9 +8,6 @@ class Offline{
     public:
     void setPath(char* username);
 
-    // \return возвращает существование записей в файле 
-    bool checkFile();
-
     // читает сообщения из файла и отправляет получателю. Знаю, что плохо. Знаю, что очень..
     int readFile(Command* &buffer);
 

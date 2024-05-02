@@ -25,7 +25,3 @@ void User::disconnect(){
     this->clearQueueUnconfirm();
     this->timer.clearTimerQueue();
 }
-
-void User::updateUserInfo(char* username){
-    memcpy(this->username, username, 8);
-}

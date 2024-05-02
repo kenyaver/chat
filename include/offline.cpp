@@ -15,25 +15,6 @@ void Offline::setPath(char* username){
     std::cout << this->path << std::endl;
 }
 
-int getFileSize(const char* fileName){
-	int file_size = 0;
-	struct stat fileStatbuff;
-	int fd = open(fileName, O_RDONLY);
-	if(fd == -1){
-		file_size = -1;
-	}
-	else{
-		if ((fstat(fd, &fileStatbuff) != 0) || (!S_ISREG(fileStatbuff.st_mode))) {
-			file_size = -1;
-		}
-		else{
-			file_size = fileStatbuff.st_size;
-		}
-		close(fd);
-	}
-	return file_size;
-}
-
 int Offline::readFile(Command* &buffer){
     std::ifstream reader(this->path, std::ios::binary | std::ios::in);
     if(!reader.is_open()){

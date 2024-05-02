@@ -19,7 +19,6 @@ class User{
     bool operator==(char* username);
     void clearQueueUnconfirm();
     void disconnect();
-    void updateUserInfo(char* username);
 };
 
 
