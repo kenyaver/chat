@@ -30,6 +30,7 @@ void Timer::removeTimer(){
 
 void Timer::clearTimerQueue(){
     for(int i = 0; i < this->timerQueue.size(); i++){
+        close(this->timerQueue.front());
         this->removeTimer();
     }
 }

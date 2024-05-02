@@ -21,7 +21,7 @@ int Offline::readFile(Command* &buffer){
         return 1;
     }
     while(!reader.eof()){
-        reader.read((char*)&buffer->header, 24);
+        reader.read((char*)&buffer->header, sizeof(Header));
         User* recver = onlineList.findUser(buffer->header.DST);
         buffer = (Command*)realloc(buffer, buffer->header.len);
         reader.read((char*)buffer->message, buffer->header.len - sizeof(Header));
