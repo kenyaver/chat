@@ -37,7 +37,7 @@ int Protocol::helloUser(){
 
 void Protocol::processSendCommand(){
     this->partner = onlineList.findUser(this->user->buffer->header.DST);
-    if(partner != NULL){
+    if(this->partner != NULL){
         std::cout << "partner online" << std::endl;
         int err = sendCommand(this->partner->sock, *this->user->buffer);
         if(err == -1){
@@ -55,10 +55,10 @@ void Protocol::processSendCommand(){
         this->user->offline.writeFile(*this->user->buffer);
         std::cout << "command writed in file" << std::endl;
         this->user->buffer->header.type = 1;
-        this->user->buffer->header.len = sizeof(Header) + 4;
+        this->user->buffer->header.len = sizeof(Header) + 3;
         this->user->buffer = (Command*)realloc(this->user->buffer, this->user->buffer->header.len);
         std::swap(this->user->buffer->header.SRC, this->user->buffer->header.DST);
-        memcpy(this->user->buffer->message, "300", 4);
+        memcpy(this->user->buffer->message, "300", 3);
         int err = sendCommand(this->user->sock, *this->user->buffer);
         if(err == -1){
             std::cout << "bad send answer" << std::endl;

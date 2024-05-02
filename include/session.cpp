@@ -31,13 +31,16 @@ void Session::worker(){
         if(ret > 0){
             if(fds[0].revents != 0){
                 if(fds[0].revents == POLLIN){
+                    std::cout << "handle command from " << this->protocol.user->username << std::endl;
                     this->protocol.handleCommand();
                     fds[0].revents = 0;
                 } else{
+                    std::cout << "user " << this->protocol.user->username << " disconnected" << std::endl;
                     fds[0].revents = 0;
                     break;
                 }
             } else {
+                std::cout << "timer work!" << std::endl;
                 fds[1].revents = 0;
                 this->protocol.handleTimer();
                 break;

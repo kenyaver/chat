@@ -11,7 +11,7 @@
 
 
 void Offline::setPath(char* username){
-    sprintf(this->path, "offlineTXT/%s.bin", username);
+    sprintf(this->path, "../offlineTXT/%s.bin", username);
     std::cout << this->path << std::endl;
 }
 
