@@ -53,7 +53,6 @@ void Protocol::processSendCommand(){
         this->user->offline.setPath(this->user->buffer->header.DST);
         this->user->buffer->header.type = 2;
         this->user->offline.writeFile(*this->user->buffer);
-        std::cout << "command writed in file" << std::endl;
         this->user->buffer->header.type = 1;
         this->user->buffer->header.len = sizeof(Header) + 3;
         this->user->buffer = (Command*)realloc(this->user->buffer, this->user->buffer->header.len);
