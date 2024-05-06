@@ -18,8 +18,8 @@ Command *sCommand = (Command*)calloc(1, sizeof(Header));
 
 void sendAnswer(int sock, Command* &command){
     std::swap(command->header.SRC, command->header.DST);
-    command = (Command*)realloc(command,sizeof(command->header) + 4 * sizeof(char));
-    memcpy(command->message, "200", 3);
+    command = (Command*)realloc(command, sizeof(command->header) + (4 * sizeof(char)));
+    strcpy(command->message, "200");
     command->header.type = 1;
     sendCommand(sock, *command);
 }
@@ -37,7 +37,7 @@ void printCommand(Command* command){
 
 int setCommand(std::string& buffer, std::string& src, std::string& dst, int id, Command* &command){
     command = (Command*)realloc(command, sizeof(Header) + buffer.size());
-    memcpy(command->message, buffer.c_str(), buffer.size());
+    strcpy(command->message, buffer.c_str());
     command->header.len = sizeof(command->header) + buffer.size();
     command->header.messageID = id;
     memcpy(command->header.SRC, src.c_str(), 8);
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]){
             std::cout << "connect error: " << errno << '\n';
             exit(EXIT_FAILURE);
         }
-        std::cout << "connected to server\n";
+        std::cout << "connected to server" << std::endl;
         
         std::string src;
         std::cout << "SRC: ";
@@ -120,6 +120,7 @@ int main(int argc, char* argv[]){
         });
 
         int id = 0;
+        std::cout << "for quit enter \'~\' in message" << std::endl;
         while(work.load() == 0){
             std::string dst;
             mut.lock();
