@@ -9,6 +9,7 @@
 #include <atomic>
 #include <mutex>
 #include <chrono>
+#include <semaphore>
 #include <algorithm>
 #include <string>
 
@@ -78,6 +79,7 @@ int main(int argc, char* argv[]){
         }
 
         std::atomic<int> work{0};
+        // std::binary_semaphore newMessage(0);
         
         std::thread r([&]{
             int byte;

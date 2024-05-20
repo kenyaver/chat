@@ -11,7 +11,7 @@
 char* getIPaddr(char* IPaddr){
     const char* google_dns_server = "8.8.8.8";
     int dns_port = 53;
-
+    
     struct sockaddr_in serv;
 
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -42,7 +42,8 @@ sockaddr_in addrInit(char* port){
 
 
 int main(int argc, char* argv[]){
-    char* IPaddr = getIPaddr(IPaddr);
+    char IPaddr[16]{0};
+    getIPaddr(IPaddr);
     std::cout << "server`s IP-address: " << IPaddr << std::endl;
 
     int sock;
