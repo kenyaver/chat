@@ -64,7 +64,6 @@ int main(int argc, char* argv[]){
 
         int err = connect(sock, (sockaddr*)&addr, addrLen);
         if(err == -1){
-            err = connect(sock, (sockaddr*)&addr, addrLen);
             std::cout << "connect error: " << errno << '\n';
             exit(EXIT_FAILURE);
         }
@@ -91,7 +90,7 @@ int main(int argc, char* argv[]){
                 if(ret < 0){
                     std::cerr << "error: " << errno << std::endl;
                     work.store(1);
-                    return;
+                    break;
                 }
                 if(ret == 0){
                     continue;
@@ -101,10 +100,10 @@ int main(int argc, char* argv[]){
                     if(pfd.revents == POLLIN){
                         byte = recvCommand(sock, rCommand);
                         if(byte != -1){
+                            if(rCommand->header.type == 0){
+                                sendAnswer(sock, rCommand);
+                            }
                             printCommand(rCommand);
-                        if(rCommand->header.type == 0){
-                            sendAnswer(sock, rCommand);
-                        }
                         } else {
                             std::cout << "error message" << std::endl;
                             work.store(1);
@@ -116,7 +115,6 @@ int main(int argc, char* argv[]){
                     }
                 }
             }
-            return;
         });
 
         int id = 0;
