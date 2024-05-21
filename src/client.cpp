@@ -26,14 +26,12 @@ void sendAnswer(int sock, Command* &command){
 }
 
 void printCommand(Command* command){
-    mut.lock();
     std::cout << "\rfrom: " << command->header.SRC << std::endl;
     if(command->header.type == 1){
         std::cout << "answer for ID: " << command->header.messageID << std::endl;
     }
     std::cout << "message: " << command->message << std::endl;
     std::cout << std::endl;
-    mut.unlock();
 }
 
 int setCommand(std::string& buffer, std::string& src, std::string& dst, int id, Command* &command){
@@ -79,7 +77,8 @@ int main(int argc, char* argv[]){
         }
 
         std::atomic<int> work{0};
-        // std::binary_semaphore newMessage(0);
+        std::binary_semaphore newMessageWrited(0);
+        std::binary_semaphore newMessageReaded(1);
         
         std::thread r([&]{
             int byte;
@@ -100,12 +99,14 @@ int main(int argc, char* argv[]){
 
                 if(ret > 0){
                     if(pfd.revents == POLLIN){
+                        newMessageReaded.acquire();
                         byte = recvCommand(sock, rCommand);
                         if(byte != -1){
                             if(rCommand->header.type == 0){
                                 sendAnswer(sock, rCommand);
                             }
-                            printCommand(rCommand);
+                            // printCommand(rCommand);
+                            newMessageWrited.release();
                         } else {
                             std::cout << "error message" << std::endl;
                             work.store(1);
@@ -123,12 +124,14 @@ int main(int argc, char* argv[]){
         std::cout << "for quit enter \'~\' in message" << std::endl;
         while(work.load() == 0){
             std::string dst;
-            mut.lock();
+            // mut.lock();
             std::cout << "DST: ";
             std::getline(std::cin, dst);
             if(dst.size() == 0 || dst.size() > 7){
-                mut.unlock();
-                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                if(newMessageWrited.try_acquire()){
+                    printCommand(rCommand);
+                    newMessageReaded.release();
+                }
                 continue;
             }
             std::string buffer;
@@ -136,8 +139,10 @@ int main(int argc, char* argv[]){
             std::getline(std::cin, buffer);
             if(buffer.size() == 0 || buffer.size() > 1000){
                 std::cout << "bad message" << std::endl;
-                mut.unlock();
-                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                if(newMessageWrited.try_acquire()){
+                    printCommand(rCommand);
+                    newMessageReaded.release();
+                }
                 continue;
             }
             if(checkExit(buffer)){
@@ -145,10 +150,12 @@ int main(int argc, char* argv[]){
                 work.store(1);
                 break;
             }
-            mut.unlock();
+            if(newMessageWrited.try_acquire()){
+                printCommand(rCommand);
+                newMessageReaded.release();
+            }
             id = setCommand(buffer, src, dst, id, sCommand);
             sendCommand(sock, *sCommand);
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
 
         r.join();

@@ -36,7 +36,7 @@ server: check.o command.o user.o unconfirm.o timer.o onlineList.o offline.o prot
 	g++ -g build/include/check.o build/include/command.o build/include/user.o build/include/unconfirm.o build/include/timer.o build/include/onlineList.o build/include/offline.o build/include/protocol.o build/include/session.o src/server.cpp -o build/server
 
 client: check.o command.o
-	g++ -g build/include/check.o build/include/command.o src/client.cpp -o build/client
+	g++ -std=c++20 -g build/include/check.o build/include/command.o src/client.cpp -o build/client
 
 
 clear:
