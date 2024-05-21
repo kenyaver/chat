@@ -69,9 +69,9 @@ int main(int argc, char* argv[]){
         std::string src;
         std::cout << "SRC: ";
         std::getline(std::cin, src);
-        if(src.size() == 0 || src.size() > 7){
+        if(src.size() == 0 || src.size() > 8){
             std::cout << "bad name" << std::endl;
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         std::binary_semaphore newMessageWrited(0);
