@@ -7,13 +7,11 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
-#include <mutex>
 #include <chrono>
 #include <semaphore>
 #include <algorithm>
 #include <string>
 
-std::mutex mut;
 Command *rCommand = (Command*)calloc(1, sizeof(Header));
 Command *sCommand = (Command*)calloc(1, sizeof(Header));
 
@@ -81,41 +79,23 @@ int main(int argc, char* argv[]){
         std::binary_semaphore newMessageReaded(1);
         
         std::thread r([&]{
-            int byte;
-            struct pollfd pfd;
-            pfd.fd = sock;
-            pfd.events = POLLIN | POLLRDHUP | POLLHUP;
-
             while(work.load() == 0){
-                int ret = poll(&pfd, 1, 3000);
-                if(ret < 0){
-                    std::cerr << "error: " << errno << std::endl;
-                    work.store(1);
-                    break;
-                }
-                if(ret == 0){
-                    continue;
-                }
-
-                if(ret > 0){
-                    if(pfd.revents == POLLIN){
-                        newMessageReaded.acquire();
-                        byte = recvCommand(sock, rCommand);
-                        if(byte != -1){
-                            if(rCommand->header.type == 0){
-                                sendAnswer(sock, rCommand);
-                            }
-                            // printCommand(rCommand);
-                            newMessageWrited.release();
-                        } else {
-                            std::cout << "error message" << std::endl;
-                            work.store(1);
-                        }
-                    } else {
-                        std::cout << "server died" << std::endl;
-                        pfd.revents = 0;
+                newMessageReaded.acquire();
+                int byte = recvCommand(sock, rCommand);
+                switch (byte){
+                    case -1:
+                        std::cerr << "error: " << errno << std::endl;
                         work.store(1);
-                    }
+                        break;
+                    case 0:
+                        std::cerr << "server died" << std::endl;
+                        work.store(1);
+                        break;
+                    default:
+                        if(rCommand->header.type == 0){
+                            sendAnswer(sock, rCommand);
+                        }
+                        newMessageWrited.release();
                 }
             }
         });
@@ -124,7 +104,6 @@ int main(int argc, char* argv[]){
         std::cout << "for quit enter \'~\' in message" << std::endl;
         while(work.load() == 0){
             std::string dst;
-            // mut.lock();
             std::cout << "DST: ";
             std::getline(std::cin, dst);
             if(dst.size() == 0 || dst.size() > 7){
@@ -146,8 +125,10 @@ int main(int argc, char* argv[]){
                 continue;
             }
             if(checkExit(buffer)){
-                mut.unlock();
                 work.store(1);
+                if(newMessageWrited.try_acquire()){
+                    printCommand(rCommand);
+                }
                 break;
             }
             if(newMessageWrited.try_acquire()){
@@ -160,5 +141,7 @@ int main(int argc, char* argv[]){
 
         r.join();
         close(sock);
+        free(rCommand);
+        free(sCommand);
     return 0;
 }
