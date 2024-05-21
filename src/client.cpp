@@ -74,35 +74,36 @@ int main(int argc, char* argv[]){
             exit(1);
         }
 
-        std::atomic<int> work{0};
         std::binary_semaphore newMessageWrited(0);
         std::binary_semaphore newMessageReaded(1);
+        std::binary_semaphore worker(0);
         
         std::thread r([&]{
-            while(work.load() == 0){
+            while(!worker.try_acquire()){
                 newMessageReaded.acquire();
                 int byte = recvCommand(sock, rCommand);
                 switch (byte){
                     case -1:
                         std::cerr << "error: " << errno << std::endl;
-                        work.store(1);
+                        worker.release();
                         break;
                     case 0:
                         std::cerr << "server died" << std::endl;
-                        work.store(1);
+                        worker.release();
                         break;
                     default:
                         if(rCommand->header.type == 0){
                             sendAnswer(sock, rCommand);
                         }
                         newMessageWrited.release();
+                        break;
                 }
             }
         });
 
         int id = 0;
         std::cout << "for quit enter \'~\' in message" << std::endl;
-        while(work.load() == 0){
+        while(!worker.try_acquire()){
             std::string dst;
             std::cout << "DST: ";
             std::getline(std::cin, dst);
@@ -125,7 +126,7 @@ int main(int argc, char* argv[]){
                 continue;
             }
             if(checkExit(buffer)){
-                work.store(1);
+                worker.release();
                 if(newMessageWrited.try_acquire()){
                     printCommand(rCommand);
                 }
