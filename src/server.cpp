@@ -8,10 +8,10 @@
 #include <vector>
 #include <thread>
 
-char* getIPaddr(char* IPaddr){
+char* getIPaddr(){
     const char* google_dns_server = "8.8.8.8";
     int dns_port = 53;
-    
+    char* IPaddr = new char[16];
     struct sockaddr_in serv;
 
     int sock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -27,7 +27,7 @@ char* getIPaddr(char* IPaddr){
     socklen_t namelen = sizeof(name);
     err = getsockname(sock, (struct sockaddr*)&name, &namelen);
 
-    inet_ntop(AF_INET, &name.sin_addr, IPaddr, 100);
+    inet_ntop(AF_INET, &name.sin_addr, IPaddr, 16);
     close(sock);
     return IPaddr;
 }
@@ -42,8 +42,7 @@ sockaddr_in addrInit(char* port){
 
 
 int main(int argc, char* argv[]){
-    char IPaddr[16]{0};
-    getIPaddr(IPaddr);
+    char* IPaddr = getIPaddr();
     std::cout << "server`s IP-address: " << IPaddr << std::endl;
 
     int sock;
