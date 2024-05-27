@@ -21,6 +21,7 @@ void sendAnswer(int sock, Command* &command){
     strcpy(command->message, "200");
     command->header.type = 1;
     sendCommand(sock, *command);
+    command = NULL;
 }
 
 void printCommand(Command* command){
@@ -30,6 +31,7 @@ void printCommand(Command* command){
     }
     std::cout << "message: " << command->message << std::endl;
     std::cout << std::endl;
+    command = NULL;
 }
 
 int setCommand(std::string& buffer, std::string& src, std::string& dst, int id, Command* &command){
@@ -138,6 +140,7 @@ int main(int argc, char* argv[]){
             }
             id = setCommand(buffer, src, dst, id, sCommand);
             sendCommand(sock, *sCommand);
+            sCommand = NULL;
         }
 
         r.join();
