@@ -107,7 +107,7 @@ int main(int argc, char* argv[]){
             std::string dst;
             std::cout << "DST: ";
             std::getline(std::cin, dst);
-            if(dst.size() == 0 || dst.size() > 7){
+            if(dst.size() == 0 || dst.size() > 8){
                 if(newMessageWrited.try_acquire()){
                     printCommand(rCommand);
                     newMessageReaded.release();
