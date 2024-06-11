@@ -52,7 +52,7 @@ int main(int argc, char* argv[]){
     try{
         sock = createTCPsocket(0);
         bindCheck(sock, reinterpret_cast<sockaddr*>(&addr));
-        listenCheck(sock, 20);
+        listenCheck(sock, SOMAXCONN);
     } catch(const char* errorMessage){
         std::cout << errorMessage << std::endl;
         exit(EXIT_FAILURE);

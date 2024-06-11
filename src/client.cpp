@@ -9,6 +9,7 @@
 #include <atomic>
 #include <chrono>
 #include <semaphore>
+#include <condition_variable>
 #include <algorithm>
 #include <string>
 
@@ -79,6 +80,7 @@ int main(int argc, char* argv[]){
         std::binary_semaphore newMessageWrited(0);
         std::binary_semaphore newMessageReaded(1);
         std::binary_semaphore worker(0);
+        std::condition_variable work;
         
         std::thread r([&]{
             while(!worker.try_acquire()){
